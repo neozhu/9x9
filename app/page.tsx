@@ -33,7 +33,6 @@ export default function Home() {
   const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
   const [speechEnabled, setSpeechEnabled] = useState(true);
   const [speechSupported, setSpeechSupported] = useState(false);
-  const [highlightSameResults, setHighlightSameResults] = useState(true);
   const [selectedResult, setSelectedResult] = useState<number | null>(null);
 
   // 检测浏览器是否支持语音合成
@@ -121,7 +120,7 @@ export default function Home() {
     );
     
     let combinationInfo = "";
-    if (otherCombinations.length > 0 && highlightSameResults) {
+    if (otherCombinations.length > 0) {
       const otherFormulas = otherCombinations.map(combo => `${combo.row}×${combo.col}`).join('、');
       combinationInfo = `其他组合：${otherFormulas}`;
     }
@@ -144,7 +143,7 @@ export default function Home() {
   };
 
   // 获取相同结果的组合
-  const sameResultCombinations = selectedResult && highlightSameResults 
+  const sameResultCombinations = selectedResult 
     ? findSameResultCombinations(selectedResult) 
     : [];
 
@@ -234,8 +233,7 @@ export default function Home() {
                 const isAreaHighlighted = isInHighlightedArea && !isSelected;
                 
                 // 检查是否是相同结果的方块
-                const isSameResult = highlightSameResults && 
-                  sameResultCombinations.some(combo => 
+                const isSameResult = sameResultCombinations.some(combo => 
                     combo.row === currentRow && combo.col === currentCol
                   ) && !isSelected;
                 
@@ -279,11 +277,9 @@ export default function Home() {
           {speechSupported && (
             <p className="mt-2 text-xs opacity-75">💡 点击数字即可听到语音朗读</p>
           )}
-          {highlightSameResults && (
-            <p className="mt-1 text-xs opacity-75 text-blue-600 dark:text-blue-400">
-              ✨ 蓝色方块表示相同的结果
-            </p>
-          )}
+          <p className="mt-1 text-xs opacity-75 text-blue-600 dark:text-blue-400">
+            ✨ 蓝色方块表示相同的结果
+          </p>
         </div>
       </div>
     </div>
