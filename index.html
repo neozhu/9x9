@@ -153,16 +153,15 @@
                 0 10px 30px rgba(0, 0, 0, 0.1),
                 inset 0 1px 1px rgba(255, 255, 255, 0.3);
             padding: 1.25rem;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.25);
         }
 
         /* --- 其他动画和辅助样式 (保持不变) --- */
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade-in-down { animation: fadeInDown 0.5s ease-out forwards; }
         @keyframes popIn { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .modal-item-animate { transform: scale(0.3); opacity: 0; animation: popIn 0.3s ease-out forwards; }
-        @keyframes typing { from { width: 0; } to { width: 100%; } }
-        .typing-effect { display: inline-block; overflow: hidden; white-space: nowrap; animation: typing 0.8s steps(30, end) forwards; }
+        .modal-item-animate { transform: scale(0.3); opacity: 0; animation: popIn 0.3s ease-out forwards; }        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        .typing-effect { display: inline-block; overflow: hidden; white-space: nowrap; animation: typing 0.4s steps(20, end) forwards; }
         
         /* 针对移动设备优化样式 */
         @media (max-width: 767px) {
@@ -202,13 +201,26 @@
 
         .touch-feedback { position: relative; overflow: hidden; }
         .touch-feedback::after { content: ''; display: block; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: rgba(255, 255, 255, 0.3); opacity: 0; transform: scale(0); border-radius: inherit; transition: transform 0.3s, opacity 0.3s; pointer-events: none; }
-        .touch-feedback.active::after { transform: scale(1); opacity: 1; transition: 0s; }
-
-        /* 移动设备专用样式 */
+        .touch-feedback.active::after { transform: scale(1); opacity: 1; transition: 0s; }        /* 移动设备专用样式 */
         @media (max-width: 767px) {
             .glass-cell {
                 border-radius: 8px;
                 border: 2px solid rgba(255, 255, 255, 0.7);
+                transition: all 0.2s ease; /* 添加简化的过渡效果 */
+            }
+            
+            /* 确保移动端也有高亮效果 */
+            .glass-cell.highlighted {
+                background-color: rgba(255, 255, 255, 0.25) !important;
+                border-color: rgba(255, 212, 100, 0.6);
+                transform: translateY(-1px) scale(1.01);
+            }
+            
+            .glass-cell.active-cell {
+                background-color: rgba(255, 255, 255, 0.4) !important;
+                border-color: rgba(255, 212, 100, 0.8);
+                transform: translateY(-2px) scale(1.03);
+                z-index: 20 !important;
             }
             
             .glass-cell-content {
@@ -339,12 +351,10 @@
                         const fontSize = product >= 10 ? 
                             (product >= 70 ? 'text-sm sm:text-lg md:text-2xl' : 'text-base sm:text-xl md:text-2xl') : 
                             'text-lg sm:text-2xl md:text-3xl';
-                        
-                        // 移动端使用更简化的样式类
+                          // 移动端使用更简化的样式类，但保留glass-cell类以确保highlighted效果可以正常工作
                         cell.className = isMobile ? 
-                            'grid-cell flex items-center justify-center aspect-square cursor-pointer' :
+                            'grid-cell glass-cell flex items-center justify-center aspect-square cursor-pointer' :
                             'grid-cell glass-cell touch-feedback flex items-center justify-center aspect-square cursor-pointer transition-all duration-300 hover:scale-105';
-                        
                         cell.dataset.row = row;
                         cell.dataset.col = col;
                         
@@ -420,11 +430,42 @@
             const initSpeech = () => { if (!window.speechSynthesis || isSpeechInitialized) return false; try { const warmUp = new SpeechSynthesisUtterance(''); speechSynthesis.speak(warmUp); isSpeechInitialized = true; return true; } catch (e) { console.warn('语音合成初始化失败:', e); return false; } };
             const cacheSpeech = (row, col) => { if (!window.speechSynthesis || !isSpeechInitialized) return; for (let i = Math.max(1, row - 1); i <= Math.min(9, row + 1); i++) { for (let j = Math.max(1, col - 1); j <= Math.min(9, col + 1); j++) { const text = generatePhrase(i, j); if (!speechCache[text]) { const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; utterance.rate = 1.1; speechCache[text] = utterance; } } } };
             const speak = (text) => { if (!window.speechSynthesis) return; if (!isSpeechInitialized && !initSpeech()) return; let utterance = speechCache[text]; if (!utterance) { utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; utterance.rate = 1.1; speechCache[text] = utterance; } speechSynthesis.cancel(); speechSynthesis.speak(utterance); };
-            const updateDisplay = (text, equation) => { if (isAnimating) return; isAnimating = true; chinesePhraseEl.textContent = text; numericEquationEl.className = ''; numericEquationEl.style.width = '0'; numericEquationEl.textContent = equation; requestAnimationFrame(() => { numericEquationEl.className = 'typing-effect text-xl text-slate-700'; setTimeout(() => { isAnimating = false; }, 800); }); };
+            const updateDisplay = (text, equation) => { if (isAnimating) return; isAnimating = true; chinesePhraseEl.textContent = text; numericEquationEl.className = ''; numericEquationEl.style.width = '0'; numericEquationEl.textContent = equation; requestAnimationFrame(() => { numericEquationEl.className = 'typing-effect text-xl text-slate-700'; setTimeout(() => { isAnimating = false; }, 400); }); };
             const showToast = (message) => { toastEl.textContent = message; toastEl.classList.remove('opacity-0'); clearTimeout(toastEl.timer); toastEl.timer = setTimeout(() => toastEl.classList.add('opacity-0'), 2000); };
-            const resetHighlights = () => { gridContainer.querySelectorAll('.grid-cell').forEach(cell => { cell.classList.remove('highlighted', 'active-cell', 'z-20'); }); };
+            const resetHighlights = () => { 
+                gridContainer.querySelectorAll('.grid-cell').forEach(cell => { 
+                    cell.classList.remove('highlighted', 'active-cell'); 
+                    cell.style.zIndex = ''; // 重置z-index样式
+                }); 
+            };
             const addTouchFeedback = (element) => { element.classList.add('active'); setTimeout(() => { element.classList.remove('active'); }, 150); };
-            const handleClick = (row, col, target) => { if (!hasUserInteracted) { hasUserInteracted = true; initSpeech(); } addTouchFeedback(target); resetHighlights(); const product = row * col; for (let r = 1; r <= row; r++) { for (let c = 1; c <= col; c++) { const currentCell = gridContainer.querySelector(`[data-row='${r}'][data-col='${c}']`); if (currentCell) { currentCell.classList.add('highlighted'); currentCell.style.zIndex = 10; } } } target.classList.add('active-cell'); const phrase = generatePhrase(row, col); updateDisplay(phrase, `${row} × ${col} = ${product}`); speak(phrase); cacheSpeech(row, col); };
+            const handleClick = (row, col, target) => { 
+                if (!hasUserInteracted) { 
+                    hasUserInteracted = true; 
+                    initSpeech(); 
+                } 
+                
+                addTouchFeedback(target); 
+                resetHighlights(); 
+                
+                const product = row * col; 
+                // 确保在所有设备上都正确应用高亮效果
+                for (let r = 1; r <= row; r++) { 
+                    for (let c = 1; c <= col; c++) { 
+                        const currentCell = gridContainer.querySelector(`[data-row='${r}'][data-col='${c}']`); 
+                        if (currentCell) { 
+                            currentCell.classList.add('highlighted'); 
+                            currentCell.style.zIndex = 10; 
+                        } 
+                    } 
+                } 
+                
+                target.classList.add('active-cell'); 
+                const phrase = generatePhrase(row, col); 
+                updateDisplay(phrase, `${row} × ${col} = ${product}`); 
+                speak(phrase); 
+                cacheSpeech(row, col); 
+            };
             const handleLongPress = (row, col) => { 
                 modalContent.innerHTML = ''; 
                 const product = row * col; 
