@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  multiplication-table-app:
+    build: .
+    ports:
+      - "4017:80"
+    restart: unless-stopped
+    container_name: multiplication-table-app
+    volumes:
+      - ./:/usr/share/nginx/html:ro
