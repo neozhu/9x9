@@ -2,6 +2,8 @@
 
 A modern, interactive web application designed to help students learn the 9x9 multiplication table with engaging visual and audio features.
 
+![](./public/screenshot.jpg)
+
 ## ✨ Features
 
 ### 🎯 Interactive Learning
