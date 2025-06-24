@@ -1,0 +1,19 @@
+{
+  "name": "9×9乘法口诀",
+  "short_name": "乘法口诀",
+  "description": "专为手机和iPad优化的9×9乘法口诀学习应用",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["education", "games"],
+  "lang": "zh-CN"
+} 

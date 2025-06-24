@@ -19,9 +19,15 @@ export function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="fixed top-4 right-4 p-2 rounded-md border border-border bg-background text-foreground hover:bg-accent transition-colors"
+      className="flex items-center space-x-2 px-3 py-2 rounded-md border border-border bg-background text-foreground hover:bg-accent transition-colors"
+      title={`切换到${theme === "dark" ? "浅色" : "深色"}模式`}
     >
-      {theme === "dark" ? "🌞" : "🌙"} {theme === "dark" ? "Light" : "Dark"}
+      <span className="text-sm">
+        {theme === "dark" ? "🌞" : "🌙"}
+      </span>
+      <span className="text-xs hidden sm:inline">
+        {theme === "dark" ? "浅色" : "深色"}
+      </span>
     </button>
   )
 } 
