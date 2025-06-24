@@ -17,9 +17,9 @@ function getChineseFormula(multiplicand: number, multiplier: number, result: num
   if (result < 10) {
     resultChinese = chineseNumbers[result];
   } else if (result === 10) {
-    resultChinese = '一十';
+    resultChinese = '十';
   } else if (result < 20) {
-    resultChinese = `一十${chineseNumbers[result - 10]}`;
+    resultChinese = `十${chineseNumbers[result - 10]}`;
   } else {
     const tens = Math.floor(result / 10);
     const units = result % 10;
@@ -40,6 +40,9 @@ export default function Home() {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       setSpeechSupported(true);
     }
+    
+    // 组件卸载时停止朗读，防止内存泄漏
+    return () => speechSynthesis.cancel();
   }, []);
 
   // 语音朗读函数
@@ -241,6 +244,8 @@ export default function Home() {
                   <button
                     key={`${rowIndex}-${colIndex}`}
                     onClick={() => handleCellClick(rowIndex, colIndex)}
+                    aria-label={`${currentRow} 乘以 ${currentCol} 等于 ${value}`}
+                    tabIndex={rowIndex * 9 + colIndex + 1}
                     className={`
                       multiplication-cell aspect-square flex items-center justify-center text-xs sm:text-sm font-semibold
                       rounded transition-all duration-300 border-2 touch-button touch-manipulation no-zoom
