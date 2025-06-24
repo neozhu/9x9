@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小先生乘法表 (最终融合版)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* --- 核心布局与背景 --- */
+        body {
+            background-color: #eaf0f7; /* 更柔和的基础背景色 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- 全新液态玻璃背景 (Apple VisionOS 风格) --- */
+        #liquid-background-container {
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: -2;
+            transition: transform 0.2s ease-out; /* 用于指针交互的平滑过渡 */
+        }
+
+        .liquid-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* 关键：高斯模糊创造融合效果 */
+            opacity: 0.6;
+            animation: move-blob 30s infinite alternate ease-in-out;
+        }
+
+        /* 定义几个不同颜色、大小和位置的团块 */
+        .liquid-blob:nth-child(1) {
+            background: #87CEEB; /* 天蓝色 */
+            width: 50%; height: 50%;
+            top: 10%; left: 10%;
+            animation-duration: 32s;
+        }
+        .liquid-blob:nth-child(2) {
+            background: #D8BFD8; /* 蓟色 (淡紫色) */
+            width: 40%; height: 40%;
+            top: 50%; left: 60%;
+            animation-duration: 28s;
+            animation-delay: -8s;
+        }
+        .liquid-blob:nth-child(3) {
+            background: #98FB98; /* 苍绿 */
+            width: 45%; height: 45%;
+            top: 60%; left: 20%;
+            animation-duration: 35s;
+            animation-delay: -15s;
+        }
+        .liquid-blob:nth-child(4) {
+            background: #FFC0CB; /* 粉色 */
+            width: 35%; height: 35%;
+            top: 20%; left: 70%;
+            animation-duration: 25s;
+            animation-delay: -5s;
+        }
+
+        /* 更有机、更复杂的移动动画 */
+        @keyframes move-blob {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(15vw, -20vh) rotate(90deg) scale(1.1); }
+            50% { transform: translate(-10vw, 10vh) rotate(180deg) scale(0.9); }
+            75% { transform: translate(20vw, 15vh) rotate(270deg) scale(1.2); }
+            100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+        }
+
+        /* --- 指针响应式光泽层 --- */
+        #pointer-gloss {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0) 60%);
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+            transition: transform 0.1s linear;
+            transform: translate(-50%, -50%); /* 中心点对齐 */
+        }
+        
+        /* --- 优化的毛玻璃效果 --- */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px); /* 增强模糊效果 */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25); /* 增加内发光，模拟厚度 */
+        }
+
+        .glass-cell {
+            position: relative;
+            /* 基础背景色，会被JS的内联样式覆盖 */
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            border: 3px solid rgba(255, 255, 255, 0.85);
+        }
+        
+        .glass-cell-content {
+            position: relative;
+            z-index: 1;
+            font-weight: 600; 
+            color: rgba(30, 41, 59, 0.9);
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6);
+            letter-spacing: -0.5px;
+        }
+
+        .glass-cell.highlighted {
+            background-color: rgba(255, 255, 255, 0.3) !important; /* 使用!important确保覆盖内联样式 */
+            box-shadow: 
+                0 8px 24px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1.5px rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            border-color: rgba(255, 212, 100, 0.7);
+        }
+        
+        .glass-cell.active-cell {
+            background-color: rgba(255, 255, 255, 0.45) !important; /* 使用!important确保覆盖内联样式 */
+            box-shadow: 
+                0 10px 30px rgba(255, 180, 0, 0.25),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+            transform: translateY(-4px) scale(1.05);
+            z-index: 30 !important;
+            border: 2px solid rgba(255, 212, 100, 0.9);
+        }
+        
+        /* 顶部显示区域的毛玻璃效果 */
+        .display-glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.1),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            padding: 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        /* --- 其他动画和辅助样式 (保持不变) --- */
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-down { animation: fadeInDown 0.5s ease-out forwards; }
+        @keyframes popIn { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-item-animate { transform: scale(0.3); opacity: 0; animation: popIn 0.3s ease-out forwards; }
+        @keyframes typing { from { width: 0; } to { width: 100%; } }
+        .typing-effect { display: inline-block; overflow: hidden; white-space: nowrap; animation: typing 0.8s steps(30, end) forwards; }
+        
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+
+        .touch-feedback { position: relative; overflow: hidden; }
+        .touch-feedback::after { content: ''; display: block; position: absolute; width: 100%; height: 100%; top: 0; left: 0; background: rgba(255, 255, 255, 0.3); opacity: 0; transform: scale(0); border-radius: inherit; transition: transform 0.3s, opacity 0.3s; pointer-events: none; }
+        .touch-feedback.active::after { transform: scale(1); opacity: 1; transition: 0s; }
+    </style>
+</head>
+<body class="h-full flex flex-col items-center justify-center p-4 font-sans select-none">
+    
+    <!-- 全新动态液体背景 -->
+    <div id="liquid-background-container">
+        <div class="liquid-blob"></div>
+        <div class="liquid-blob"></div>
+        <div class="liquid-blob"></div>
+        <div class="liquid-blob"></div>
+    </div>
+    <!-- 指针光泽效果 -->
+    <div id="pointer-gloss"></div>
+      <!-- 页面内容 -->
+    <div id="display-area" class="display-glass h-28 sm:h-32 flex flex-col items-center justify-center text-center mb-4 sm:mb-6 w-full max-w-lg z-10">
+        <h1 id="chinese-phrase" class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-800"></h1>
+        <div id="equation-container" class="overflow-hidden mt-1 sm:mt-2">
+            <p id="numeric-equation" class="text-lg sm:text-xl text-slate-700"></p>
+        </div>
+    </div>    <div id="grid-container" class="w-full max-w-lg mx-auto aspect-square grid grid-cols-9 gap-1 sm:gap-1.5 md:gap-2 p-0.5 sm:p-1 z-10">
+        <!-- JS动态生成格子 -->
+    </div><!-- 新增页脚部分 -->
+    <footer class="glass-effect mt-6 sm:mt-8 py-2 sm:py-3 px-4 sm:px-6 rounded-full text-center w-full max-w-lg mx-auto z-10 text-slate-700">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-1 sm:gap-2">
+            <p class="text-xs sm:text-sm">© <span id="current-year"></span> 小先生乘法表</p>
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <span class="text-xs hidden sm:inline">使用互动方式学习乘法</span>
+                <span class="text-xs inline sm:hidden">互动学习</span>
+                <div class="h-3 sm:h-4 w-px bg-slate-300/50"></div>
+                <span class="text-xs">长按可视觉化数字</span>
+            </div>
+        </div>
+    </footer>
+
+    <div id="toast" class="fixed bottom-5 bg-gradient-to-r from-amber-400/95 to-amber-500/95 backdrop-blur-sm text-white py-2 px-6 rounded-full shadow-lg text-sm opacity-0 transition-opacity duration-300 z-50">
+        提示信息
+    </div>
+
+    <div id="modal-overlay" class="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50" onclick="this.classList.add('hidden')">
+        <div id="modal-content" class="glass-effect bg-white/20 p-6 rounded-2xl shadow-2xl" onclick="event.stopPropagation()">
+            <!-- JS动态生成阵列 -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM 元素 ---
+            const gridContainer = document.getElementById('grid-container');
+            const chinesePhraseEl = document.getElementById('chinese-phrase');
+            const numericEquationEl = document.getElementById('numeric-equation');
+            const toastEl = document.getElementById('toast');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalContent = document.getElementById('modal-content');
+            const liquidBackground = document.getElementById('liquid-background-container');
+            const pointerGloss = document.getElementById('pointer-gloss');
+
+            // --- 状态变量和常量 ---
+            let longPressTimer = null;
+            const LONG_PRESS_DURATION = 600;
+            const speechCache = {};
+            let isSpeechInitialized = false;
+            let hasUserInteracted = false;
+            let isAnimating = false;
+            
+            // --- 核心功能函数 ---
+
+            // 生成 9x9 网格，并恢复原始的多彩背景功能
+            const initGrid = () => {
+                const fragment = document.createDocumentFragment();
+                for (let row = 1; row <= 9; row++) {
+                    for (let col = 1; col <= 9; col++) {                        const cell = document.createElement('div');
+                        const cellContent = document.createElement('div');
+                        const product = row * col;
+                        // 更小的手机屏幕使用更小的字体
+                        const fontSize = product >= 10 ? 
+                            (product >= 70 ? 'text-sm sm:text-lg md:text-xl' : 'text-base sm:text-xl md:text-2xl') : 
+                            'text-lg sm:text-2xl md:text-3xl';
+                        
+                        cell.className = 'grid-cell glass-cell touch-feedback flex items-center justify-center aspect-square cursor-pointer transition-all duration-300 hover:scale-105';
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        
+                        // *** 恢复原始功能：为每个单元格设置基于其位置的独特颜色 ***
+                        // 对颜色进行了微调，以更好地融入新的背景
+                        cell.style.backgroundColor = `hsla(${(row + col) * 20}, 60%, 80%, 0.15)`;
+                        
+                        cellContent.className = `glass-cell-content ${fontSize}`;
+                        cellContent.textContent = product;
+                        
+                        cell.appendChild(cellContent);
+                        fragment.appendChild(cell);
+                    }
+                }
+                gridContainer.appendChild(fragment);
+            };
+
+            // 全新：指针交互效果
+            const setupPointerInteraction = () => {
+                // ... (函数内容与之前优化版相同，此处为简洁省略)
+                let pointerX = 0, pointerY = 0;
+                window.addEventListener('mousemove', (e) => {
+                    pointerGloss.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+                    pointerX = (e.clientX / window.innerWidth) - 0.5;
+                    pointerY = (e.clientY / window.innerHeight) - 0.5;
+                });
+                const animateParallax = () => {
+                    const moveX = pointerX * -30;
+                    const moveY = pointerY * -30;
+                    liquidBackground.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                    requestAnimationFrame(animateParallax);
+                };
+                if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    animateParallax();
+                }
+            };
+            
+            // --- 粘贴所有其他未变的JS函数 ---
+            const numToCN = (num) => {
+                const cnNums = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+                const cnUnits = ['', '十', '百'];
+                if (num <= 10) return num === 10 ? cnUnits[1] : cnNums[num];
+                const digits = String(num).split('');
+                if (num < 20) return `${cnUnits[1]}${cnNums[digits[1]]}`;
+                if (num % 10 === 0) return `${cnNums[digits[0]]}${cnUnits[1]}`;
+                return `${cnNums[digits[0]]}${cnUnits[1]}${cnNums[digits[1]]}`;
+            };
+            const generatePhrase = (n1, n2) => {
+                if (n1 === 1 && n2 === 1) return '一一得一';
+                const product = n1 * n2;
+                return `${numToCN(n1)}${numToCN(n2)}${numToCN(product)}`;
+            };
+            const initSpeech = () => { if (!window.speechSynthesis || isSpeechInitialized) return false; try { const warmUp = new SpeechSynthesisUtterance(''); speechSynthesis.speak(warmUp); isSpeechInitialized = true; return true; } catch (e) { console.warn('语音合成初始化失败:', e); return false; } };
+            const cacheSpeech = (row, col) => { if (!window.speechSynthesis || !isSpeechInitialized) return; for (let i = Math.max(1, row - 1); i <= Math.min(9, row + 1); i++) { for (let j = Math.max(1, col - 1); j <= Math.min(9, col + 1); j++) { const text = generatePhrase(i, j); if (!speechCache[text]) { const utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; utterance.rate = 1.1; speechCache[text] = utterance; } } } };
+            const speak = (text) => { if (!window.speechSynthesis) return; if (!isSpeechInitialized && !initSpeech()) return; let utterance = speechCache[text]; if (!utterance) { utterance = new SpeechSynthesisUtterance(text); utterance.lang = 'zh-CN'; utterance.rate = 1.1; speechCache[text] = utterance; } speechSynthesis.cancel(); speechSynthesis.speak(utterance); };
+            const updateDisplay = (text, equation) => { if (isAnimating) return; isAnimating = true; chinesePhraseEl.textContent = text; numericEquationEl.className = ''; numericEquationEl.style.width = '0'; numericEquationEl.textContent = equation; requestAnimationFrame(() => { numericEquationEl.className = 'typing-effect text-xl text-slate-700'; setTimeout(() => { isAnimating = false; }, 800); }); };
+            const showToast = (message) => { toastEl.textContent = message; toastEl.classList.remove('opacity-0'); clearTimeout(toastEl.timer); toastEl.timer = setTimeout(() => toastEl.classList.add('opacity-0'), 2000); };
+            const resetHighlights = () => { gridContainer.querySelectorAll('.grid-cell').forEach(cell => { cell.classList.remove('highlighted', 'active-cell', 'z-20'); }); };
+            const addTouchFeedback = (element) => { element.classList.add('active'); setTimeout(() => { element.classList.remove('active'); }, 150); };
+            const handleClick = (row, col, target) => { if (!hasUserInteracted) { hasUserInteracted = true; initSpeech(); } addTouchFeedback(target); resetHighlights(); const product = row * col; for (let r = 1; r <= row; r++) { for (let c = 1; c <= col; c++) { const currentCell = gridContainer.querySelector(`[data-row='${r}'][data-col='${c}']`); if (currentCell) { currentCell.classList.add('highlighted'); currentCell.style.zIndex = 10; } } } target.classList.add('active-cell'); const phrase = generatePhrase(row, col); updateDisplay(phrase, `${row} × ${col} = ${product}`); speak(phrase); cacheSpeech(row, col); };
+            const handleLongPress = (row, col) => { modalContent.innerHTML = ''; const product = row * col; const fragment = document.createDocumentFragment(); const itemSize = Math.max(16, Math.min(40, Math.floor(320 / Math.max(col, Math.ceil(product/col))))); const optimalCols = col > 15 ? Math.ceil(Math.sqrt(product)) : col; modalContent.style.gridTemplateColumns = `repeat(${optimalCols}, 1fr)`; modalContent.classList.add('grid', 'gap-2'); requestAnimationFrame(() => { for(let i=0; i < product; i++) { const item = document.createElement('div'); item.className = 'modal-item-animate glass-effect rounded-lg'; item.style.width = `${itemSize}px`; item.style.height = `${itemSize}px`; item.style.backgroundColor = `hsla(${(row + col) * 20}, 80%, 70%, 0.4)`; item.style.animationDelay = `${Math.min(i * 0.02, 1)}s`; fragment.appendChild(item); } modalContent.appendChild(fragment); modalOverlay.classList.remove('hidden'); }); };
+            const setupEvents = () => { gridContainer.addEventListener('mousedown', (e) => { const cell = e.target.closest('.grid-cell'); if (!cell) return; const { row, col } = cell.dataset; longPressTimer = setTimeout(() => { handleLongPress(Number(row), Number(col)); longPressTimer = null; }, LONG_PRESS_DURATION); }); const clearLongPress = () => { if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; } }; gridContainer.addEventListener('mouseup', (e) => { if (longPressTimer) { clearTimeout(longPressTimer); const cell = e.target.closest('.grid-cell'); if (cell) { const { row, col } = cell.dataset; handleClick(Number(row), Number(col), cell); } } }); let touchStartX, touchStartY; gridContainer.addEventListener('touchstart', (e) => { const cell = e.target.closest('.grid-cell'); if (!cell) return; touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; e.preventDefault(); const { row, col } = cell.dataset; longPressTimer = setTimeout(() => { handleLongPress(Number(row), Number(col)); longPressTimer = null; }, LONG_PRESS_DURATION); }, { passive: false }); gridContainer.addEventListener('touchmove', (e) => { if (longPressTimer) { const distance = Math.sqrt(Math.pow(e.touches[0].clientX - touchStartX, 2) + Math.pow(e.touches[0].clientY - touchStartY, 2)); if (distance > 10) { clearTimeout(longPressTimer); longPressTimer = null; } } }, { passive: true }); gridContainer.addEventListener('touchend', (e) => { if (longPressTimer) { clearTimeout(longPressTimer); const cell = e.target.closest('.grid-cell'); if (cell) { const { row, col } = cell.dataset; handleClick(Number(row), Number(col), cell); } } }); gridContainer.addEventListener('mouseleave', clearLongPress); gridContainer.addEventListener('touchcancel', clearLongPress); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') { if (window.speechSynthesis) { speechSynthesis.cancel(); } clearLongPress(); if (toastEl.timer) { clearTimeout(toastEl.timer); } } }); window.addEventListener('beforeunload', () => { if (window.speechSynthesis) { speechSynthesis.cancel(); } }); };
+
+            // --- 执行初始化 ---
+            initGrid();
+            setupEvents();
+            setupPointerInteraction();
+            updateDisplay('小先生乘法表', '请点击任意方块学习口诀');
+            
+            // 设置页脚年份
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+        });
+    </script>
+</body>
+</html>
