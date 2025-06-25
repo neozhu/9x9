@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Nunito } from "next/font/google"; // Changed from Geist
 import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import { Footer } from "./footer";
 import { Analytics } from "@vercel/analytics/next"
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const nunito = Nunito({ // Changed from Geist
+  variable: "--font-sans", // Updated variable name to reflect usage
   subsets: ["latin"],
+  weight: ["400", "700"], // Added weights for flexibility
 });
 
+// Assuming Geist Mono is still desired for mono, otherwise it can be removed or replaced
+import { Geist_Mono } from "next/font/google";
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
   subsets: ["latin"],
 });
 
@@ -37,7 +40,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="乘法口诀" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${nunito.variable} ${geistMono.variable} antialiased`} // Updated to use nunito
       >
         <ThemeProvider
           attribute="class"
@@ -45,7 +48,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex flex-col">
+          <div className="fixed inset-0 z-[-1] overflow-hidden floating-shapes-container">
+            {/* Shapes will be added here via CSS or could be dynamically generated */}
+            <div className="shape shape-1"></div>
+            <div className="shape shape-2"></div>
+            <div className="shape shape-3"></div>
+            <div className="shape shape-4"></div>
+            <div className="shape shape-5"></div>
+          </div>
+          <div className="min-h-screen flex flex-col relative z-10"> {/* Ensure content is above shapes */}
             <main className="flex-1">
               {children}
             </main>
