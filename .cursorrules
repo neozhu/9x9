@@ -51,3 +51,4 @@
   - **Use only for Web API access** in small components.
   - **Avoid for data fetching or state management**.
 - **Follow Next.js docs** for Data Fetching, Rendering, and Routing.
+- **Use context 7** to query the latest documentation

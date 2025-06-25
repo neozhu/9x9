@@ -1,0 +1,104 @@
+{
+  "common": {
+    "title": "Multiplication Table",
+    "subtitle": "Make math learning fun",
+    "close": "Close",
+    "next": "Next",
+    "start": "Start",
+    "stop": "Stop",
+    "submit": "Submit",
+    "again": "Try Again",
+    "repeat": "Repeat",
+    "correct": "Correct",
+    "incorrect": "Incorrect",
+    "score": "Score",
+    "time": "Time",
+    "question": "Question",
+    "answer": "Answer",
+    "other": "Other combinations",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  },
+  "modes": {
+    "learn": "Learn",
+    "quiz": "Quiz",
+    "review": "Review"
+  },
+  "grid": {
+    "multiplication": "Multiplication",
+    "equals": "equals",
+    "formula": "{num1} times {num2} equals {result}",
+    "clickCell": "Click a cell to learn multiplication"
+  },
+  "quiz": {
+    "question": "{num1} × {num2} = ?",
+    "timeLeft": "Time left: {time}s",
+    "correctAnswer": "Correct answer: {answer}",
+    "yourAnswer": "Your answer: {answer}",
+    "noAnswer": "No answer selected",
+    "questionsAnswered": "Questions answered",
+    "currentScore": "Current score",
+    "startQuiz": "Start Quiz",
+    "stopQuiz": "End Quiz",
+    "nextQuestion": "Next Question",
+    "quizComplete": "Quiz Complete!",
+    "noWrongQuestions": "No wrong questions to review",
+    "reviewMode": "Wrong Questions Review",
+    "practiceMode": "Practice Mode"
+  },
+  "achievements": {
+    "title": "Achievements",
+    "newAchievement": "New Achievement!",
+    "earnedTitle": "Earned Achievements",
+    "first_correct": "First Steps",
+    "first_correctDesc": "Answer your first question correctly",
+    "streak_5": "Getting Started",
+    "streak_5Desc": "Answer 5 questions correctly in a row",
+    "streak_10": "On Fire",
+    "streak_10Desc": "Answer 10 questions correctly in a row",
+    "streak_20": "Unstoppable",
+    "streak_20Desc": "Answer 20 questions correctly in a row",
+    "daily_3": "Persistent",
+    "daily_3Desc": "Practice for 3 consecutive days",
+    "daily_7": "Weekly Star",
+    "daily_7Desc": "Practice for 7 consecutive days",
+    "accuracy_90": "Sharpshooter",
+    "accuracy_90Desc": "Achieve 90% accuracy",
+    "questions_100": "Century Master",
+    "questions_100Desc": "Answer 100 questions total"
+  },
+  "stats": {
+    "totalQuestions": "Total Questions",
+    "correctAnswers": "Correct Answers",
+    "accuracy": "Accuracy",
+    "bestStreak": "Best Streak",
+    "wrongQuestions": "Wrong Questions",
+    "streak": "Streak",
+    "consecutiveDays": "Consecutive Days"
+  },
+  "speech": {
+    "enabled": "Speech Enabled",
+    "disabled": "Speech Disabled",
+    "notSupported": "Speech not supported by browser"
+  },
+  "language": {
+    "switch": "Switch Language",
+    "current": "Current Language"
+  },
+  "learn": {
+    "selectNumber": "Please select a number",
+    "clickToStart": "Click a number below to start learning",
+    "clickAnyNumber": "Click any number to learn multiplication",
+    "practiceDaily": "Practice a few minutes daily to master the multiplication table",
+    "clickToHear": "Click numbers to hear speech",
+    "sameResult": "Blue squares show same results"
+  },
+  "footer": {
+    "appName": "9×9 Multiplication Table Learning App",
+    "tagline": "Making math learning fun for kids",
+    "focusedLearning": "Focused Learning",
+    "interactiveExperience": "Interactive Experience",
+    "eyeProtection": "Eye Protection",
+    "copyright": "© 2024 Multiplication Table Learning App · Making math more enjoyable"
+  }
+} 

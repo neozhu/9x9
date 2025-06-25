@@ -28,9 +28,7 @@ export function ThemeToggle() {
       ) : (
         <Moon className="w-4 h-4" />
       )}
-      <span className="text-xs hidden sm:inline">
-        {theme === "dark" ? "浅色" : "深色"}
-      </span>
+ 
     </button>
   )
 } 

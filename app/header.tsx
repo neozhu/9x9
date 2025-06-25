@@ -1,7 +1,9 @@
 "use client"
 
 import { ThemeToggle } from "./theme-toggle";
+import { LanguageSwitcher } from "./components/language-switcher";
 import { Hash, BookOpen, Target, BookOpenCheck } from 'lucide-react';
+import { useLocale } from "./hooks/use-locale";
 
 interface HeaderProps {
   currentMode: 'learn' | 'quiz' | 'review';
@@ -10,14 +12,16 @@ interface HeaderProps {
 }
 
 export function Header({ currentMode, onModeChange, wrongQuestionsCount }: HeaderProps) {
+  const { locale, changeLocale, t } = useLocale();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Hash className="w-8 h-8 text-primary" />
-          <div>
-            <h1 className="text-xl font-bold text-foreground">乘法口诀</h1>
-            <p className="text-xs text-muted-foreground hidden sm:block">让数学学习更有趣</p>
+          <div className="hidden sm:block">
+            <h1 className="text-xl font-bold text-foreground">{t('common.title')}</h1>
+            <p className="text-xs text-muted-foreground">{t('common.subtitle')}</p>
           </div>
         </div>
         
@@ -31,7 +35,7 @@ export function Header({ currentMode, onModeChange, wrongQuestionsCount }: Heade
             }`}
           >
             <BookOpen className="w-4 h-4" />
-            <span>学习</span>
+            <span>{t('modes.learn')}</span>
           </button>
           <button
             onClick={() => onModeChange('quiz')}
@@ -42,7 +46,7 @@ export function Header({ currentMode, onModeChange, wrongQuestionsCount }: Heade
             }`}
           >
             <Target className="w-4 h-4" />
-            <span>答题</span>
+            <span>{t('modes.quiz')}</span>
           </button>
           <button
             onClick={() => onModeChange('review')}
@@ -56,13 +60,17 @@ export function Header({ currentMode, onModeChange, wrongQuestionsCount }: Heade
             }`}
           >
             <BookOpenCheck className="w-4 h-4" />
-            <span>复习</span>
+            <span>{t('modes.review')}</span>
             {wrongQuestionsCount > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                 {wrongQuestionsCount > 99 ? '99+' : wrongQuestionsCount}
               </span>
             )}
           </button>
+          <LanguageSwitcher 
+            currentLocale={locale} 
+            onLocaleChange={changeLocale} 
+          />
           <ThemeToggle />
         </div>
       </div>

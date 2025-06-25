@@ -1,4 +1,5 @@
 import type { Question, Mode } from '@/lib/types';
+import { useLocale } from '../hooks/use-locale';
 import { BookOpenCheck, Clock, CheckCircle, XCircle } from 'lucide-react';
 
 interface QuizInterfaceProps {
@@ -28,6 +29,8 @@ export function QuizInterface({
   onAnswerSelect,
   onStopQuiz
 }: QuizInterfaceProps) {
+  const { t } = useLocale();
+
   return (
     <div className="mb-6 space-y-4">
       {/* 答题区域 */}
@@ -36,7 +39,7 @@ export function QuizInterface({
           {mode === 'review' && (
             <span className="text-red-500 text-sm flex items-center justify-center space-x-1">
               <BookOpenCheck className="w-4 h-4" />
-              <span>错题复习</span>
+              <span>{t('quiz.reviewMode')}</span>
             </span>
           )}
         </div>
@@ -50,7 +53,7 @@ export function QuizInterface({
             <div className="mb-6">
               <div className={`text-xl font-mono flex items-center justify-center space-x-2 ${timeLeft <= 3 ? 'text-red-500' : 'text-primary'}`}>
                 <Clock className="w-5 h-5" />
-                <span>{timeLeft}秒</span>
+                <span>{t('quiz.timeLeft', { time: timeLeft })}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
                 <div 
@@ -89,19 +92,19 @@ export function QuizInterface({
               ) : (
                 <XCircle className="w-8 h-8" />
               )}
-              <span>{isCorrect ? '正确！' : '错误'}</span>
+              <span>{isCorrect ? t('common.correct') : t('common.incorrect')}</span>
             </div>
             <div className="text-lg mt-2">
-              正确答案：{currentQuestion.correctAnswer}
+              {t('quiz.correctAnswer', { answer: currentQuestion.correctAnswer })}
             </div>
             {!isCorrect && selectedAnswer !== null && (
               <div className="text-sm text-muted-foreground mt-1">
-                你的答案：{selectedAnswer}
+                {t('quiz.yourAnswer', { answer: selectedAnswer })}
               </div>
             )}
             {selectedAnswer === null && (
               <div className="text-sm text-muted-foreground mt-1">
-                未选择答案
+                {t('quiz.noAnswer')}
               </div>
             )}
           </div>
@@ -110,13 +113,13 @@ export function QuizInterface({
       
       {/* 答题统计 */}
       <div className="flex justify-between text-sm text-muted-foreground">
-        <span>本轮答题：{questionsAnswered}</span>
-        <span>本轮得分：{quizScore}</span>
+        <span>{t('quiz.questionsAnswered')}: {questionsAnswered}</span>
+        <span>{t('quiz.currentScore')}: {quizScore}</span>
         <button 
           onClick={onStopQuiz}
           className="text-red-500 hover:text-red-700"
         >
-          结束答题
+          {t('quiz.stopQuiz')}
         </button>
       </div>
     </div>

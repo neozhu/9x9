@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./theme-provider";
 import { Footer } from "./footer";
+import { ClientLayout } from "./components/client-layout";
 import { Analytics } from "@vercel/analytics/next"
 
 const geistSans = Geist({
@@ -113,13 +114,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <MathBackground />
-          <div className="min-h-screen flex flex-col relative z-10">
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <ClientLayout>
+            <MathBackground />
+            <div className="min-h-screen flex flex-col relative z-10">
+              <main className="flex-1">
+                {children}
+              </main>
+              <Footer />
+            </div>
+          </ClientLayout>
         </ThemeProvider>
         <Analytics />
       </body>

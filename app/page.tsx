@@ -8,6 +8,7 @@ import { QuizInterface } from "./components/quiz-interface";
 import { LearnMode } from "./components/learn-mode";
 import { AchievementDisplay } from "./components/achievement-display";
 import { useUserProgress } from "./hooks/use-user-progress";
+import { useLocale } from "./hooks/use-locale";
 import { 
   generateRandomQuestion, 
   generateReviewQuestion, 
@@ -17,6 +18,9 @@ import {
 import type { Question, Mode } from "@/lib/types";
 
 export default function Home() {
+  // 国际化
+  const { locale } = useLocale();
+
   // 状态管理
   const [mode, setMode] = useState<Mode>('learn');
   const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
@@ -81,8 +85,8 @@ export default function Home() {
     setShowResult(false);
     
     // 朗读题目
-    speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported);
-  }, [userProgress.wrongQuestions, speechEnabled, speechSupported]);
+    speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported, locale);
+  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, locale]);
 
   // 提交答案
   const handleAnswerSubmit = useCallback((directAnswer?: number) => {
@@ -170,12 +174,12 @@ export default function Home() {
     setSelectedCell({ row: newRow, col: newCol });
     setSelectedResult(result);
     
-    speakFormula(newRow, newCol, speechEnabled, speechSupported);
+    speakFormula(newRow, newCol, speechEnabled, speechSupported, locale);
   };
 
   const repeatSpeech = () => {
     if (selectedCell) {
-      speakFormula(selectedCell.row, selectedCell.col, speechEnabled, speechSupported);
+      speakFormula(selectedCell.row, selectedCell.col, speechEnabled, speechSupported, locale);
     }
   };
 

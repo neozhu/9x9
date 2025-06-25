@@ -1,10 +1,13 @@
 import { achievements } from '@/lib/constants';
+import { useLocale } from '../hooks/use-locale';
 
 interface AchievementNotificationProps {
   newAchievements: string[];
 }
 
 export function AchievementNotification({ newAchievements }: AchievementNotificationProps) {
+  const { t } = useLocale();
+  
   if (newAchievements.length === 0) return null;
 
   return (
@@ -19,8 +22,8 @@ export function AchievementNotification({ newAchievements }: AchievementNotifica
             <div className="flex items-center space-x-2">
               <span className="text-xl">{achievement.icon}</span>
               <div>
-                <div className="font-bold">解锁成就！</div>
-                <div className="text-sm">{achievement.name}</div>
+                <div className="font-bold">{t('achievements.newAchievement')}</div>
+                <div className="text-sm">{t(`achievements.${achievement.id}`)}</div>
               </div>
             </div>
           </div>

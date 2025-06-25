@@ -1,3 +1,5 @@
+import { useLocale } from "../hooks/use-locale";
+
 interface MultiplicationGridProps {
   grid: number[][];
   selectedCell: {row: number, col: number} | null;
@@ -12,6 +14,8 @@ export function MultiplicationGrid({
   sameResultCombinations,
   onCellClick
 }: MultiplicationGridProps) {
+  const { t } = useLocale();
+
   return (
     <div className="mb-8 p-6 bg-gradient-to-br from-white/20 via-white/10 to-white/5 dark:from-white/15 dark:via-white/8 dark:to-white/3 backdrop-blur-xl border border-white/30 dark:border-white/20 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/30 text-center relative overflow-hidden">
       {/* Glassmorphism overlay effect */}
@@ -37,7 +41,7 @@ export function MultiplicationGrid({
               <button
                 key={`${rowIndex}-${colIndex}`}
                 onClick={() => onCellClick(rowIndex, colIndex)}
-                aria-label={`${currentRow} 乘以 ${currentCol} 等于 ${value}`}
+                aria-label={t('grid.formula', { num1: currentRow, num2: currentCol, result: value })}
                 tabIndex={rowIndex * 9 + colIndex + 1}
                 className={`
                   multiplication-cell aspect-square flex items-center justify-center text-xs sm:text-sm font-semibold

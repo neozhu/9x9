@@ -103,20 +103,54 @@ export function generateReviewQuestion(wrongQuestions: WrongQuestion[]): Questio
   };
 }
 
-// 语音朗读函数
-export function speakFormula(multiplicand: number, multiplier: number, speechEnabled: boolean, speechSupported: boolean) {
+// 多语言公式生成函数
+export function getFormulaByLocale(multiplicand: number, multiplier: number, result: number, locale: string): string {
+  switch (locale) {
+    case 'zh':
+      return getChineseFormula(multiplicand, multiplier, result);
+    case 'en':
+      return `${multiplicand} times ${multiplier} equals ${result}`;
+    case 'de':
+      return `${multiplicand} mal ${multiplier} ist ${result}`;
+    case 'ja':
+      return `${multiplicand} かける ${multiplier} は ${result}`;
+    default:
+      return getChineseFormula(multiplicand, multiplier, result);
+  }
+}
+
+// 语音朗读函数（支持多语言）
+export function speakFormula(
+  multiplicand: number, 
+  multiplier: number, 
+  speechEnabled: boolean, 
+  speechSupported: boolean, 
+  locale: string = 'zh',
+  voiceSettings?: { lang?: string; rate?: number; pitch?: number; volume?: number }
+) {
   if (!speechEnabled || !speechSupported) return;
   
   speechSynthesis.cancel();
   
   const result = multiplicand * multiplier;
-  const formula = getChineseFormula(multiplicand, multiplier, result);
+  const formula = getFormulaByLocale(multiplicand, multiplier, result, locale);
   
   const utterance = new SpeechSynthesisUtterance(formula);
-  utterance.lang = 'zh-CN';
-  utterance.rate = 0.8;
-  utterance.pitch = 1.1;
-  utterance.volume = 0.8;
+  
+  // 根据语言设置语音参数
+  const defaultSettings = {
+    'zh': { lang: 'zh-CN', rate: 0.8, pitch: 1.1 },
+    'en': { lang: 'en-US', rate: 0.9, pitch: 1.0 },
+    'de': { lang: 'de-DE', rate: 0.8, pitch: 1.0 },
+    'ja': { lang: 'ja-JP', rate: 0.8, pitch: 1.2 }
+  };
+  
+  const settings = defaultSettings[locale as keyof typeof defaultSettings] || defaultSettings.zh;
+  
+  utterance.lang = voiceSettings?.lang || settings.lang;
+  utterance.rate = voiceSettings?.rate || settings.rate;
+  utterance.pitch = voiceSettings?.pitch || settings.pitch;
+  utterance.volume = voiceSettings?.volume || 0.8;
   
   speechSynthesis.speak(utterance);
 } 

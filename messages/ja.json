@@ -1,0 +1,104 @@
+{
+  "common": {
+    "title": "九九表",
+    "subtitle": "数学の学習を楽しく",
+    "close": "閉じる",
+    "next": "次へ",
+    "start": "開始",
+    "stop": "停止",
+    "submit": "送信",
+    "again": "もう一度",
+    "repeat": "繰り返し",
+    "correct": "正解",
+    "incorrect": "不正解",
+    "score": "スコア",
+    "time": "時間",
+    "question": "問題",
+    "answer": "答え",
+    "other": "他の組み合わせ",
+    "enabled": "有効",
+    "disabled": "無効"
+  },
+  "modes": {
+    "learn": "学習",
+    "quiz": "クイズ",
+    "review": "復習"
+  },
+  "grid": {
+    "multiplication": "掛け算",
+    "equals": "は",
+    "formula": "{num1} かける {num2} は {result}",
+    "clickCell": "セルをクリックして掛け算を学習しましょう"
+  },
+  "quiz": {
+    "question": "{num1} × {num2} = ?",
+    "timeLeft": "残り時間：{time}秒",
+    "correctAnswer": "正解：{answer}",
+    "yourAnswer": "あなたの答え：{answer}",
+    "noAnswer": "回答が選択されていません",
+    "questionsAnswered": "回答数",
+    "currentScore": "現在のスコア",
+    "startQuiz": "クイズ開始",
+    "stopQuiz": "クイズ終了",
+    "nextQuestion": "次の問題",
+    "quizComplete": "クイズ完了！",
+    "noWrongQuestions": "復習する間違いがありません",
+    "reviewMode": "間違い問題復習",
+    "practiceMode": "練習モード"
+  },
+  "achievements": {
+    "title": "実績",
+    "newAchievement": "新しい実績！",
+    "earnedTitle": "獲得済み実績",
+    "first_correct": "初めの一歩",
+    "first_correctDesc": "最初の問題に正解",
+    "streak_5": "順調なスタート",
+    "streak_5Desc": "連続5問正解",
+    "streak_10": "勢いに乗る",
+    "streak_10Desc": "連続10問正解",
+    "streak_20": "止まらない",
+    "streak_20Desc": "連続20問正解",
+    "daily_3": "継続者",
+    "daily_3Desc": "3日連続で練習",
+    "daily_7": "週間スター",
+    "daily_7Desc": "7日連続で練習",
+    "accuracy_90": "狙撃手",
+    "accuracy_90Desc": "90%の正解率を達成",
+    "questions_100": "百問達人",
+    "questions_100Desc": "合計100問回答"
+  },
+  "stats": {
+    "totalQuestions": "総問題数",
+    "correctAnswers": "正解数",
+    "accuracy": "正解率",
+    "bestStreak": "最高連続",
+    "wrongQuestions": "間違い数",
+    "streak": "連続",
+    "consecutiveDays": "連続日数"
+  },
+  "speech": {
+    "enabled": "音声有効",
+    "disabled": "音声無効",
+    "notSupported": "ブラウザが音声をサポートしていません"
+  },
+  "language": {
+    "switch": "言語切り替え",
+    "current": "現在の言語"
+  },
+  "learn": {
+    "selectNumber": "数字を選択してください",
+    "clickToStart": "下の数字をクリックして学習を開始",
+    "clickAnyNumber": "任意の数字をクリックして掛け算を学習",
+    "practiceDaily": "毎日数分練習して九九表をマスター",
+    "clickToHear": "数字をクリックして音声を聞く",
+    "sameResult": "青い四角は同じ結果を表示"
+  },
+  "footer": {
+    "appName": "9×9九九表学習アプリ",
+    "tagline": "子供たちが楽しく数学を学べるように",
+    "focusedLearning": "集中学習",
+    "interactiveExperience": "インタラクティブ体験",
+    "eyeProtection": "目の保護",
+    "copyright": "© 2024 九九表学習アプリ · 数学をもっと楽しく"
+  }
+} 

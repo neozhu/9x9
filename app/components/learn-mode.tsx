@@ -1,5 +1,6 @@
 import { MultiplicationGrid } from './multiplication-grid';
-import { getChineseFormula, generateGrid, findSameResultCombinations } from '@/lib/multiplication-utils';
+import { getFormulaByLocale, generateGrid, findSameResultCombinations } from '@/lib/multiplication-utils';
+import { useLocale } from '../hooks/use-locale';
 import { Volume2, RotateCcw, VolumeX, Lightbulb, Sparkles } from 'lucide-react';
 
 interface LearnModeProps {
@@ -21,11 +22,13 @@ export function LearnMode({
   onSpeechToggle,
   onRepeatSpeech
 }: LearnModeProps) {
+  const { locale, t } = useLocale();
+
   const getDisplayFormula = () => {
     if (!selectedCell) {
       return {
-        chinese: "请选择一个数字",
-        equation: "点击下方数字开始学习",
+        formula: t('grid.clickCell'),
+        equation: t('grid.clickCell'),
         combinationInfo: ""
       };
     }
@@ -40,18 +43,18 @@ export function LearnMode({
     let combinationInfo = "";
     if (otherCombinations.length > 0) {
       const otherFormulas = otherCombinations.map(combo => `${combo.row}×${combo.col}`).join('、');
-      combinationInfo = `其他组合：${otherFormulas}`;
+      combinationInfo = `${t('common.other')}: ${otherFormulas}`;
     }
     
     return {
-      chinese: getChineseFormula(selectedCell.row, selectedCell.col, result),
+      formula: getFormulaByLocale(selectedCell.row, selectedCell.col, result, locale),
       equation: `${selectedCell.row} × ${selectedCell.col} = ${result}`,
       combinationInfo
     };
   };
 
   const grid = generateGrid();
-  const { chinese, equation, combinationInfo } = getDisplayFormula();
+  const { formula, equation, combinationInfo } = getDisplayFormula();
   const sameResultCombinations = selectedResult ? findSameResultCombinations(selectedResult) : [];
 
   return (
@@ -62,14 +65,14 @@ export function LearnMode({
           <div className="flex items-center justify-between p-3 bg-white/30 dark:bg-white/10 backdrop-blur-lg backdrop-saturate-150 border border-white/50 dark:border-white/20 rounded-lg">
             <div className="flex items-center space-x-2">
               <Volume2 className="w-4 h-4" />
-              <span className="text-sm font-medium">语音朗读</span>
+              <span className="text-sm font-medium">{t('speech.enabled')}</span>
               {selectedCell && (
                 <button
                   onClick={onRepeatSpeech}
                   className="ml-2 px-2 py-1 text-xs bg-accent text-accent-foreground rounded hover:bg-accent/80 transition-colors flex items-center space-x-1"
                 >
                   <RotateCcw className="w-3 h-3" />
-                  <span>重复</span>
+                  <span>{t('common.repeat')}</span>
                 </button>
               )}
             </div>
@@ -82,7 +85,7 @@ export function LearnMode({
               }`}
             >
               {speechEnabled ? <Volume2 className="w-3 h-3" /> : <VolumeX className="w-3 h-3" />}
-              <span>{speechEnabled ? '开启' : '关闭'}</span>
+              <span>{speechEnabled ? t('common.enabled') : t('common.disabled')}</span>
             </button>
           </div>
         )}
@@ -99,7 +102,7 @@ export function LearnMode({
             opacity: selectedCell ? 1 : 0.7 
           }}
         >
-          {chinese}
+          {formula}
         </div>
         <div 
           className="text-lg sm:text-xl text-muted-foreground transition-all duration-300 ease-in-out"
@@ -133,17 +136,17 @@ export function LearnMode({
 
       {/* 底部说明 */}
       <div className="mt-6 text-center text-sm text-muted-foreground">
-        <p>点击任意数字学习乘法口诀</p>
-        <p className="mt-1">每天练习几分钟，轻松记住九九表</p>
+        <p>{t('learn.clickAnyNumber')}</p>
+        <p className="mt-1">{t('learn.practiceDaily')}</p>
         {speechSupported && (
           <p className="mt-2 text-xs opacity-75 flex items-center justify-center space-x-1">
             <Lightbulb className="w-3 h-3" />
-            <span>点击数字即可听到语音朗读</span>
+            <span>{t('learn.clickToHear')}</span>
           </p>
         )}
         <p className="mt-1 text-xs opacity-75 text-blue-600 dark:text-blue-400 flex items-center justify-center space-x-1">
           <Sparkles className="w-3 h-3" />
-          <span>蓝色方块表示相同的结果</span>
+          <span>{t('learn.sameResult')}</span>
         </p>
       </div>
     </>

@@ -1,0 +1,104 @@
+{
+  "common": {
+    "title": "乘法口诀",
+    "subtitle": "让数学学习更有趣",
+    "close": "关闭",
+    "next": "下一个",
+    "start": "开始",
+    "stop": "停止",
+    "submit": "提交",
+    "again": "再来一次",
+    "repeat": "重复",
+    "correct": "正确",
+    "incorrect": "错误",
+    "score": "得分",
+    "time": "时间",
+    "question": "题目",
+    "answer": "答案",
+    "other": "其他组合",
+    "enabled": "开启",
+    "disabled": "关闭"
+  },
+  "modes": {
+    "learn": "学习",
+    "quiz": "答题",
+    "review": "复习"
+  },
+  "grid": {
+    "multiplication": "乘法",
+    "equals": "等于",
+    "formula": "{num1} 乘以 {num2} 等于 {result}",
+    "clickCell": "点击格子学习乘法"
+  },
+  "quiz": {
+    "question": "{num1} × {num2} = ?",
+    "timeLeft": "剩余时间：{time}秒",
+    "correctAnswer": "正确答案：{answer}",
+    "yourAnswer": "你的答案：{answer}",
+    "noAnswer": "未选择答案",
+    "questionsAnswered": "本轮答题",
+    "currentScore": "本轮得分",
+    "startQuiz": "开始答题",
+    "stopQuiz": "结束答题",
+    "nextQuestion": "下一题",
+    "quizComplete": "答题完成！",
+    "noWrongQuestions": "暂无错题需要复习",
+    "reviewMode": "错题复习",
+    "practiceMode": "练习模式"
+  },
+  "achievements": {
+    "title": "成就",
+    "newAchievement": "新成就！",
+    "earnedTitle": "已获得成就",
+    "first_correct": "初出茅庐",
+    "first_correctDesc": "第一次答对题目",
+    "streak_5": "小试牛刀",
+    "streak_5Desc": "连续答对5题",
+    "streak_10": "势如破竹",
+    "streak_10Desc": "连续答对10题",
+    "streak_20": "一鼓作气",
+    "streak_20Desc": "连续答对20题",
+    "daily_3": "坚持不懈",
+    "daily_3Desc": "连续3天练习",
+    "daily_7": "一周之星",
+    "daily_7Desc": "连续7天练习",
+    "accuracy_90": "神射手",
+    "accuracy_90Desc": "正确率达到90%",
+    "questions_100": "百题达人",
+    "questions_100Desc": "累计答题100道"
+  },
+  "stats": {
+    "totalQuestions": "总题数",
+    "correctAnswers": "正确答案",
+    "accuracy": "准确率",
+    "bestStreak": "最佳连击",
+    "wrongQuestions": "错题数",
+    "streak": "连击",
+    "consecutiveDays": "连续天数"
+  },
+  "speech": {
+    "enabled": "语音开启",
+    "disabled": "语音关闭",
+    "notSupported": "浏览器不支持语音功能"
+  },
+  "language": {
+    "switch": "切换语言",
+    "current": "当前语言"
+  },
+  "learn": {
+    "selectNumber": "请选择一个数字",
+    "clickToStart": "点击下方数字开始学习",
+    "clickAnyNumber": "点击任意数字学习乘法口诀",
+    "practiceDaily": "每天练习几分钟，轻松记住九九表",
+    "clickToHear": "点击数字即可听到语音朗读",
+    "sameResult": "蓝色方块表示相同的结果"
+  },
+  "footer": {
+    "appName": "9×9乘法口诀学习应用",
+    "tagline": "陪伴孩子快乐学数学",
+    "focusedLearning": "专注学习",
+    "interactiveExperience": "互动体验",
+    "eyeProtection": "护眼模式",
+    "copyright": "© 2024 乘法口诀学习应用 · 让数学学习更有趣"
+  }
+} 

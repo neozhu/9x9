@@ -1,0 +1,104 @@
+{
+  "common": {
+    "title": "Einmaleins",
+    "subtitle": "Mathematik lernen macht Spaß",
+    "close": "Schließen",
+    "next": "Weiter",
+    "start": "Start",
+    "stop": "Stopp",
+    "submit": "Absenden",
+    "again": "Nochmal",
+    "repeat": "Wiederholen",
+    "correct": "Richtig",
+    "incorrect": "Falsch",
+    "score": "Punkte",
+    "time": "Zeit",
+    "question": "Frage",
+    "answer": "Antwort",
+    "other": "Andere Kombinationen",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert"
+  },
+  "modes": {
+    "learn": "Lernen",
+    "quiz": "Quiz",
+    "review": "Überprüfen"
+  },
+  "grid": {
+    "multiplication": "Multiplikation",
+    "equals": "gleich",
+    "formula": "{num1} mal {num2} gleich {result}",
+    "clickCell": "Klicken Sie auf eine Zelle, um Multiplikation zu lernen"
+  },
+  "quiz": {
+    "question": "{num1} × {num2} = ?",
+    "timeLeft": "Verbleibende Zeit: {time}s",
+    "correctAnswer": "Richtige Antwort: {answer}",
+    "yourAnswer": "Ihre Antwort: {answer}",
+    "noAnswer": "Keine Antwort ausgewählt",
+    "questionsAnswered": "Beantwortete Fragen",
+    "currentScore": "Aktuelle Punktzahl",
+    "startQuiz": "Quiz starten",
+    "stopQuiz": "Quiz beenden",
+    "nextQuestion": "Nächste Frage",
+    "quizComplete": "Quiz abgeschlossen!",
+    "noWrongQuestions": "Keine falschen Fragen zu überprüfen",
+    "reviewMode": "Falsche Fragen überprüfen",
+    "practiceMode": "Übungsmodus"
+  },
+  "achievements": {
+    "title": "Erfolge",
+    "newAchievement": "Neuer Erfolg!",
+    "earnedTitle": "Erreichte Erfolge",
+    "first_correct": "Erste Schritte",
+    "first_correctDesc": "Erste Frage richtig beantwortet",
+    "streak_5": "Guter Start",
+    "streak_5Desc": "5 Fragen nacheinander richtig beantwortet",
+    "streak_10": "In Fahrt",
+    "streak_10Desc": "10 Fragen nacheinander richtig beantwortet",
+    "streak_20": "Unaufhaltbar",
+    "streak_20Desc": "20 Fragen nacheinander richtig beantwortet",
+    "daily_3": "Ausdauernd",
+    "daily_3Desc": "3 Tage in Folge geübt",
+    "daily_7": "Wochenstern",
+    "daily_7Desc": "7 Tage in Folge geübt",
+    "accuracy_90": "Scharfschütze",
+    "accuracy_90Desc": "90% Genauigkeit erreicht",
+    "questions_100": "Hundert-Meister",
+    "questions_100Desc": "100 Fragen insgesamt beantwortet"
+  },
+  "stats": {
+    "totalQuestions": "Gesamtfragen",
+    "correctAnswers": "Richtige Antworten",
+    "accuracy": "Genauigkeit",
+    "bestStreak": "Beste Serie",
+    "wrongQuestions": "Falsche Fragen",
+    "streak": "Serie",
+    "consecutiveDays": "Aufeinanderfolgende Tage"
+  },
+  "speech": {
+    "enabled": "Sprache aktiviert",
+    "disabled": "Sprache deaktiviert",
+    "notSupported": "Sprache wird vom Browser nicht unterstützt"
+  },
+  "language": {
+    "switch": "Sprache wechseln",
+    "current": "Aktuelle Sprache"
+  },
+  "learn": {
+    "selectNumber": "Bitte wählen Sie eine Zahl",
+    "clickToStart": "Klicken Sie unten auf eine Zahl, um zu beginnen",
+    "clickAnyNumber": "Klicken Sie auf eine beliebige Zahl, um Multiplikation zu lernen",
+    "practiceDaily": "Üben Sie täglich einige Minuten, um das Einmaleins zu beherrschen",
+    "clickToHear": "Zahlen anklicken, um Sprache zu hören",
+    "sameResult": "Blaue Quadrate zeigen gleiche Ergebnisse"
+  },
+  "footer": {
+    "appName": "9×9 Einmaleins-Lern-App",
+    "tagline": "Mathematik lernen für Kinder unterhaltsam gestalten",
+    "focusedLearning": "Fokussiertes Lernen",
+    "interactiveExperience": "Interaktive Erfahrung",
+    "eyeProtection": "Augenschutz",
+    "copyright": "© 2024 Einmaleins-Lern-App · Mathematik unterhaltsamer machen"
+  }
+} 
