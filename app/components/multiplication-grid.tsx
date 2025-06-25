@@ -13,8 +13,11 @@ export function MultiplicationGrid({
   onCellClick
 }: MultiplicationGridProps) {
   return (
-    <div className="mb-8 p-6 bg-white/10 dark:bg-black/10 backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-lg shadow-lg text-center">
-      <div className="grid grid-cols-9 multiplication-grid gap-1 sm:gap-2">
+    <div className="mb-8 p-6 bg-gradient-to-br from-white/20 via-white/10 to-white/5 dark:from-white/15 dark:via-white/8 dark:to-white/3 backdrop-blur-xl border border-white/30 dark:border-white/20 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/30 text-center relative overflow-hidden">
+      {/* Glassmorphism overlay effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent dark:via-white/3 rounded-2xl pointer-events-none"></div>
+      
+      <div className="grid grid-cols-9 multiplication-grid gap-1 sm:gap-2 relative z-10">
         {grid.map((row, rowIndex) =>
           row.map((value, colIndex) => {
             const currentRow = rowIndex + 1;

@@ -59,7 +59,7 @@ export function LearnMode({
       {/* 功能控制区域 */}
       <div className="mb-4 space-y-3">
         {speechSupported && (
-          <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+          <div className="flex items-center justify-between p-3 bg-white/30 dark:bg-white/10 backdrop-blur-lg backdrop-saturate-150 border border-white/50 dark:border-white/20 rounded-lg">
             <div className="flex items-center space-x-2">
               <Volume2 className="w-4 h-4" />
               <span className="text-sm font-medium">语音朗读</span>
