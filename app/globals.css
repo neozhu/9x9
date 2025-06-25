@@ -157,7 +157,9 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    /* Apply a default, less problematic outline for base styles */
+    /* Specific focus rings will be applied via focus:ring-* utilities on components */
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
@@ -326,11 +328,13 @@
   }
   
   /* 选中状态的特殊效果 */
+  /* These .multiplication-cell.selected and .highlighted rules are likely superseded by Tailwind classes in app/page.tsx */
+  /* Commenting them out to prevent conflicts and ensure new styling takes precedence. */
+  /*
   .multiplication-cell.selected {
     animation: pulse-selected 0.6s ease-in-out;
   }
   
-  /* 矩形区域高亮效果 */
   .multiplication-cell.highlighted {
     background-color: rgba(34, 197, 94, 0.2) !important;
     border-color: rgb(34, 197, 94) !important;
@@ -340,6 +344,7 @@
   .multiplication-cell.selected {
     box-shadow: 0 0 25px rgba(249, 115, 22, 0.6), 0 0 40px rgba(249, 115, 22, 0.3);
   }
+  */
   
   @keyframes pulse-selected {
     0% {
