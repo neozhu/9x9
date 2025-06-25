@@ -102,18 +102,14 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
       </div>
 
       {/* 其他统计 */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <div className="text-2xl font-bold text-primary">{userProgress.streak}</div>
-          <div className="text-xs text-muted-foreground">{t('stats.streak')}</div>
+          <div className="text-2xl font-bold text-blue-600">{userProgress.correctAnswers}</div>
+          <div className="text-xs text-muted-foreground">{t('stats.totalCorrectAnswers')}</div>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <div className="text-2xl font-bold text-green-600">{accuracy}%</div>
           <div className="text-xs text-muted-foreground">{t('stats.accuracy')}</div>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <div className="text-2xl font-bold text-blue-600">{userProgress.consecutiveDays}</div>
-          <div className="text-xs text-muted-foreground">{t('stats.consecutiveDays')}</div>
         </div>
         <div className="bg-card border border-border rounded-lg p-3 text-center">
           <div className="text-2xl font-bold text-purple-600">{userProgress.wrongQuestions.length}</div>

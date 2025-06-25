@@ -83,6 +83,7 @@
   "stats": {
     "totalQuestions": "Gesamtfragen",
     "correctAnswers": "Richtige Antworten",
+    "totalCorrectAnswers": "Gesamt Richtig",
     "accuracy": "Genauigkeit",
     "bestStreak": "Beste Serie",
     "wrongQuestions": "Falsche Fragen",

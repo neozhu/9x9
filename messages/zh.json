@@ -85,6 +85,7 @@
   "stats": {
     "totalQuestions": "总题数",
     "correctAnswers": "正确答案",
+    "totalCorrectAnswers": "累计答对",
     "accuracy": "正确率",
     "bestStreak": "最佳连击",
     "wrongQuestions": "错题数量",

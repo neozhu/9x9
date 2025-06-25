@@ -85,6 +85,7 @@
   "stats": {
     "totalQuestions": "Total Questions",
     "correctAnswers": "Correct Answers",
+    "totalCorrectAnswers": "Total Correct",
     "accuracy": "Accuracy",
     "bestStreak": "Best Streak",
     "wrongQuestions": "Wrong Questions",

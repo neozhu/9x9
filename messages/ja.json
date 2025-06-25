@@ -83,6 +83,7 @@
   "stats": {
     "totalQuestions": "総問題数",
     "correctAnswers": "正解数",
+    "totalCorrectAnswers": "累計正解数",
     "accuracy": "正解率",
     "bestStreak": "最高連続",
     "wrongQuestions": "間違い数",
