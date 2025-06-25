@@ -43,6 +43,8 @@ export default function Home() {
   const [showReviewComplete, setShowReviewComplete] = useState(false);
   const [showDailyComplete, setShowDailyComplete] = useState(false);
   const [completionStats, setCompletionStats] = useState({ questionsCompleted: 0, score: 0 });
+  const [reviewTaskCompleted, setReviewTaskCompleted] = useState(false);
+  const [initialWrongQuestionsCount, setInitialWrongQuestionsCount] = useState(0);
   
   // 用户进度管理
   const {
@@ -65,6 +67,13 @@ export default function Home() {
     
     return () => speechSynthesis.cancel();
   }, [loadProgress, setUserProgress]);
+
+  // 监听用户进度变化，更新复习任务完成状态
+  useEffect(() => {
+    if (mode === 'review' && userProgress.wrongQuestions.length === 0 && !reviewTaskCompleted) {
+      setReviewTaskCompleted(true);
+    }
+  }, [userProgress.wrongQuestions.length, mode, reviewTaskCompleted]);
 
   // 停止答题
   const stopQuiz = useCallback(() => {
@@ -104,26 +113,40 @@ export default function Home() {
     setShowResult(true);
     setIsQuizActive(false);
     
-    let updatedProgress = userProgress;
+    let newProgress;
     
-    if (correct && mode === 'review') {
-      // 如果是复习模式且答对了，从错题本中移除该题目
-      updatedProgress = removeFromWrongQuestions(currentQuestion.multiplicand, currentQuestion.multiplier);
-      setQuizScore(quizScore + 1);
-    } else if (correct) {
-      setQuizScore(quizScore + 1);
+    if (mode === 'review') {
+      if (correct) {
+        // 复习模式答对了，只移除错题，不调用updateProgress避免覆盖
+        newProgress = removeFromWrongQuestions(currentQuestion.multiplicand, currentQuestion.multiplier);
+        setQuizScore(quizScore + 1);
+      } else {
+        // 复习模式答错了，正常更新进度
+        const wrongQuestion = {
+          multiplicand: currentQuestion.multiplicand,
+          multiplier: currentQuestion.multiplier,
+          userAnswer: answer,
+          correctAnswer: currentQuestion.correctAnswer,
+          timestamp: Date.now()
+        };
+        newProgress = updateProgress(false, wrongQuestion);
+      }
+    } else {
+      // 普通答题模式，正常更新进度
+      const wrongQuestion = !correct ? {
+        multiplicand: currentQuestion.multiplicand,
+        multiplier: currentQuestion.multiplier,
+        userAnswer: answer,
+        correctAnswer: currentQuestion.correctAnswer,
+        timestamp: Date.now()
+      } : undefined;
+      
+      newProgress = updateProgress(correct, wrongQuestion);
+      if (correct) {
+        setQuizScore(quizScore + 1);
+      }
     }
     
-    // 更新进度
-    const wrongQuestion = !correct ? {
-      multiplicand: currentQuestion.multiplicand,
-      multiplier: currentQuestion.multiplier,
-      userAnswer: answer,
-      correctAnswer: currentQuestion.correctAnswer,
-      timestamp: Date.now()
-    } : undefined;
-    
-    const newProgress = updateProgress(correct, wrongQuestion);
     setQuestionsAnswered(questionsAnswered + 1);
 
     // 3秒后自动下一题或结束任务
@@ -147,18 +170,10 @@ export default function Home() {
       
       // 如果是复习模式且错题本已清空，结束复习
       if (mode === 'review') {
-        const currentWrongQuestions = correct ? updatedProgress.wrongQuestions : newProgress.wrongQuestions;
-        if (currentWrongQuestions.length === 0) {
-          // 保存当前数据
-          const currentQuestionsAnswered = questionsAnswered + 1;
-          const currentScore = correct ? quizScore + 1 : quizScore;
-          setCompletionStats({ questionsCompleted: currentQuestionsAnswered, score: currentScore });
-          setMode('learn');
+        if (newProgress.wrongQuestions.length === 0) {
+          // 错题本已清空，标记复习任务完成
+          setReviewTaskCompleted(true);
           stopQuiz();
-          // 显示复习完成模态框，使用保存的数据
-          setTimeout(() => {
-            setShowReviewComplete(true);
-          }, 100);
         } else {
           startQuiz(true);
         }
@@ -202,7 +217,21 @@ export default function Home() {
       }
       setTimeout(() => startQuiz(false), 100);
     } else if (newMode === 'review') {
+      // 检查是否有错题需要复习
+      if (userProgress.wrongQuestions.length === 0) {
+        // 没有错题，标记复习任务完成
+        setReviewTaskCompleted(true);
+        setInitialWrongQuestionsCount(0);
+        return;
+      }
+      // 重置复习任务完成状态并记录初始错题数量
+      setReviewTaskCompleted(false);
+      setInitialWrongQuestionsCount(userProgress.wrongQuestions.length);
       setTimeout(() => startQuiz(true), 100);
+    } else {
+      // 切换到学习模式时，重置复习任务完成状态和初始错题数量
+      setReviewTaskCompleted(false);
+      setInitialWrongQuestionsCount(0);
     }
   };
 
@@ -243,15 +272,24 @@ export default function Home() {
 
         {/* 用户进度统计 - 仅在答题和复习模式下显示 */}
         {(mode === 'quiz' || mode === 'review') && (
-          <UserProgressStats userProgress={userProgress} />
+          <UserProgressStats 
+            userProgress={userProgress} 
+            mode={mode} 
+            initialWrongQuestionsCount={initialWrongQuestionsCount}
+          />
         )}
 
         {/* 答题模式界面 */}
         {mode === 'quiz' && userProgress.dailyTaskCompleted && (
-          <DailyTaskComplete onBackToLearn={handleBackToLearn} />
+          <DailyTaskComplete onBackToLearn={handleBackToLearn} type="daily" />
         )}
         
-        {((mode === 'quiz' && !userProgress.dailyTaskCompleted) || mode === 'review') && currentQuestion && (
+        {/* 复习模式界面 */}
+        {mode === 'review' && reviewTaskCompleted && (
+          <DailyTaskComplete onBackToLearn={handleBackToLearn} type="review" />
+        )}
+        
+        {((mode === 'quiz' && !userProgress.dailyTaskCompleted) || (mode === 'review' && !reviewTaskCompleted)) && currentQuestion && (
           <QuizInterface
             mode={mode}
             currentQuestion={currentQuestion}

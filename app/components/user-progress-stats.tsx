@@ -1,30 +1,77 @@
-import type { UserProgress } from '@/lib/types';
+import type { UserProgress, Mode } from '@/lib/types';
 import { useLocale } from '../hooks/use-locale';
-import { Target, CheckCircle } from 'lucide-react';
+import { Target, CheckCircle, BookOpen } from 'lucide-react';
 
 interface UserProgressStatsProps {
   userProgress: UserProgress;
+  mode: Mode;
+  initialWrongQuestionsCount?: number;
 }
 
-export function UserProgressStats({ userProgress }: UserProgressStatsProps) {
+export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCount = 0 }: UserProgressStatsProps) {
   const { t } = useLocale();
   const accuracy = userProgress.totalQuestions > 0 
     ? Math.round((userProgress.correctAnswers / userProgress.totalQuestions) * 100) 
     : 0;
 
-  const dailyProgress = Math.min(userProgress.dailyQuestionsAnswered, userProgress.dailyTarget);
-  const dailyProgressPercentage = (dailyProgress / userProgress.dailyTarget) * 100;
+  // 根据模式计算不同的进度数据
+  const getTaskProgress = () => {
+    if (mode === 'review') {
+      // 复习模式：显示错题复习进度
+      const currentWrongQuestions = userProgress.wrongQuestions.length;
+      const isCompleted = currentWrongQuestions === 0;
+      const initialCount = Math.max(initialWrongQuestionsCount, currentWrongQuestions);
+      
+      if (isCompleted) {
+        // 复习完成，显示100%
+        return {
+          current: 0,
+          total: initialCount || 1,
+          percentage: 100,
+          isCompleted: true,
+          taskName: t('stats.reviewTask'),
+          icon: BookOpen
+        };
+      } else {
+        // 复习进行中，计算已完成的百分比
+        const completedCount = initialCount - currentWrongQuestions;
+        const percentage = initialCount > 0 ? (completedCount / initialCount) * 100 : 0;
+        return {
+          current: currentWrongQuestions,
+          total: initialCount,
+          percentage,
+          isCompleted: false,
+          taskName: t('stats.reviewTask'),
+          icon: BookOpen
+        };
+      }
+    } else {
+      // 答题模式：显示每日任务进度
+      const current = Math.min(userProgress.dailyQuestionsAnswered, userProgress.dailyTarget);
+      const percentage = (current / userProgress.dailyTarget) * 100;
+      return {
+        current,
+        total: userProgress.dailyTarget,
+        percentage,
+        isCompleted: userProgress.dailyTaskCompleted,
+        taskName: t('stats.dailyTask'),
+        icon: Target
+      };
+    }
+  };
+
+  const taskProgress = getTaskProgress();
 
   return (
     <div className="mb-6 space-y-4">
-      {/* 每日任务进度 */}
+      {/* 任务进度（根据模式显示不同内容） */}
       <div className="bg-card border border-border rounded-lg p-4">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <Target className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium">{t('stats.dailyTask')}</span>
+            <taskProgress.icon className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium">{taskProgress.taskName}</span>
           </div>
-          {userProgress.dailyTaskCompleted && (
+          {taskProgress.isCompleted && (
             <div className="flex items-center space-x-1 text-green-600">
               <CheckCircle className="w-4 h-4" />
               <span className="text-xs font-medium">{t('common.completed')}</span>
@@ -32,15 +79,24 @@ export function UserProgressStats({ userProgress }: UserProgressStatsProps) {
           )}
         </div>
         <div className="flex items-center justify-between text-sm mb-1">
-          <span>{dailyProgress}/{userProgress.dailyTarget} {t('stats.questions')}</span>
-          <span className="font-medium">{Math.round(dailyProgressPercentage)}%</span>
+          {mode === 'review' ? (
+            <span>
+              {taskProgress.isCompleted 
+                ? t('stats.noWrongQuestions') 
+                : `${taskProgress.total - taskProgress.current}/${taskProgress.total} ${t('stats.questions')}`
+              }
+            </span>
+          ) : (
+            <span>{taskProgress.current}/{taskProgress.total} {t('stats.questions')}</span>
+          )}
+          <span className="font-medium">{Math.round(taskProgress.percentage)}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
             className={`h-2 rounded-full transition-all duration-500 ${
-              userProgress.dailyTaskCompleted ? 'bg-green-500' : 'bg-blue-500'
+              taskProgress.isCompleted ? 'bg-green-500' : 'bg-blue-500'
             }`}
-            style={{ width: `${Math.min(dailyProgressPercentage, 100)}%` }}
+            style={{ width: `${Math.min(taskProgress.percentage, 100)}%` }}
           ></div>
         </div>
       </div>

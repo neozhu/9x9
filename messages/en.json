@@ -55,6 +55,8 @@
     "finalScore": "Final Score",
     "dailyTaskCompletedTitle": "Daily Task Completed",
     "dailyTaskCompletedMessage": "Congratulations! You have completed today's quiz task. Come back tomorrow for more challenges!",
+    "reviewTaskCompletedTitle": "Review Task Completed",
+    "reviewTaskCompletedMessage": "Congratulations! You have mastered all wrong questions, review task completed!",
     "backToLearn": "Back to Learn Mode"
   },
   "achievements": {
@@ -89,6 +91,8 @@
     "streak": "Streak",
     "consecutiveDays": "Consecutive Days",
     "dailyTask": "Daily Task",
+    "reviewTask": "Review Task",
+    "noWrongQuestions": "No Wrong Questions",
     "questions": "questions"
   },
   "speech": {

@@ -53,6 +53,8 @@
     "finalScore": "Endpunktzahl",
     "dailyTaskCompletedTitle": "Tägliche Aufgabe abgeschlossen",
     "dailyTaskCompletedMessage": "Herzlichen Glückwunsch! Sie haben Ihre heutige Quiz-Aufgabe abgeschlossen. Kommen Sie morgen für weitere Herausforderungen zurück!",
+    "reviewTaskCompletedTitle": "Wiederholungsaufgabe abgeschlossen",
+    "reviewTaskCompletedMessage": "Herzlichen Glückwunsch! Sie haben alle falschen Fragen gemeistert, Wiederholungsaufgabe abgeschlossen!",
     "backToLearn": "Zurück zum Lernmodus"
   },
   "achievements": {
@@ -87,6 +89,8 @@
     "streak": "Serie",
     "consecutiveDays": "Aufeinanderfolgende Tage",
     "dailyTask": "Tägliche Aufgabe",
+    "reviewTask": "Wiederholungsaufgabe",
+    "noWrongQuestions": "Keine falschen Fragen",
     "questions": "Fragen"
   },
   "speech": {

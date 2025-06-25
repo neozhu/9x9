@@ -3,9 +3,10 @@ import { CheckCircle, ArrowLeft } from 'lucide-react';
 
 interface DailyTaskCompleteProps {
   onBackToLearn: () => void;
+  type?: 'daily' | 'review';
 }
 
-export function DailyTaskComplete({ onBackToLearn }: DailyTaskCompleteProps) {
+export function DailyTaskComplete({ onBackToLearn, type = 'daily' }: DailyTaskCompleteProps) {
   const { t } = useLocale();
 
   return (
@@ -26,12 +27,12 @@ export function DailyTaskComplete({ onBackToLearn }: DailyTaskCompleteProps) {
           
           {/* Title */}
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('quiz.dailyTaskCompletedTitle')}
+            {type === 'daily' ? t('quiz.dailyTaskCompletedTitle') : t('quiz.reviewTaskCompletedTitle')}
           </h2>
           
           {/* Message */}
           <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-            {t('quiz.dailyTaskCompletedMessage')}
+            {type === 'daily' ? t('quiz.dailyTaskCompletedMessage') : t('quiz.reviewTaskCompletedMessage')}
           </p>
           
           {/* Back to Learn Button */}

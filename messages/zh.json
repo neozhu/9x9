@@ -55,6 +55,8 @@
     "finalScore": "最终得分",
     "dailyTaskCompletedTitle": "今日任务已完成",
     "dailyTaskCompletedMessage": "恭喜！您今天的答题任务已经完成了。明天再来挑战吧！",
+    "reviewTaskCompletedTitle": "复习任务已完成",
+    "reviewTaskCompletedMessage": "恭喜！您已经掌握了所有错题，复习任务完成！",
     "backToLearn": "返回学习模式"
   },
   "achievements": {
@@ -89,6 +91,8 @@
     "streak": "连对记录",
     "consecutiveDays": "连续天数",
     "dailyTask": "今日任务",
+    "reviewTask": "复习任务",
+    "noWrongQuestions": "无错题",
     "questions": "题"
   },
   "speech": {
