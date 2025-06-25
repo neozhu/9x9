@@ -44,72 +44,114 @@
 }
 
 :root {
-  --radius: 0.65rem;
-  --background: #F9FAFB; /* Soft off-white */
-  --foreground: #1F2937; /* Dark gray */
+  --radius: 0.75rem; /* Slightly larger radius for a softer feel */
+  --background: #F0F8FF; /* light-sky */
+  --foreground: #4A4A4A; /* dark-slate */
   --card: #FFFFFF;
-  --card-foreground: #1F2937;
+  --card-foreground: #4A4A4A; /* dark-slate */
   --popover: #FFFFFF;
-  --popover-foreground: #1F2937;
-  --primary: #3B82F6; /* Vibrant blue */
+  --popover-foreground: #4A4A4A; /* dark-slate */
+
+  --primary: #4A90E2; /* explorer-blue */
   --primary-foreground: #FFFFFF;
-  --secondary: #FBBF24; /* Cheerful yellow */
-  --secondary-foreground: #1F2937;
-  --muted: #E5E7EB; /* Light gray */
-  --muted-foreground: #6B7280; /* Medium gray */
-  --accent: #10B981; /* Friendly green */
-  --accent-foreground: #FFFFFF;
-  --destructive: #EF4444; /* Red */
-  --border: #D1D5DB; /* Light gray */
-  --input: #D1D5DB; /* Light gray */
-  --ring: #3B82F6; /* Vibrant blue */
-  --chart-1: #3B82F6;
-  --chart-2: #FBBF24;
-  --chart-3: #10B981;
-  --chart-4: #F472B6; /* Pink */
-  --chart-5: #8B5CF6; /* Purple */
+
+  --secondary: #F8E71C; /* sunshine-yellow */
+  --secondary-foreground: #4A4A4A; /* dark-slate (for text on yellow) */
+
+  --accent: #50E3C2; /* discovery-green */
+  --accent-foreground: #FFFFFF; /* White text on green for pop */
+
+  --muted: #9B9B9B; /* stone-gray */
+  --muted-foreground: #F0F8FF; /* light-sky (for text on muted) */
+
+  --destructive: #E94E4E; /* A slightly softer red */
+  --destructive-foreground: #FFFFFF;
+
+  --border: #D1E0EC; /* Lighter, softer border, derived from light-sky & explorer-blue */
+  --input: #FFFFFF; /* White input background */
+  --input-border: #B0C4DE; /* stone-gray slightly bluer for input borders */
+  --ring: #77A5E8; /* Lighter explorer-blue for focus rings */
+
+  /* Specific colors for "Math Explorer" theme */
+  --explorer-blue: #4A90E2;
+  --discovery-green: #50E3C2;
+  --sunshine-yellow: #F8E71C;
+  --light-sky: #F0F8FF;
+  --stone-gray: #9B9B9B;
+  --dark-slate: #4A4A4A;
+  --correct-green: #50E3C2;
+  --try-again-orange: #F5A623;
+
+  /* Chart colors can be aliases or new values from the palette */
+  --chart-1: var(--explorer-blue);
+  --chart-2: var(--discovery-green);
+  --chart-3: var(--sunshine-yellow);
+  --chart-4: #FFA07A; /* Light Salmon - a friendly warm color */
+  --chart-5: #AFEEEE; /* PaleTurquoise - a friendly cool color */
+
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #1F2937;
-  --sidebar-primary: #3B82F6;
+  --sidebar-foreground: var(--dark-slate);
+  --sidebar-primary: var(--explorer-blue);
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FBBF24;
-  --sidebar-accent-foreground: #1F2937;
-  --sidebar-border: #D1D5DB;
-  --sidebar-ring: #3B82F6;
+  --sidebar-accent: var(--sunshine-yellow);
+  --sidebar-accent-foreground: var(--dark-slate);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
-  --background: #1E3A8A; /* Deep blue */
-  --foreground: #D1D5DB; /* Light gray */
-  --card: #1F2937; /* Dark gray */
-  --card-foreground: #D1D5DB;
-  --popover: #1F2937;
-  --popover-foreground: #D1D5DB;
-  --primary: #60A5FA; /* Lighter blue */
-  --primary-foreground: #1E3A8A;
-  --secondary: #FCD34D; /* Lighter yellow */
-  --secondary-foreground: #1E3A8A;
-  --muted: #374151; /* Darker gray */
-  --muted-foreground: #9CA3AF; /* Medium gray */
-  --accent: #34D399; /* Lighter green */
-  --accent-foreground: #1E3A8A;
-  --destructive: #F87171; /* Lighter red */
-  --border: #374151; /* Darker gray */
-  --input: #374151; /* Darker gray */
-  --ring: #60A5FA; /* Lighter blue */
-  --chart-1: #60A5FA;
-  --chart-2: #FCD34D;
-  --chart-3: #34D399;
-  --chart-4: #F9A8D4; /* Lighter Pink */
-  --chart-5: #A78BFA; /* Lighter Purple */
-  --sidebar: #1F2937;
-  --sidebar-foreground: #D1D5DB;
-  --sidebar-primary: #60A5FA;
-  --sidebar-primary-foreground: #1E3A8A;
-  --sidebar-accent: #FCD34D;
-  --sidebar-accent-foreground: #1E3A8A;
-  --sidebar-border: #374151;
-  --sidebar-ring: #60A5FA;
+  --background: #2C3E50; /* night-sky-blue / Dark desaturated blue */
+  --foreground: #E0E0E0; /* Light, soft gray */
+  --card: #34495E; /* Slightly lighter dark blue for cards */
+  --card-foreground: #E0E0E0;
+  --popover: #34495E;
+  --popover-foreground: #E0E0E0;
+
+  --primary: #77A5E8; /* Lighter explorer-blue */
+  --primary-foreground: #1A2B3C; /* Darker blue for contrast */
+
+  --secondary: #F9E040; /* Lighter sunshine-yellow */
+  --secondary-foreground: #2C3E50; /* night-sky-blue (for text on yellow) */
+
+  --accent: #78E8D0; /* Lighter discovery-green */
+  --accent-foreground: #1A2B3C; /* Darker blue for contrast */
+
+  --muted: #566573; /* Darker stone-gray */
+  --muted-foreground: #ABB2B9;
+
+  --destructive: #F1807E; /* Lighter, softer red */
+  --destructive-foreground: #FFFFFF;
+
+  --border: #415A75; /* Darker border */
+  --input: #3E566D; /* Darker input background */
+  --input-border: #5D7A9A;
+  --ring: #A2C4F0; /* Lighter blue for focus rings */
+
+  /* Specific colors for "Math Explorer" theme */
+  --explorer-blue: #77A5E8;
+  --discovery-green: #78E8D0;
+  --sunshine-yellow: #F9E040;
+  --light-sky: #E0E0E0; /* Using light gray as the "lightest" tone in dark mode */
+  --stone-gray: #85929E;
+  --dark-slate: #D5D8DC;
+  --correct-green: #78E8D0;
+  --try-again-orange: #FABE58; /* Lighter orange */
+
+  /* Chart colors for dark mode */
+  --chart-1: var(--explorer-blue);
+  --chart-2: var(--discovery-green);
+  --chart-3: var(--sunshine-yellow);
+  --chart-4: #FFB08A;
+  --chart-5: #BFEFEF;
+
+  --sidebar: #34495E;
+  --sidebar-foreground: var(--light-sky);
+  --sidebar-primary: var(--explorer-blue);
+  --sidebar-primary-foreground: #1A2B3C;
+  --sidebar-accent: var(--sunshine-yellow);
+  --sidebar-accent-foreground: #2C3E50;
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
 }
 
 

@@ -486,17 +486,15 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8 max-w-md sm:max-w-lg">
         {/* 成就通知 */}
         {newAchievements.length > 0 && (
-          <div className="fixed top-20 right-4 z-50 space-y-2">
+          <div className="fixed top-20 right-4 z-[100] space-y-2"> {/* Increased z-index */}
             {newAchievements.map(achievementId => {
               const achievement = achievements.find(a => a.id === achievementId);
               return achievement ? (
-                <div key={achievementId} className="bg-yellow-100 border border-yellow-300 text-yellow-800 px-4 py-2 rounded-lg shadow-lg animate-bounce">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xl">{achievement.icon}</span>
-                    <div>
-                      <div className="font-bold">解锁成就！</div>
-                      <div className="text-sm">{achievement.name}</div>
-                    </div>
+                <div key={achievementId} className="bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--secondary)]/50 px-4 py-3 rounded-lg shadow-xl animate-bounce flex items-center space-x-3"> {/* Themed colors, increased padding & shadow */}
+                  <span className="text-2xl">{achievement.icon}</span> {/* Larger icon */}
+                  <div>
+                    <div className="font-bold text-base">解锁成就！</div> {/* Increased font size */}
+                    <div className="text-sm">{achievement.name}</div>
                   </div>
                 </div>
               ) : null;
@@ -506,49 +504,44 @@ export default function Home() {
 
         {/* 用户进度统计 - 仅在答题和复习模式下显示 */}
         {(mode === 'quiz' || mode === 'review') && (
-          <div className="mb-6 grid grid-cols-2 gap-4">
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-primary">{userProgress.streak}</div>
-              <div className="text-xs text-muted-foreground">连击</div>
-            </div>
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-green-600">{accuracy}%</div>
-              <div className="text-xs text-muted-foreground">准确率</div>
-            </div>
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-blue-600">{userProgress.consecutiveDays}</div>
-              <div className="text-xs text-muted-foreground">连续天数</div>
-            </div>
-            <div className="bg-card border border-border rounded-lg p-3 text-center">
-              <div className="text-2xl font-bold text-purple-600">{userProgress.wrongQuestions.length}</div>
-              <div className="text-xs text-muted-foreground">错题数</div>
-            </div>
+          <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4"> {/* Responsive grid */}
+            {[
+              { label: '连击', value: userProgress.streak, color: 'text-[var(--primary)]' },
+              { label: '准确率', value: `${accuracy}%`, color: 'text-[var(--correct-green)]' },
+              { label: '连续天数', value: userProgress.consecutiveDays, color: 'text-[var(--explorer-blue)]' },
+              { label: '错题数', value: userProgress.wrongQuestions.length, color: 'text-[var(--try-again-orange)]' }
+            ].map(stat => (
+              <div key={stat.label} className="bg-[var(--card)] border border-[var(--border)] rounded-lg p-3 text-center shadow">
+                <div className={`text-2xl sm:text-3xl font-bold ${stat.color}`}>{stat.value}</div>
+                <div className="text-xs text-[var(--muted-foreground)] mt-0.5">{stat.label}</div>
+              </div>
+            ))}
           </div>
         )}
 
         {/* 答题模式界面 */}
         {(mode === 'quiz' || mode === 'review') && currentQuestion && (
-          <div className="mb-6 space-y-4">
+          <div className="mb-6 space-y-6"> {/* Increased space */}
             {/* 答题区域 */}
-            <div className="bg-card border border-border rounded-lg p-6 text-center">
-              <div className="text-lg mb-4">
-                {mode === 'review' && <span className="text-red-500 text-sm">📖 错题复习</span>}
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-lg p-6 text-center"> {/* Increased rounded and shadow */}
+              <div className="text-lg mb-1">
+                {mode === 'review' && <span className="text-[var(--try-again-orange)] text-sm font-semibold">📖 错题复习</span>}
               </div>
               
-              <div className="text-3xl font-bold mb-4">
+              <div className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] mb-6"> {/* Increased mb */}
                 {currentQuestion.multiplicand} × {currentQuestion.multiplier} = ?
               </div>
               
               {!showResult && (
                 <>
                   <div className="mb-6">
-                    <div className={`text-xl font-mono ${timeLeft <= 3 ? 'text-red-500' : 'text-primary'}`}>
+                    <div className={`text-xl font-mono ${timeLeft <= 3 ? 'text-red-500 dark:text-red-400' : 'text-[var(--primary)]'}`}>
                       ⏰ {timeLeft}秒
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-2 shadow-inner"> {/* Added shadow-inner */}
                       <div 
-                        className={`h-2 rounded-full transition-all duration-1000 ${
-                          timeLeft <= 3 ? 'bg-red-500' : 'bg-primary'
+                        className={`h-2.5 rounded-full transition-all duration-1000 ease-linear ${
+                          timeLeft <= 3 ? 'bg-red-500' : 'bg-[var(--primary)]'
                         }`}
                         style={{ width: `${(timeLeft / 10) * 100}%` }}
                       ></div>
@@ -556,16 +549,16 @@ export default function Home() {
                   </div>
                   
                   {/* 答案选项按钮 */}
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-3 sm:gap-4">
                     {answerOptions.map((option, index) => (
                       <button
                         key={index}
                         onClick={() => handleAnswerSelect(option)}
-                        className={`h-16 text-2xl font-bold rounded-lg border-2 transition-all ${
-                          selectedAnswer === option
-                            ? 'bg-primary text-primary-foreground border-primary shadow-lg scale-105'
-                            : 'bg-background border-border hover:border-primary hover:bg-accent'
-                        }`}
+                        className={`h-16 sm:h-20 text-2xl sm:text-3xl font-bold rounded-lg border-2 transition-all duration-150 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--ring)]
+                          ${ selectedAnswer === option
+                            ? 'bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] scale-105'
+                            : 'bg-[var(--background)] text-[var(--foreground)] border-[var(--input-border)] hover:border-[var(--primary)] hover:bg-[var(--primary)]/10'
+                          }`}
                       >
                         {option}
                       </button>
@@ -575,19 +568,19 @@ export default function Home() {
               )}
               
               {showResult && (
-                <div className={`text-2xl font-bold ${isCorrect ? 'text-green-600' : 'text-red-500'}`}>
-                  {isCorrect ? '✅ 正确！' : '❌ 错误'}
-                  <div className="text-lg mt-2">
+                <div className={`text-2xl sm:text-3xl font-bold ${isCorrect ? 'text-[var(--correct-green)]' : 'text-red-500 dark:text-red-400'}`}>
+                  {isCorrect ? '✅ 太棒了！正确！' : '❌ 再想想哦～'} {/* More friendly feedback text */}
+                  <div className="text-lg sm:text-xl mt-2 text-[var(--muted-foreground)]">
                     正确答案：{currentQuestion.correctAnswer}
                   </div>
                   {!isCorrect && selectedAnswer !== null && (
-                    <div className="text-sm text-muted-foreground mt-1">
+                    <div className="text-sm sm:text-base text-[var(--muted-foreground)]/80 mt-1">
                       你的答案：{selectedAnswer}
                     </div>
                   )}
-                  {selectedAnswer === null && (
-                    <div className="text-sm text-muted-foreground mt-1">
-                      未选择答案
+                  {selectedAnswer === null && timeLeft === 0 && ( // Show only if time ran out
+                    <div className="text-sm sm:text-base text-[var(--muted-foreground)]/80 mt-1">
+                      时间到了！
                     </div>
                   )}
                 </div>
@@ -595,12 +588,14 @@ export default function Home() {
             </div>
             
             {/* 答题统计 */}
-            <div className="flex justify-between text-sm text-muted-foreground">
-              <span>本轮答题：{questionsAnswered}</span>
-              <span>本轮得分：{quizScore}</span>
+            <div className="flex justify-between items-center text-sm text-[var(--muted-foreground)] px-1">
+              <div>
+                <span>本轮已答：{questionsAnswered}</span>
+                <span className="ml-3">得分：{quizScore}</span>
+              </div>
               <button 
                 onClick={stopQuiz}
-                className="text-red-500 hover:text-red-700"
+                className="px-3 py-1.5 text-sm font-medium bg-red-500/10 text-red-600 dark:text-red-400 hover:bg-red-500/20 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:ring-offset-2 focus:ring-offset-[var(--card)]"
               >
                 结束答题
               </button>
@@ -612,15 +607,15 @@ export default function Home() {
         {mode === 'learn' && (
           <>
             {/* 功能控制区域 */}
-            <div className="mb-4 space-y-3">
+            <div className="mb-6 space-y-3"> {/* Increased mb */}
               {speechSupported && (
-                <div className="flex items-center justify-between p-3 bg-card border border-border rounded-lg">
+                <div className="flex items-center justify-between p-3 bg-[var(--card)] border border-[var(--border)] rounded-lg shadow">
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm font-medium">🔊 语音朗读</span>
+                    <span className="text-base font-medium text-[var(--foreground)]">🔊 语音朗读</span> {/* Larger text */}
                     {selectedCell && (
                       <button
                         onClick={repeatSpeech}
-                        className="ml-2 px-2 py-1 text-xs bg-accent text-accent-foreground rounded hover:bg-accent/80 transition-colors"
+                        className="ml-2 px-3 py-1.5 text-sm bg-[var(--accent)] text-[var(--accent-foreground)] rounded-md hover:bg-[var(--accent)]/80 transition-colors shadow-sm"
                       >
                         🔁 重复
                       </button>
@@ -628,10 +623,11 @@ export default function Home() {
                   </div>
                   <button
                     onClick={() => setSpeechEnabled(!speechEnabled)}
-                    className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
-                      speechEnabled 
-                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' 
-                        : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                    className={`flex items-center space-x-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors shadow-sm
+                      focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:ring-offset-2 focus:ring-offset-[var(--card)]
+                      ${speechEnabled
+                        ? 'bg-[var(--discovery-green)]/20 text-[var(--discovery-green)]'
+                        : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
                     }`}
                   >
                     <span>{speechEnabled ? '🔊' : '🔇'}</span>
@@ -642,33 +638,33 @@ export default function Home() {
             </div>
 
             {/* 顶部口诀显示区域 */}
-            <div className="mb-8 p-6 bg-card border border-border rounded-lg shadow-sm text-center">
+            <div className="mb-8 p-6 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-lg text-center min-h-[160px] flex flex-col justify-center"> {/* Increased rounded, min-h, shadow */}
               <div 
-                className="text-2xl sm:text-3xl font-bold text-card-foreground mb-2 transition-all duration-300 ease-in-out"
+                className="text-3xl sm:text-4xl font-bold text-[var(--primary)] mb-2 transition-all duration-300 ease-in-out" // Primary color for emphasis
                 style={{ 
-                  fontSize: selectedCell ? '2rem' : '1.5rem',
-                  opacity: selectedCell ? 1 : 0.7 
+                  fontSize: selectedCell ? '2.25rem' : '1.875rem', // Adjusted sizes
+                  opacity: selectedCell ? 1 : 0.6
                 }}
               >
                 {chinese}
               </div>
               <div 
-                className="text-lg sm:text-xl text-muted-foreground transition-all duration-300 ease-in-out"
+                className="text-xl sm:text-2xl text-[var(--foreground)] transition-all duration-300 ease-in-out" // Foreground color
                 style={{ 
-                  fontSize: selectedCell ? '1.25rem' : '1rem',
-                  opacity: selectedCell ? 1 : 0.7 
+                  fontSize: selectedCell ? '1.5rem' : '1.25rem', // Adjusted sizes
+                  opacity: selectedCell ? 1 : 0.6
                 }}
               >
                 {equation}
               </div>
               {selectedCell && (
-                <div className="mt-3 space-y-1">
-                  <div className="text-sm text-muted-foreground opacity-75">
-                    <span className="text-xs">{areaInfo}</span>
+                <div className="mt-4 space-y-1"> {/* Increased mt */}
+                  <div className="text-sm text-[var(--muted-foreground)] opacity-80"> {/* Adjusted opacity */}
+                    <span>{areaInfo}</span> {/* Removed text-xs */}
                   </div>
                   {combinationInfo && (
-                    <div className="text-sm text-blue-600 dark:text-blue-400">
-                      <span className="text-xs">💡 {combinationInfo}</span>
+                    <div className="text-sm text-[var(--explorer-blue)] dark:text-[var(--explorer-blue)]"> {/* Explorer blue for info */}
+                      <span>💡 {combinationInfo}</span> {/* Removed text-xs */}
                     </div>
                   )}
                 </div>
@@ -676,8 +672,8 @@ export default function Home() {
             </div>
 
             {/* 9x9网格区域 */}
-            <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
-              <div className="grid grid-cols-9 multiplication-grid gap-1 sm:gap-2">
+            <div className="bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-lg p-3 sm:p-4"> {/* Increased rounded, shadow */}
+              <div className="grid grid-cols-9 multiplication-grid gap-1.5 sm:gap-2"> {/* Increased gap slightly */}
                 {grid.map((row, rowIndex) =>
                   row.map((value, colIndex) => {
                     const currentRow = rowIndex + 1;
@@ -693,6 +689,7 @@ export default function Home() {
                         combo.row === currentRow && combo.col === currentCol
                       ) && !isSelected;
                     
+                    // Updated button classes for new theme
                     return (
                       <button
                         key={`${rowIndex}-${colIndex}`}
@@ -700,25 +697,28 @@ export default function Home() {
                         aria-label={`${currentRow} 乘以 ${currentCol} 等于 ${value}`}
                         tabIndex={rowIndex * 9 + colIndex + 1}
                         className={`
-                          multiplication-cell aspect-square flex items-center justify-center text-xs sm:text-sm font-semibold
-                          rounded transition-all duration-300 border-2 touch-button touch-manipulation no-zoom
+                          multiplication-cell aspect-square flex items-center justify-center text-sm sm:text-base
+                          rounded-lg transition-all duration-200 border-2 touch-button touch-manipulation no-zoom
+                          focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[var(--ring)]
                           ${isSelected
-                            ? 'selected bg-primary text-primary-foreground border-primary shadow-xl z-10 relative ring-4 ring-primary/30'
+                            ? 'selected bg-[var(--primary)] text-[var(--primary-foreground)] border-[var(--primary)] shadow-xl z-10 relative ring-4 ring-[var(--primary)]/30'
                             : isSameResult
-                            ? 'same-result bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-600 shadow-lg ring-2 ring-blue-400/50'
+                            ? 'same-result bg-[var(--explorer-blue)]/20 text-[var(--explorer-blue)] border-[var(--explorer-blue)]/40 dark:border-[var(--explorer-blue)]/60 shadow-md ring-1 ring-[var(--explorer-blue)]/30'
                             : isAreaHighlighted
-                            ? 'highlighted bg-accent text-accent-foreground border-accent-foreground shadow-md ring-2 ring-accent/50'
-                            : 'bg-secondary hover:bg-accent text-secondary-foreground border-border hover:border-accent-foreground hover:shadow-md hover:scale-102'
+                            ? 'highlighted bg-[var(--accent)]/20 text-[var(--accent-foreground)] border-[var(--accent)]/30 dark:border-[var(--accent)]/50 shadow-sm'
+                            : 'bg-[var(--background)] text-[var(--foreground)] border-[var(--input-border)] hover:bg-[var(--primary)]/10 hover:border-[var(--primary)]/50 hover:shadow-md'
                           }
                         `}
                         style={{
-                          minHeight: '2.5rem',
-                          minWidth: '2.5rem',
+                          minHeight: '2.75rem', // Increased min height/width
+                          minWidth: '2.75rem',
                           transform: isSelected ? 'scale(1.15)' : (isSameResult || isAreaHighlighted) ? 'scale(1.05)' : 'scale(1)',
-                          zIndex: isSelected ? 10 : (isSameResult || isAreaHighlighted) ? 5 : 1
+                          zIndex: isSelected ? 10 : (isSameResult || isAreaHighlighted) ? 5 : 1,
+                          // Using CSS variables for font weight based on state
+                          fontWeight: isSelected ? '900' : (isSameResult || isAreaHighlighted) ? '700' : '500'
                         }}
                       >
-                        <span className={`${isSelected ? 'font-black text-lg' : (isSameResult || isAreaHighlighted) ? 'font-bold' : 'font-semibold'}`}>
+                        <span className={`${isSelected ? 'text-lg' : ''}`}> {/* Simplified span, font weight handled by style */}
                           {value}
                         </span>
                       </button>
@@ -729,13 +729,13 @@ export default function Home() {
             </div>
 
             {/* 底部说明 */}
-            <div className="mt-6 text-center text-sm text-muted-foreground">
+            <div className="mt-8 text-center text-base text-[var(--muted-foreground)]"> {/* Increased mt, text-base */}
               <p>点击任意数字学习乘法口诀</p>
-              <p className="mt-1">每天练习几分钟，轻松记住九九表</p>
+              <p className="mt-1.5">每天练习几分钟，轻松记住九九表</p> {/* Increased mt */}
               {speechSupported && (
-                <p className="mt-2 text-xs opacity-75">💡 点击数字即可听到语音朗读</p>
+                <p className="mt-2 text-sm opacity-80">💡 点击数字即可听到语音朗读</p> {/* Adjusted opacity */}
               )}
-              <p className="mt-1 text-xs opacity-75 text-blue-600 dark:text-blue-400">
+              <p className="mt-1.5 text-sm opacity-80 text-[var(--explorer-blue)] dark:text-[var(--explorer-blue)]"> {/* Increased mt, explorer-blue color */}
                 ✨ 蓝色方块表示相同的结果
               </p>
             </div>
@@ -744,17 +744,19 @@ export default function Home() {
 
         {/* 成就展示 - 仅在答题和复习模式下显示 */}
         {(mode === 'quiz' || mode === 'review') && userProgress.achievements.length > 0 && (
-          <div className="mt-6 bg-card border border-border rounded-lg p-4">
-            <h3 className="text-lg font-bold mb-3">🏆 已获得成就</h3>
-            <div className="grid grid-cols-2 gap-2">
+          <div className="mt-8 bg-[var(--card)] border border-[var(--border)] rounded-xl shadow-lg p-4 sm:p-6"> {/* Increased mt, rounded, shadow, padding */}
+            <h3 className="text-xl font-bold mb-4 text-[var(--foreground)] flex items-center"> {/* Increased font size, mb, color */}
+              <span className="text-2xl mr-2">🏆</span> 已获得成就
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3"> {/* Responsive grid, increased gap */}
               {userProgress.achievements.map(achievementId => {
                 const achievement = achievements.find(a => a.id === achievementId);
                 return achievement ? (
-                  <div key={achievementId} className="flex items-center space-x-2 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded">
-                    <span>{achievement.icon}</span>
+                  <div key={achievementId} className="flex items-center space-x-3 p-3 bg-[var(--background)] dark:bg-[var(--background)]/50 border border-[var(--border)] rounded-lg shadow-sm"> {/* Themed bg, border, increased padding, space */}
+                    <span className="text-2xl">{achievement.icon}</span> {/* Larger icon */}
                     <div>
-                      <div className="text-sm font-medium">{achievement.name}</div>
-                      <div className="text-xs text-muted-foreground">{achievement.description}</div>
+                      <div className="text-base font-semibold text-[var(--foreground)]">{achievement.name}</div> {/* Increased font size */}
+                      <div className="text-xs text-[var(--muted-foreground)]">{achievement.description}</div>
                     </div>
                   </div>
                 ) : null;
