@@ -312,20 +312,30 @@ export default function Home() {
         newProgress.bestStreak = newProgress.streak;
       }
       setQuizScore(quizScore + 1);
+      
+      // 如果是复习模式且答对了，从错题本中移除该题目
+      if (mode === 'review') {
+        newProgress.wrongQuestions = newProgress.wrongQuestions.filter(
+          wrongQ => !(wrongQ.multiplicand === currentQuestion.multiplicand && 
+                      wrongQ.multiplier === currentQuestion.multiplier)
+        );
+      }
     } else {
       newProgress.streak = 0;
-      // 添加到错题本
-      const wrongQuestion: WrongQuestion = {
-        multiplicand: currentQuestion.multiplicand,
-        multiplier: currentQuestion.multiplier,
-        userAnswer: answer,
-        correctAnswer: currentQuestion.correctAnswer,
-        timestamp: Date.now()
-      };
-      newProgress.wrongQuestions.push(wrongQuestion);
-      // 保持错题本最多100题
-      if (newProgress.wrongQuestions.length > 100) {
-        newProgress.wrongQuestions = newProgress.wrongQuestions.slice(-100);
+      // 添加到错题本（只在非复习模式下添加，避免重复）
+      if (mode !== 'review') {
+        const wrongQuestion: WrongQuestion = {
+          multiplicand: currentQuestion.multiplicand,
+          multiplier: currentQuestion.multiplier,
+          userAnswer: answer,
+          correctAnswer: currentQuestion.correctAnswer,
+          timestamp: Date.now()
+        };
+        newProgress.wrongQuestions.push(wrongQuestion);
+        // 保持错题本最多100题
+        if (newProgress.wrongQuestions.length > 100) {
+          newProgress.wrongQuestions = newProgress.wrongQuestions.slice(-100);
+        }
       }
     }
     
@@ -351,7 +361,13 @@ export default function Home() {
     // 3秒后自动下一题
     setTimeout(() => {
       setShowResult(false);
-      startQuiz(mode === 'review');
+      // 如果是复习模式且错题本已清空，切换到学习模式
+      if (mode === 'review' && newProgress.wrongQuestions.length === 0) {
+        setMode('learn');
+        stopQuiz();
+      } else {
+        startQuiz(mode === 'review');
+      }
     }, 3000);
   };
 
