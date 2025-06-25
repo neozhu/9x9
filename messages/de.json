@@ -50,7 +50,10 @@
     "reviewComplete": "Überprüfung abgeschlossen",
     "reviewCompleteDesc": "Herzlichen Glückwunsch! Alle falschen Fragen gemeistert!",
     "questionsCompleted": "Fragen abgeschlossen",
-    "finalScore": "Endpunktzahl"
+    "finalScore": "Endpunktzahl",
+    "dailyTaskCompletedTitle": "Tägliche Aufgabe abgeschlossen",
+    "dailyTaskCompletedMessage": "Herzlichen Glückwunsch! Sie haben Ihre heutige Quiz-Aufgabe abgeschlossen. Kommen Sie morgen für weitere Herausforderungen zurück!",
+    "backToLearn": "Zurück zum Lernmodus"
   },
   "achievements": {
     "title": "Erfolge",

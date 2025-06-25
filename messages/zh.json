@@ -52,7 +52,10 @@
     "dailyComplete": "今日任务完成",
     "dailyCompleteDesc": "恭喜！今天的10题任务已完成！",
     "questionsCompleted": "完成题数",
-    "finalScore": "最终得分"
+    "finalScore": "最终得分",
+    "dailyTaskCompletedTitle": "今日任务已完成",
+    "dailyTaskCompletedMessage": "恭喜！您今天的答题任务已经完成了。明天再来挑战吧！",
+    "backToLearn": "返回学习模式"
   },
   "achievements": {
     "title": "成就",

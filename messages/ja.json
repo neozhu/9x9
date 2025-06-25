@@ -50,7 +50,10 @@
     "reviewComplete": "復習完了",
     "reviewCompleteDesc": "おめでとうございます！すべての間違いを克服しました！",
     "questionsCompleted": "完了問題数",
-    "finalScore": "最終スコア"
+    "finalScore": "最終スコア",
+    "dailyTaskCompletedTitle": "今日のタスク完了",
+    "dailyTaskCompletedMessage": "おめでとうございます！今日のクイズタスクが完了しました。明日また挑戦してください！",
+    "backToLearn": "学習モードに戻る"
   },
   "achievements": {
     "title": "実績",

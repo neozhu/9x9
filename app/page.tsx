@@ -8,6 +8,7 @@ import { QuizInterface } from "./components/quiz-interface";
 import { LearnMode } from "./components/learn-mode";
 import { AchievementDisplay } from "./components/achievement-display";
 import { ReviewCompleteModal } from "./components/review-complete-modal";
+import { DailyTaskComplete } from "./components/daily-task-complete";
 import { useUserProgress } from "./hooks/use-user-progress";
 import { useLocale } from "./hooks/use-locale";
 import { 
@@ -192,8 +193,13 @@ export default function Home() {
     setMode(newMode);
     stopQuiz();
     
-    // 如果切换到答题或复习模式，自动开始
+    // 如果切换到答题模式，检查当天任务是否已完成
     if (newMode === 'quiz') {
+      // 检查当天任务是否已完成
+      if (userProgress.dailyTaskCompleted) {
+        // 任务已完成，不启动答题
+        return;
+      }
       setTimeout(() => startQuiz(false), 100);
     } else if (newMode === 'review') {
       setTimeout(() => startQuiz(true), 100);
@@ -218,6 +224,11 @@ export default function Home() {
     }
   };
 
+  // 返回学习模式
+  const handleBackToLearn = () => {
+    setMode('learn');
+  };
+
   return (
     <div className="text-foreground min-h-screen relative">
       <Header 
@@ -236,7 +247,11 @@ export default function Home() {
         )}
 
         {/* 答题模式界面 */}
-        {(mode === 'quiz' || mode === 'review') && currentQuestion && (
+        {mode === 'quiz' && userProgress.dailyTaskCompleted && (
+          <DailyTaskComplete onBackToLearn={handleBackToLearn} />
+        )}
+        
+        {((mode === 'quiz' && !userProgress.dailyTaskCompleted) || mode === 'review') && currentQuestion && (
           <QuizInterface
             mode={mode}
             currentQuestion={currentQuestion}

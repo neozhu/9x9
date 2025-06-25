@@ -52,7 +52,10 @@
     "dailyComplete": "Daily Task Complete",
     "dailyCompleteDesc": "Congratulations! Today's 10 questions completed!",
     "questionsCompleted": "Questions Completed",
-    "finalScore": "Final Score"
+    "finalScore": "Final Score",
+    "dailyTaskCompletedTitle": "Daily Task Completed",
+    "dailyTaskCompletedMessage": "Congratulations! You have completed today's quiz task. Come back tomorrow for more challenges!",
+    "backToLearn": "Back to Learn Mode"
   },
   "achievements": {
     "title": "Achievements",

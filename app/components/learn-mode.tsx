@@ -69,7 +69,7 @@ export function LearnMode({
               {selectedCell && (
                 <button
                   onClick={onRepeatSpeech}
-                  className="ml-2 px-2 py-1 text-xs bg-accent text-accent-foreground rounded hover:bg-accent/80 transition-colors flex items-center space-x-1"
+                  className="ml-2 px-2 py-1 text-xs bg-white/20 dark:bg-white/10 backdrop-blur-sm border border-white/30 dark:border-white/20 text-foreground rounded hover:bg-white/30 dark:hover:bg-white/15 transition-all duration-200 flex items-center space-x-1"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>{t('common.repeat')}</span>
@@ -78,10 +78,10 @@ export function LearnMode({
             </div>
             <button
               onClick={onSpeechToggle}
-              className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border ${
                 speechEnabled 
-                  ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' 
-                  : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                  ? 'bg-green-100/60 dark:bg-green-900/40 text-green-800 dark:text-green-400 border-green-200/50 dark:border-green-700/50 hover:bg-green-100/80 dark:hover:bg-green-900/60' 
+                  : 'bg-white/20 dark:bg-white/10 text-muted-foreground border-white/30 dark:border-white/20 hover:bg-white/30 dark:hover:bg-white/15'
               }`}
             >
               {speechEnabled ? <Volume2 className="w-3 h-3" /> : <VolumeX className="w-3 h-3" />}
