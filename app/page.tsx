@@ -57,19 +57,17 @@ export default function Home() {
     return () => speechSynthesis.cancel();
   }, [loadProgress, setUserProgress]);
 
-  // 答题模式倒计时
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isQuizActive && timeLeft > 0 && !showResult) {
-      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && !showResult) {
-      handleAnswerSubmit();
-    }
-    return () => clearTimeout(timer);
-  }, [isQuizActive, timeLeft, showResult]);
+  // 停止答题
+  const stopQuiz = useCallback(() => {
+    setIsQuizActive(false);
+    setShowResult(false);
+    setCurrentQuestion(null);
+    setQuizScore(0);
+    setQuestionsAnswered(0);
+  }, []);
 
   // 开始答题
-  const startQuiz = (isReview = false) => {
+  const startQuiz = useCallback((isReview = false) => {
     const question = isReview 
       ? generateReviewQuestion(userProgress.wrongQuestions) 
       : generateRandomQuestion();
@@ -84,19 +82,10 @@ export default function Home() {
     
     // 朗读题目
     speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported);
-  };
-
-  // 选择答案
-  const handleAnswerSelect = (answer: number) => {
-    if (showResult) return;
-    setSelectedAnswer(answer);
-    setTimeout(() => {
-      handleAnswerSubmit(answer);
-    }, 100);
-  };
+  }, [userProgress.wrongQuestions, speechEnabled, speechSupported]);
 
   // 提交答案
-  const handleAnswerSubmit = (directAnswer?: number) => {
+  const handleAnswerSubmit = useCallback((directAnswer?: number) => {
     if (!currentQuestion) return;
     
     const answer = directAnswer || selectedAnswer || 0;
@@ -137,15 +126,26 @@ export default function Home() {
         startQuiz(mode === 'review');
       }
     }, 3000);
-  };
+  }, [currentQuestion, selectedAnswer, quizScore, mode, removeFromWrongQuestions, updateProgress, questionsAnswered, stopQuiz, startQuiz]);
 
-  // 停止答题
-  const stopQuiz = () => {
-    setIsQuizActive(false);
-    setShowResult(false);
-    setCurrentQuestion(null);
-    setQuizScore(0);
-    setQuestionsAnswered(0);
+  // 答题模式倒计时
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isQuizActive && timeLeft > 0 && !showResult) {
+      timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+    } else if (timeLeft === 0 && !showResult) {
+      handleAnswerSubmit();
+    }
+    return () => clearTimeout(timer);
+  }, [isQuizActive, timeLeft, showResult, handleAnswerSubmit]);
+
+  // 选择答案
+  const handleAnswerSelect = (answer: number) => {
+    if (showResult) return;
+    setSelectedAnswer(answer);
+    setTimeout(() => {
+      handleAnswerSubmit(answer);
+    }, 100);
   };
 
   // 处理模式切换
@@ -180,7 +180,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
+    <div className="text-foreground min-h-screen relative">
       <Header 
         currentMode={mode} 
         onModeChange={handleModeChange}

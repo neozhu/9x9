@@ -9,12 +9,11 @@ interface MultiplicationGridProps {
 export function MultiplicationGrid({
   grid,
   selectedCell,
-  selectedResult,
   sameResultCombinations,
   onCellClick
 }: MultiplicationGridProps) {
   return (
-    <div className="bg-card border border-border rounded-lg p-4 shadow-sm">
+    <div className="mb-8 p-6 bg-white/10 dark:bg-black/10 backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-lg shadow-lg text-center">
       <div className="grid grid-cols-9 multiplication-grid gap-1 sm:gap-2">
         {grid.map((row, rowIndex) =>
           row.map((value, colIndex) => {

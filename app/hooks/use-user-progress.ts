@@ -1,6 +1,5 @@
 import { useState, useCallback } from 'react';
 import type { UserProgress, WrongQuestion } from '@/lib/types';
-import { achievements } from '@/lib/constants';
 
 export function useUserProgress() {
   const [userProgress, setUserProgress] = useState<UserProgress>({

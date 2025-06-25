@@ -1,5 +1,5 @@
 import { MultiplicationGrid } from './multiplication-grid';
-import { getChineseFormula, generateGrid, findSameResultCombinations, speakFormula } from '@/lib/multiplication-utils';
+import { getChineseFormula, generateGrid, findSameResultCombinations } from '@/lib/multiplication-utils';
 import { Volume2, RotateCcw, VolumeX, Lightbulb, Sparkles } from 'lucide-react';
 
 interface LearnModeProps {
@@ -26,12 +26,11 @@ export function LearnMode({
       return {
         chinese: "请选择一个数字",
         equation: "点击下方数字开始学习",
-        areaInfo: ""
+        combinationInfo: ""
       };
     }
     
     const result = selectedCell.row * selectedCell.col;
-    const areaSize = selectedCell.row * selectedCell.col;
     
     const sameResultCombinations = findSameResultCombinations(result);
     const otherCombinations = sameResultCombinations.filter(
@@ -47,13 +46,12 @@ export function LearnMode({
     return {
       chinese: getChineseFormula(selectedCell.row, selectedCell.col, result),
       equation: `${selectedCell.row} × ${selectedCell.col} = ${result}`,
-      areaInfo: `${selectedCell.row}行×${selectedCell.col}列矩形区域 (共${areaSize}个方块)`,
       combinationInfo
     };
   };
 
   const grid = generateGrid();
-  const { chinese, equation, areaInfo, combinationInfo } = getDisplayFormula();
+  const { chinese, equation, combinationInfo } = getDisplayFormula();
   const sameResultCombinations = selectedResult ? findSameResultCombinations(selectedResult) : [];
 
   return (
@@ -91,7 +89,9 @@ export function LearnMode({
       </div>
 
       {/* 顶部口诀显示区域 */}
-      <div className="mb-8 p-6 bg-card border border-border rounded-lg shadow-sm text-center">
+      <div
+        className="mb-8 p-6 relative rounded-xl text-center bg-white/30 dark:bg-white/10 backdrop-blur-lg backdrop-saturate-150 border border-white/50 dark:border-white/20 shadow-xl"
+      >
         <div 
           className="text-2xl sm:text-3xl font-bold text-card-foreground mb-2 transition-all duration-300 ease-in-out"
           style={{ 
@@ -112,9 +112,6 @@ export function LearnMode({
         </div>
         {selectedCell && (
           <div className="mt-3 space-y-1">
-            <div className="text-sm text-muted-foreground opacity-75">
-              <span className="text-xs">{areaInfo}</span>
-            </div>
             {combinationInfo && (
               <div className="text-sm text-blue-600 dark:text-blue-400 flex items-center justify-center space-x-1">
                 <Lightbulb className="w-3 h-3" />

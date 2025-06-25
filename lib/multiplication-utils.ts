@@ -1,5 +1,5 @@
 import { chineseNumbers } from './constants';
-import type { Question, UserProgress, WrongQuestion } from './types';
+import type { Question, WrongQuestion } from './types';
 
 // 中文口诀转换函数
 export function getChineseFormula(multiplicand: number, multiplier: number, result: number): string {
