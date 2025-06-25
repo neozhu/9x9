@@ -17,7 +17,9 @@
     "answer": "答え",
     "other": "他の組み合わせ",
     "enabled": "有効",
-    "disabled": "無効"
+    "disabled": "無効",
+    "continue": "続ける",
+    "completed": "完了"
   },
   "modes": {
     "learn": "学習",
@@ -44,7 +46,11 @@
     "quizComplete": "クイズ完了！",
     "noWrongQuestions": "復習する間違いがありません",
     "reviewMode": "間違い問題復習",
-    "practiceMode": "練習モード"
+    "practiceMode": "練習モード",
+    "reviewComplete": "復習完了",
+    "reviewCompleteDesc": "おめでとうございます！すべての間違いを克服しました！",
+    "questionsCompleted": "完了問題数",
+    "finalScore": "最終スコア"
   },
   "achievements": {
     "title": "実績",
@@ -65,7 +71,9 @@
     "accuracy_90": "狙撃手",
     "accuracy_90Desc": "90%の正解率を達成",
     "questions_100": "百問達人",
-    "questions_100Desc": "合計100問回答"
+    "questions_100Desc": "合計100問回答",
+    "daily_task_complete": "今日のチャンピオン",
+    "daily_task_completeDesc": "今日の10問タスクを完了"
   },
   "stats": {
     "totalQuestions": "総問題数",
@@ -73,8 +81,10 @@
     "accuracy": "正解率",
     "bestStreak": "最高連続",
     "wrongQuestions": "間違い数",
-    "streak": "連続",
-    "consecutiveDays": "連続日数"
+    "streak": "連続記録",
+    "consecutiveDays": "連続日数",
+    "dailyTask": "今日のタスク",
+    "questions": "問"
   },
   "speech": {
     "enabled": "音声有効",

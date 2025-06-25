@@ -1,7 +1,7 @@
 {
   "common": {
     "title": "Einmaleins",
-    "subtitle": "Mathematik lernen macht Spaß",
+    "subtitle": "Mathe lernen macht Spaß",
     "close": "Schließen",
     "next": "Weiter",
     "start": "Start",
@@ -17,7 +17,9 @@
     "answer": "Antwort",
     "other": "Andere Kombinationen",
     "enabled": "Aktiviert",
-    "disabled": "Deaktiviert"
+    "disabled": "Deaktiviert",
+    "continue": "Weiter",
+    "completed": "Abgeschlossen"
   },
   "modes": {
     "learn": "Lernen",
@@ -44,7 +46,11 @@
     "quizComplete": "Quiz abgeschlossen!",
     "noWrongQuestions": "Keine falschen Fragen zu überprüfen",
     "reviewMode": "Falsche Fragen überprüfen",
-    "practiceMode": "Übungsmodus"
+    "practiceMode": "Übungsmodus",
+    "reviewComplete": "Überprüfung abgeschlossen",
+    "reviewCompleteDesc": "Herzlichen Glückwunsch! Alle falschen Fragen gemeistert!",
+    "questionsCompleted": "Fragen abgeschlossen",
+    "finalScore": "Endpunktzahl"
   },
   "achievements": {
     "title": "Erfolge",
@@ -64,8 +70,10 @@
     "daily_7Desc": "7 Tage in Folge geübt",
     "accuracy_90": "Scharfschütze",
     "accuracy_90Desc": "90% Genauigkeit erreicht",
-    "questions_100": "Hundert-Meister",
-    "questions_100Desc": "100 Fragen insgesamt beantwortet"
+    "questions_100": "Jahrhundert-Meister",
+    "questions_100Desc": "100 Fragen beantwortet",
+    "daily_task_complete": "Tages-Champion",
+    "daily_task_completeDesc": "Heutige 10-Fragen-Aufgabe erledigt"
   },
   "stats": {
     "totalQuestions": "Gesamtfragen",
@@ -74,7 +82,9 @@
     "bestStreak": "Beste Serie",
     "wrongQuestions": "Falsche Fragen",
     "streak": "Serie",
-    "consecutiveDays": "Aufeinanderfolgende Tage"
+    "consecutiveDays": "Aufeinanderfolgende Tage",
+    "dailyTask": "Tägliche Aufgabe",
+    "questions": "Fragen"
   },
   "speech": {
     "enabled": "Sprache aktiviert",

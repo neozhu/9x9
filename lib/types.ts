@@ -15,6 +15,9 @@ export interface UserProgress {
   consecutiveDays: number;
   wrongQuestions: WrongQuestion[];
   achievements: string[];
+  dailyQuestionsAnswered: number;
+  dailyTarget: number;
+  dailyTaskCompleted: boolean;
 }
 
 export interface Question {

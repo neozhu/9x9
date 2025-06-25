@@ -17,7 +17,9 @@
     "answer": "答案",
     "other": "其他组合",
     "enabled": "开启",
-    "disabled": "关闭"
+    "disabled": "关闭",
+    "continue": "继续",
+    "completed": "已完成"
   },
   "modes": {
     "learn": "学习",
@@ -44,7 +46,13 @@
     "quizComplete": "答题完成！",
     "noWrongQuestions": "暂无错题需要复习",
     "reviewMode": "错题复习",
-    "practiceMode": "练习模式"
+    "practiceMode": "练习模式",
+    "reviewComplete": "复习完成",
+    "reviewCompleteDesc": "恭喜！所有错题都已掌握！",
+    "dailyComplete": "今日任务完成",
+    "dailyCompleteDesc": "恭喜！今天的10题任务已完成！",
+    "questionsCompleted": "完成题数",
+    "finalScore": "最终得分"
   },
   "achievements": {
     "title": "成就",
@@ -65,16 +73,20 @@
     "accuracy_90": "神射手",
     "accuracy_90Desc": "正确率达到90%",
     "questions_100": "百题达人",
-    "questions_100Desc": "累计答题100道"
+    "questions_100Desc": "累计答题100道",
+    "daily_task_complete": "今日达人",
+    "daily_task_completeDesc": "完成今日10题任务"
   },
   "stats": {
     "totalQuestions": "总题数",
     "correctAnswers": "正确答案",
-    "accuracy": "准确率",
+    "accuracy": "正确率",
     "bestStreak": "最佳连击",
-    "wrongQuestions": "错题数",
-    "streak": "连击",
-    "consecutiveDays": "连续天数"
+    "wrongQuestions": "错题数量",
+    "streak": "连对记录",
+    "consecutiveDays": "连续天数",
+    "dailyTask": "今日任务",
+    "questions": "题"
   },
   "speech": {
     "enabled": "语音开启",

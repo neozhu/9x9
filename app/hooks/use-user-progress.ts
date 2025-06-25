@@ -10,7 +10,10 @@ export function useUserProgress() {
     lastPlayDate: '',
     consecutiveDays: 0,
     wrongQuestions: [],
-    achievements: []
+    achievements: [],
+    dailyQuestionsAnswered: 0,
+    dailyTarget: 10,
+    dailyTaskCompleted: false
   });
 
   const [newAchievements, setNewAchievements] = useState<string[]>([]);
@@ -26,7 +29,14 @@ export function useUserProgress() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('multiplicationProgress');
       if (saved) {
-        return JSON.parse(saved);
+        const progress = JSON.parse(saved);
+        // 确保旧数据兼容性
+        return {
+          ...progress,
+          dailyQuestionsAnswered: progress.dailyQuestionsAnswered || 0,
+          dailyTarget: progress.dailyTarget || 10,
+          dailyTaskCompleted: progress.dailyTaskCompleted || false
+        };
       }
     }
     return {
@@ -37,8 +47,18 @@ export function useUserProgress() {
       lastPlayDate: '',
       consecutiveDays: 0,
       wrongQuestions: [],
-      achievements: []
+      achievements: [],
+      dailyQuestionsAnswered: 0,
+      dailyTarget: 10,
+      dailyTaskCompleted: false
     };
+  }, []);
+
+  // 检查是否是重复的错题
+  const isDuplicateWrongQuestion = useCallback((wrongQuestions: WrongQuestion[], newWrong: WrongQuestion) => {
+    return wrongQuestions.some(
+      wrongQ => wrongQ.multiplicand === newWrong.multiplicand && wrongQ.multiplier === newWrong.multiplier
+    );
   }, []);
 
   // 检查成就
@@ -69,6 +89,10 @@ export function useUserProgress() {
     if (progress.totalQuestions >= 100 && !progress.achievements.includes('questions_100')) {
       newAchievementsFound.push('questions_100');
     }
+    // 每日任务完成成就
+    if (progress.dailyTaskCompleted && !progress.achievements.includes('daily_task_complete')) {
+      newAchievementsFound.push('daily_task_complete');
+    }
 
     if (newAchievementsFound.length > 0) {
       setNewAchievements(newAchievementsFound);
@@ -89,6 +113,20 @@ export function useUserProgress() {
     
     newProgress.totalQuestions += 1;
     
+    // 更新每日答题数量
+    if (newProgress.lastPlayDate === today) {
+      newProgress.dailyQuestionsAnswered += 1;
+    } else {
+      // 新的一天，重置每日计数
+      newProgress.dailyQuestionsAnswered = 1;
+      newProgress.dailyTaskCompleted = false;
+    }
+    
+    // 检查是否完成每日任务
+    if (newProgress.dailyQuestionsAnswered >= newProgress.dailyTarget) {
+      newProgress.dailyTaskCompleted = true;
+    }
+    
     if (correct) {
       newProgress.correctAnswers += 1;
       newProgress.streak += 1;
@@ -97,7 +135,8 @@ export function useUserProgress() {
       }
     } else {
       newProgress.streak = 0;
-      if (wrongQuestion) {
+      if (wrongQuestion && !isDuplicateWrongQuestion(newProgress.wrongQuestions, wrongQuestion)) {
+        // 只添加不重复的错题
         newProgress.wrongQuestions.push(wrongQuestion);
         // 保持错题本最多100题
         if (newProgress.wrongQuestions.length > 100) {
@@ -124,7 +163,7 @@ export function useUserProgress() {
     saveProgress(newProgress);
     
     return newProgress;
-  }, [userProgress, checkAchievements, saveProgress]);
+  }, [userProgress, checkAchievements, saveProgress, isDuplicateWrongQuestion]);
 
   // 从错题本移除题目
   const removeFromWrongQuestions = useCallback((multiplicand: number, multiplier: number) => {

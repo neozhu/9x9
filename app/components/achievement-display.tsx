@@ -1,7 +1,7 @@
 import { achievements } from '@/lib/constants';
 import type { UserProgress } from '@/lib/types';
 import { useLocale } from '../hooks/use-locale';
-import { Trophy, Sprout, Flame, Zap, Gem, Calendar, Star, Target } from 'lucide-react';
+import { Trophy, Sprout, Flame, Zap, Gem, Calendar, Star, Target, CheckCircle } from 'lucide-react';
 
 interface AchievementDisplayProps {
   userProgress: UserProgress;
@@ -17,6 +17,7 @@ const iconMap = {
   'Star': Star,
   'Target': Target,
   'Trophy': Trophy,
+  'CheckCircle': CheckCircle,
 };
 
 export function AchievementDisplay({ userProgress }: AchievementDisplayProps) {

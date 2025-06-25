@@ -1,6 +1,6 @@
 import { MultiplicationGrid } from './multiplication-grid';
 import { getFormulaByLocale, generateGrid, findSameResultCombinations } from '@/lib/multiplication-utils';
-import { useLocale } from '../hooks/use-locale';
+import { useLocale } from '@/app/hooks/use-locale';
 import { Volume2, RotateCcw, VolumeX, Lightbulb, Sparkles } from 'lucide-react';
 
 interface LearnModeProps {

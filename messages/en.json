@@ -1,13 +1,13 @@
 {
   "common": {
-    "title": "Multiplication Table",
-    "subtitle": "Make math learning fun",
+    "title": "Multiplication Tables",
+    "subtitle": "Making math learning more fun",
     "close": "Close",
     "next": "Next",
     "start": "Start",
     "stop": "Stop",
     "submit": "Submit",
-    "again": "Try Again",
+    "again": "Again",
     "repeat": "Repeat",
     "correct": "Correct",
     "incorrect": "Incorrect",
@@ -17,7 +17,9 @@
     "answer": "Answer",
     "other": "Other combinations",
     "enabled": "Enabled",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "continue": "Continue",
+    "completed": "Completed"
   },
   "modes": {
     "learn": "Learn",
@@ -44,7 +46,13 @@
     "quizComplete": "Quiz Complete!",
     "noWrongQuestions": "No wrong questions to review",
     "reviewMode": "Wrong Questions Review",
-    "practiceMode": "Practice Mode"
+    "practiceMode": "Practice Mode",
+    "reviewComplete": "Review Complete",
+    "reviewCompleteDesc": "Congratulations! All wrong questions mastered!",
+    "dailyComplete": "Daily Task Complete",
+    "dailyCompleteDesc": "Congratulations! Today's 10 questions completed!",
+    "questionsCompleted": "Questions Completed",
+    "finalScore": "Final Score"
   },
   "achievements": {
     "title": "Achievements",
@@ -63,9 +71,11 @@
     "daily_7": "Weekly Star",
     "daily_7Desc": "Practice for 7 consecutive days",
     "accuracy_90": "Sharpshooter",
-    "accuracy_90Desc": "Achieve 90% accuracy",
+    "accuracy_90Desc": "Achieved 90% accuracy",
     "questions_100": "Century Master",
-    "questions_100Desc": "Answer 100 questions total"
+    "questions_100Desc": "Answered 100 questions",
+    "daily_task_complete": "Daily Champion",
+    "daily_task_completeDesc": "Completed today's 10 questions task"
   },
   "stats": {
     "totalQuestions": "Total Questions",
@@ -74,7 +84,9 @@
     "bestStreak": "Best Streak",
     "wrongQuestions": "Wrong Questions",
     "streak": "Streak",
-    "consecutiveDays": "Consecutive Days"
+    "consecutiveDays": "Consecutive Days",
+    "dailyTask": "Daily Task",
+    "questions": "questions"
   },
   "speech": {
     "enabled": "Speech Enabled",

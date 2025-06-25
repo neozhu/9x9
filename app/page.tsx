@@ -7,6 +7,7 @@ import { UserProgressStats } from "./components/user-progress-stats";
 import { QuizInterface } from "./components/quiz-interface";
 import { LearnMode } from "./components/learn-mode";
 import { AchievementDisplay } from "./components/achievement-display";
+import { ReviewCompleteModal } from "./components/review-complete-modal";
 import { useUserProgress } from "./hooks/use-user-progress";
 import { useLocale } from "./hooks/use-locale";
 import { 
@@ -38,6 +39,9 @@ export default function Home() {
   const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answerOptions, setAnswerOptions] = useState<number[]>([]);
+  const [showReviewComplete, setShowReviewComplete] = useState(false);
+  const [showDailyComplete, setShowDailyComplete] = useState(false);
+  const [completionStats, setCompletionStats] = useState({ questionsCompleted: 0, score: 0 });
   
   // 用户进度管理
   const {
@@ -99,12 +103,14 @@ export default function Home() {
     setShowResult(true);
     setIsQuizActive(false);
     
-    if (correct) {
-      setQuizScore(quizScore + 1);
+    let updatedProgress = userProgress;
+    
+    if (correct && mode === 'review') {
       // 如果是复习模式且答对了，从错题本中移除该题目
-      if (mode === 'review') {
-        removeFromWrongQuestions(currentQuestion.multiplicand, currentQuestion.multiplier);
-      }
+      updatedProgress = removeFromWrongQuestions(currentQuestion.multiplicand, currentQuestion.multiplier);
+      setQuizScore(quizScore + 1);
+    } else if (correct) {
+      setQuizScore(quizScore + 1);
     }
     
     // 更新进度
@@ -119,18 +125,47 @@ export default function Home() {
     const newProgress = updateProgress(correct, wrongQuestion);
     setQuestionsAnswered(questionsAnswered + 1);
 
-    // 3秒后自动下一题
+    // 3秒后自动下一题或结束任务
     setTimeout(() => {
       setShowResult(false);
-      // 如果是复习模式且错题本已清空，切换到学习模式
-      if (mode === 'review' && newProgress.wrongQuestions.length === 0) {
+      
+      // 检查是否完成每日任务
+      if (mode === 'quiz' && newProgress.dailyTaskCompleted) {
+        // 保存当前数据，因为stopQuiz会重置这些值
+        const currentScore = correct ? quizScore + 1 : quizScore;
+        // 对于每日任务，使用每日答题总数
+        setCompletionStats({ questionsCompleted: newProgress.dailyQuestionsAnswered, score: currentScore });
         setMode('learn');
         stopQuiz();
+        // 显示每日任务完成模态框，使用保存的数据
+        setTimeout(() => {
+          setShowDailyComplete(true);
+        }, 100);
+        return;
+      }
+      
+      // 如果是复习模式且错题本已清空，结束复习
+      if (mode === 'review') {
+        const currentWrongQuestions = correct ? updatedProgress.wrongQuestions : newProgress.wrongQuestions;
+        if (currentWrongQuestions.length === 0) {
+          // 保存当前数据
+          const currentQuestionsAnswered = questionsAnswered + 1;
+          const currentScore = correct ? quizScore + 1 : quizScore;
+          setCompletionStats({ questionsCompleted: currentQuestionsAnswered, score: currentScore });
+          setMode('learn');
+          stopQuiz();
+          // 显示复习完成模态框，使用保存的数据
+          setTimeout(() => {
+            setShowReviewComplete(true);
+          }, 100);
+        } else {
+          startQuiz(true);
+        }
       } else {
-        startQuiz(mode === 'review');
+        startQuiz(false);
       }
     }, 3000);
-  }, [currentQuestion, selectedAnswer, quizScore, mode, removeFromWrongQuestions, updateProgress, questionsAnswered, stopQuiz, startQuiz]);
+  }, [currentQuestion, selectedAnswer, quizScore, mode, removeFromWrongQuestions, updateProgress, questionsAnswered, stopQuiz, startQuiz, userProgress]);
 
   // 答题模式倒计时
   useEffect(() => {
@@ -235,6 +270,24 @@ export default function Home() {
           <AchievementDisplay userProgress={userProgress} />
         )}
       </div>
+
+      {/* 复习完成模态框 */}
+      <ReviewCompleteModal
+        isOpen={showReviewComplete}
+        onClose={() => setShowReviewComplete(false)}
+        questionsCompleted={completionStats.questionsCompleted}
+        score={completionStats.score}
+        type="review"
+      />
+      
+      {/* 每日任务完成模态框 */}
+      <ReviewCompleteModal
+        isOpen={showDailyComplete}
+        onClose={() => setShowDailyComplete(false)}
+        questionsCompleted={completionStats.questionsCompleted}
+        score={completionStats.score}
+        type="daily"
+      />
     </div>
   );
 }
