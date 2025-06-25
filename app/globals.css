@@ -140,6 +140,11 @@
     transform: scale(1.02);
   }
   
+  /* 径向渐变背景工具类 */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+  
   /* 针对小屏幕优化 */
   @media (max-width: 480px) {
     .multiplication-grid {
