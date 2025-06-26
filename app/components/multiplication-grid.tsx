@@ -17,10 +17,9 @@ export function MultiplicationGrid({
   const { t } = useLocale();
 
   return (
-    <div className="mb-8 p-6 bg-gradient-to-br from-white/40 via-white/25 to-white/30 dark:from-white/20 dark:via-white/12 dark:to-white/15 backdrop-blur-2xl backdrop-saturate-150 border border-white/40 dark:border-white/25 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/30 text-center relative overflow-hidden">
-      {/* 增强的Glassmorphism叠加效果 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-white/15 dark:from-white/10 dark:via-transparent dark:to-white/8 rounded-2xl pointer-events-none"></div>
-      <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white/15 to-transparent dark:from-white/8 dark:to-transparent rounded-t-2xl pointer-events-none"></div>
+    <div className="mb-8 p-6 supports-[backdrop-filter]:bg-gradient-to-br supports-[backdrop-filter]:from-white/20 supports-[backdrop-filter]:via-white/10 supports-[backdrop-filter]:to-white/5 supports-[backdrop-filter]:dark:from-white/15 supports-[backdrop-filter]:dark:via-white/8 supports-[backdrop-filter]:dark:to-white/3 supports-[backdrop-filter]:backdrop-blur-xl bg-white/90 dark:bg-gray-800/90 border border-white/30 dark:border-white/20 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/30 text-center relative overflow-hidden">
+      {/* Glassmorphism overlay effect */}
+      <div className="absolute inset-0 supports-[backdrop-filter]:bg-gradient-to-br supports-[backdrop-filter]:from-transparent supports-[backdrop-filter]:via-white/5 supports-[backdrop-filter]:to-transparent supports-[backdrop-filter]:dark:via-white/3 bg-gradient-to-br from-transparent via-white/2 to-transparent dark:via-white/1 rounded-2xl pointer-events-none"></div>
       
       <div className="grid grid-cols-9 multiplication-grid gap-1 sm:gap-2 relative z-10">
         {grid.map((row, rowIndex) =>
@@ -46,14 +45,14 @@ export function MultiplicationGrid({
                 tabIndex={rowIndex * 9 + colIndex + 1}
                 className={`
                   multiplication-cell aspect-square flex items-center justify-center text-xs sm:text-sm font-semibold
-                  rounded-lg transition-all duration-300 border-2 touch-button touch-manipulation no-zoom backdrop-blur-sm
+                  rounded transition-all duration-300 border-2 touch-button touch-manipulation no-zoom
                   ${isSelected
-                    ? 'selected bg-gradient-to-br from-primary/90 to-primary text-primary-foreground border-primary/70 shadow-2xl shadow-primary/30 z-10 relative ring-4 ring-primary/40'
+                    ? 'selected bg-primary text-primary-foreground border-primary shadow-xl z-10 relative ring-4 ring-primary/30'
                     : isSameResult
-                    ? 'same-result bg-gradient-to-br from-blue-100/80 to-blue-50/80 text-blue-800 border-blue-300/70 dark:from-blue-900/50 dark:to-blue-800/40 dark:text-blue-300 dark:border-blue-600/70 shadow-xl shadow-blue-500/20 ring-2 ring-blue-400/60'
+                    ? 'same-result supports-[backdrop-filter]:bg-blue-100/60 supports-[backdrop-filter]:dark:bg-blue-900/40 bg-blue-100/80 dark:bg-blue-900/60 text-blue-800 border-blue-300 dark:text-blue-300 dark:border-blue-600 shadow-lg ring-2 ring-blue-400/50'
                     : isAreaHighlighted
-                    ? 'highlighted bg-gradient-to-br from-accent/80 to-accent/60 text-accent-foreground border-accent/70 shadow-lg shadow-accent/20 ring-2 ring-accent/60'
-                    : 'bg-gradient-to-br from-secondary/80 to-secondary/60 hover:from-accent/80 hover:to-accent/60 text-secondary-foreground border-border/50 hover:border-accent/70 hover:shadow-lg hover:shadow-accent/20 hover:scale-102'
+                    ? 'highlighted bg-accent text-accent-foreground border-accent-foreground shadow-md ring-2 ring-accent/50'
+                    : 'supports-[backdrop-filter]:bg-secondary/80 supports-[backdrop-filter]:hover:bg-accent/80 bg-secondary hover:bg-accent text-secondary-foreground border-border hover:border-accent-foreground hover:shadow-md hover:scale-102'
                   }
                 `}
                 style={{

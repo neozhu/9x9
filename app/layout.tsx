@@ -62,20 +62,10 @@ function MathBackground() {
 
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
-      {/* 增强的渐变背景层 */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/40 via-purple-50/30 to-pink-50/40 dark:from-blue-950/40 dark:via-purple-950/30 dark:to-pink-950/40"></div>
-      <div className="absolute inset-0 bg-gradient-to-tr from-green-50/30 via-transparent to-yellow-50/30 dark:from-green-950/30 dark:via-transparent dark:to-yellow-950/30"></div>
-      
-      {/* 动态光晕效果 */}
-      <div className="absolute top-20 left-20 w-96 h-96 bg-gradient-radial from-blue-200/20 to-transparent dark:from-blue-800/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '8s' }}></div>
-      <div className="absolute bottom-20 right-20 w-80 h-80 bg-gradient-radial from-purple-200/20 to-transparent dark:from-purple-800/20 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '6s', animationDelay: '2s' }}></div>
-      <div className="absolute top-1/2 left-1/2 w-72 h-72 bg-gradient-radial from-pink-200/15 to-transparent dark:from-pink-800/15 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '10s', animationDelay: '4s' }}></div>
-      
-      {/* 数学符号 - 增强透明度 */}
       {mathSymbols.map((item, index) => (
         <div
           key={index}
-          className={`absolute ${item.size} ${item.rotation} font-mono text-primary/40 dark:text-primary/30 select-none transition-all duration-1000 animate-pulse`}
+          className={`absolute ${item.size} ${item.rotation} font-mono text-primary/20 dark:text-primary/15 select-none transition-all duration-1000 animate-pulse`}
           style={{
             left: item.x,
             top: item.y,
@@ -87,19 +77,15 @@ function MathBackground() {
         </div>
       ))}
       
-      {/* 几何图形装饰 - 增强可见性 */}
-      <div className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary/20 dark:border-primary/15 rounded-full opacity-50 animate-spin" style={{ animationDuration: '25s' }}></div>
-      <div className="absolute top-3/4 right-1/4 w-12 h-12 border-2 border-primary/20 dark:border-primary/15 rotate-45 opacity-50 animate-bounce" style={{ animationDuration: '5s' }}></div>
-      <div className="absolute top-1/2 left-1/6 w-8 h-16 border-l-2 border-primary/20 dark:border-primary/15 opacity-50 transform rotate-12"></div>
-      <div className="absolute bottom-1/4 right-1/6 w-20 h-1 bg-primary/20 dark:bg-primary/15 opacity-50 transform -rotate-12"></div>
+      {/* 几何图形装饰 */}
+      <div className="absolute top-1/4 left-1/4 w-16 h-16 border-2 border-primary/10 rounded-full opacity-30 animate-spin" style={{ animationDuration: '25s' }}></div>
+      <div className="absolute top-3/4 right-1/4 w-12 h-12 border-2 border-primary/10 rotate-45 opacity-30 animate-bounce" style={{ animationDuration: '5s' }}></div>
+      <div className="absolute top-1/2 left-1/6 w-8 h-16 border-l-2 border-primary/10 opacity-30 transform rotate-12"></div>
+      <div className="absolute bottom-1/4 right-1/6 w-20 h-1 bg-primary/10 opacity-30 transform -rotate-12"></div>
       
       {/* 更多几何装饰 */}
-      <div className="absolute top-1/3 right-1/3 w-6 h-6 bg-primary/10 dark:bg-primary/8 rounded-full opacity-60"></div>
-      <div className="absolute bottom-1/3 left-1/3 w-4 h-4 bg-primary/10 dark:bg-primary/8 rotate-45 opacity-60"></div>
-      
-      {/* 额外的装饰层 */}
-      <div className="absolute top-10 right-10 w-32 h-32 border border-dashed border-blue-300/30 dark:border-blue-600/20 rounded-lg rotate-12 opacity-40"></div>
-      <div className="absolute bottom-10 left-10 w-24 h-24 border border-dashed border-purple-300/30 dark:border-purple-600/20 rounded-full -rotate-12 opacity-40"></div>
+      <div className="absolute top-1/3 right-1/3 w-6 h-6 bg-primary/5 rounded-full opacity-40"></div>
+      <div className="absolute bottom-1/3 left-1/3 w-4 h-4 bg-primary/5 rotate-45 opacity-40"></div>
     </div>
   );
 }

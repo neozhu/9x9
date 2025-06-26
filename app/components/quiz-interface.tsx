@@ -34,9 +34,9 @@ export function QuizInterface({
   return (
     <div className="mb-6 space-y-4">
       {/* 答题区域 - Glassmorphism Effect */}
-      <div className="relative backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border border-white/20 dark:border-gray-700/30 rounded-xl p-6 text-center shadow-2xl shadow-black/10 dark:shadow-black/30">
+      <div className="relative supports-[backdrop-filter]:backdrop-blur-xl supports-[backdrop-filter]:bg-white/70 supports-[backdrop-filter]:dark:bg-gray-900/70 bg-white/90 dark:bg-gray-900/90 border border-white/20 dark:border-gray-700/30 rounded-xl p-6 text-center shadow-2xl shadow-black/10 dark:shadow-black/30">
         {/* Glassmorphism overlay for extra depth */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent dark:from-white/5 dark:to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 rounded-xl supports-[backdrop-filter]:bg-gradient-to-br supports-[backdrop-filter]:from-white/10 supports-[backdrop-filter]:to-transparent supports-[backdrop-filter]:dark:from-white/5 supports-[backdrop-filter]:dark:to-transparent bg-gradient-to-br from-white/5 to-transparent dark:from-white/2 dark:to-transparent pointer-events-none"></div>
         
         {/* Content with relative positioning */}
         <div className="relative z-10">
@@ -60,7 +60,7 @@ export function QuizInterface({
                   <Clock className="w-5 h-5" />
                   <span>{t('quiz.timeLeft', { time: timeLeft })}</span>
                 </div>
-                <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-2 mt-2 backdrop-blur-sm">
+                <div className="w-full supports-[backdrop-filter]:bg-gray-200/50 supports-[backdrop-filter]:dark:bg-gray-700/50 supports-[backdrop-filter]:backdrop-blur-sm bg-gray-200/80 dark:bg-gray-700/80 rounded-full h-2 mt-2">
                   <div 
                     className={`h-2 rounded-full transition-all duration-1000 ${
                       timeLeft <= 3 ? 'bg-red-500 dark:bg-red-400' : 'bg-blue-500 dark:bg-blue-400'
@@ -76,10 +76,10 @@ export function QuizInterface({
                   <button
                     key={index}
                     onClick={() => onAnswerSelect(option)}
-                    className={`h-16 text-2xl font-bold rounded-lg border-2 transition-all duration-200 backdrop-blur-md ${
+                    className={`h-16 text-2xl font-bold rounded-lg border-2 transition-all duration-200 supports-[backdrop-filter]:backdrop-blur-md ${
                       selectedAnswer === option
-                        ? 'bg-blue-500/80 dark:bg-blue-600/80 text-white border-blue-400/50 dark:border-blue-500/50 shadow-lg shadow-blue-500/25 scale-105'
-                        : 'bg-white/60 dark:bg-gray-800/60 border-white/30 dark:border-gray-600/30 hover:border-blue-400/50 dark:hover:border-blue-500/50 hover:bg-white/80 dark:hover:bg-gray-700/80 text-gray-900 dark:text-white shadow-lg shadow-black/5 dark:shadow-black/20'
+                        ? 'supports-[backdrop-filter]:bg-blue-500/80 supports-[backdrop-filter]:dark:bg-blue-600/80 bg-blue-500 dark:bg-blue-600 text-white border-blue-400/50 dark:border-blue-500/50 shadow-lg shadow-blue-500/25 scale-105'
+                        : 'supports-[backdrop-filter]:bg-white/60 supports-[backdrop-filter]:dark:bg-gray-800/60 bg-white/90 dark:bg-gray-800/90 border-white/30 dark:border-gray-600/30 hover:border-blue-400/50 dark:hover:border-blue-500/50 hover:supports-[backdrop-filter]:bg-white/80 hover:supports-[backdrop-filter]:dark:bg-gray-700/80 hover:bg-white hover:dark:bg-gray-700 text-gray-900 dark:text-white shadow-lg shadow-black/5 dark:shadow-black/20'
                     }`}
                   >
                     {option}
@@ -118,7 +118,7 @@ export function QuizInterface({
       </div>
       
       {/* 答题统计 - Glassmorphism Effect */}
-      <div className="flex justify-between text-sm backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-700/30 rounded-lg px-4 py-3 shadow-lg shadow-black/5 dark:shadow-black/20">
+      <div className="flex justify-between text-sm supports-[backdrop-filter]:backdrop-blur-md supports-[backdrop-filter]:bg-white/50 supports-[backdrop-filter]:dark:bg-gray-900/50 bg-white/80 dark:bg-gray-900/80 border border-white/20 dark:border-gray-700/30 rounded-lg px-4 py-3 shadow-lg shadow-black/5 dark:shadow-black/20">
         <span className="text-gray-700 dark:text-gray-300">{t('quiz.questionsAnswered')}: {questionsAnswered}</span>
         <span className="text-gray-700 dark:text-gray-300">{t('quiz.currentScore')}: {quizScore}</span>
         <button 
