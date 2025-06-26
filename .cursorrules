@@ -1,54 +1,61 @@
-
-
-# TypeScript (shadcn/ui, Next.js)
-
 # TypeScript Best Practices with shadcn/ui and Next.js
 
 ## Code Style and Structure
-- **Write concise, technical TypeScript code** with accurate examples.
-- **Use functional and declarative programming patterns**; avoid classes.
-- **Prefer iteration and modularization** over code duplication.
-- **Use descriptive variable names** with auxiliary verbs (e.g., `isLoading`, `hasError`).
-- **Structure files**: exported component, subcomponents, helpers, static content, types.
+
+* **Write concise, technical TypeScript code** with accurate examples.
+* **Use functional and declarative programming patterns**; avoid classes.
+* **Prefer iteration and modularization** over code duplication.
+* **Use descriptive variable names** with auxiliary verbs (e.g., `isLoading`, `hasError`).
+* **Structure files logically**: exported component, sub‑components, helpers, static content, and types.
 
 ## Naming Conventions
-- **Use lowercase with dashes for directories** (e.g., `components/auth-wizard`).
-- **Favor named exports** for components.
+
+* **Use lowercase with dashes for directories** (e.g., `components/auth-wizard`).
+* **Favor named exports** for components.
 
 ## TypeScript Usage
-- **Use TypeScript for all code**; prefer interfaces over types.
-- **Avoid enums**; use maps instead.
-- **Use functional components with TypeScript interfaces**.
+
+* **Use TypeScript for all code**; prefer `interface` declarations over `type` aliases when possible.
+* **Avoid `enum`; use maps or discriminated unions instead.**
+* **Write functional React components typed with interfaces.**
 
 ## Syntax and Formatting
-- **Use the `function` keyword** for pure functions.
-- **Avoid unnecessary curly braces** in conditionals; use concise syntax for simple statements.
-- **Use declarative JSX**.
+
+* **Use the `function` keyword** for pure functions.
+* **Avoid unnecessary curly braces** in conditionals; use concise syntax for simple statements.
+* **Write declarative, readable JSX.**
 
 ## Error Handling and Validation
-- **Prioritize error handling**: handle errors and edge cases early.
-- **Use early returns and guard clauses**.
-- **Implement proper error logging** and user-friendly messages.
-- **Use Zod for form validation**.
-- **Model expected errors as return values** in Server Actions.
-- **Use error boundaries** for unexpected errors.
+
+* **Handle errors and edge cases early.**
+* **Use early returns and guard clauses.**
+* **Implement proper error logging** and user‑friendly messages.
+* **Use Zod for form validation** and type inference.
+* **Model expected errors as return values** in Server Actions.
+* **Wrap unexpected errors with React Error Boundaries.**
 
 ## UI and Styling
-- **Use Shadcn UI, Radix, and Tailwind Aria** for components and styling.
-- **Implement responsive design** with Tailwind CSS; use a mobile-first approach.
+
+* **Build UI with shadcn/ui, Radix Primitives, and Tailwind Aria.**
+* **Use Tailwind CSS with a mobile‑first approach** for responsive design.
+* **Re‑use shadcn/ui components wherever possible** to ensure visual consistency.
+* **Prefer glassmorphism styling for card components.**
 
 ## Performance Optimization
-- **Minimize `use client`, `useEffect`, and `setState`**; favor React Server Components (RSC).
-- **Wrap client components in Suspense** with fallback.
-- **Use dynamic loading** for non-critical components.
-- **Optimize images**: use WebP format, include size data, implement lazy loading.
+
+* **Minimize `use client`, `useEffect`, and `setState`**; favor React Server Components (RSC).
+* **Wrap client components in `<Suspense>` with a fallback.**
+* **Use dynamic import** for non‑critical components.
+* **Optimise images**: serve WebP, include explicit width/height, enable lazy loading.
 
 ## Key Conventions
-- **Use `nuqs` for URL search parameter state management**.
-- **Optimize Web Vitals** (LCP, CLS, FID).
-- **Limit `use client`**:
-  - **Favor server components and Next.js SSR**.
-  - **Use only for Web API access** in small components.
-  - **Avoid for data fetching or state management**.
-- **Follow Next.js docs** for Data Fetching, Rendering, and Routing.
-- **Use context 7** to query the latest documentation
+
+* **Use `nuqs` for URL search parameter state management.**
+* **Monitor and optimize Web Vitals** (LCP, CLS, FID).
+* **Limit `use client`**:
+
+  * **Prefer Server Components and Next.js SSR.**
+  * **Use it only for Web API access in small components.**
+  * **Avoid it for data fetching or state management.**
+* **Follow the official Next.js docs** for Data Fetching, Rendering, and Routing.
+* **Use `context 7` searches** to stay up‑to‑date with the latest Next.js, shadcn/ui, and TypeScript best practices.
