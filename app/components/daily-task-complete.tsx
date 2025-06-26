@@ -12,9 +12,9 @@ export function DailyTaskComplete({ onBackToLearn, type = 'daily' }: DailyTaskCo
   return (
     <div className="mb-6 space-y-4">
       {/* 任务完成提示 - Glassmorphism Effect */}
-      <div className="relative supports-[backdrop-filter]:backdrop-blur-lg supports-[backdrop-filter]:backdrop-saturate-150 bg-white/90 dark:bg-gray-800/90 border border-white/50 dark:border-white/20 rounded-xl p-8 text-center shadow-2xl shadow-black/10 dark:shadow-black/30">
+      <div className="relative bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border rounded-xl p-8 text-center shadow-2xl">
         {/* Glassmorphism overlay for extra depth */}
-        <div className="absolute inset-0 rounded-xl supports-[backdrop-filter]:bg-gradient-to-br supports-[backdrop-filter]:from-white/10 supports-[backdrop-filter]:to-transparent supports-[backdrop-filter]:dark:from-white/5 supports-[backdrop-filter]:dark:to-transparent bg-gradient-to-br from-white/5 to-transparent dark:from-white/2 dark:to-transparent pointer-events-none"></div>
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-background/10 to-transparent pointer-events-none"></div>
         
         {/* Content with relative positioning */}
         <div className="relative z-10">
@@ -26,19 +26,19 @@ export function DailyTaskComplete({ onBackToLearn, type = 'daily' }: DailyTaskCo
           </div>
           
           {/* Title */}
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-2xl font-bold text-foreground mb-4">
             {type === 'daily' ? t('quiz.dailyTaskCompletedTitle') : t('quiz.reviewTaskCompletedTitle')}
           </h2>
           
           {/* Message */}
-          <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+          <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
             {type === 'daily' ? t('quiz.dailyTaskCompletedMessage') : t('quiz.reviewTaskCompletedMessage')}
           </p>
           
           {/* Back to Learn Button */}
           <button
             onClick={onBackToLearn}
-            className="inline-flex items-center space-x-2 px-6 py-3 supports-[backdrop-filter]:bg-blue-500/80 supports-[backdrop-filter]:dark:bg-blue-600/80 supports-[backdrop-filter]:backdrop-blur-md bg-blue-500 dark:bg-blue-600 text-white rounded-lg hover:supports-[backdrop-filter]:bg-blue-600/90 hover:supports-[backdrop-filter]:dark:bg-blue-700/90 hover:bg-blue-600 hover:dark:bg-blue-700 transition-all duration-200 shadow-lg shadow-blue-500/25 hover:scale-105"
+            className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-200 backdrop-blur shadow-lg hover:scale-105"
           >
             <ArrowLeft className="w-5 h-5" />
             <span className="font-medium">{t('quiz.backToLearn')}</span>

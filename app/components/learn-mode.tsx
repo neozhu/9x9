@@ -62,14 +62,14 @@ export function LearnMode({
       {/* 功能控制区域 */}
       <div className="mb-4 space-y-3">
         {speechSupported && (
-          <div className="flex items-center justify-between p-3 supports-[backdrop-filter]:bg-white/30 supports-[backdrop-filter]:dark:bg-white/10 supports-[backdrop-filter]:backdrop-blur-lg supports-[backdrop-filter]:backdrop-saturate-150 bg-white/90 dark:bg-gray-800/90 border border-white/50 dark:border-white/20 rounded-lg shadow-lg">
+          <div className="flex items-center justify-between p-3 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border rounded-lg">
             <div className="flex items-center space-x-2">
               <Volume2 className="w-4 h-4" />
               <span className="text-sm font-medium">{t('speech.enabled')}</span>
               {selectedCell && (
                 <button
                   onClick={onRepeatSpeech}
-                  className="ml-2 px-2 py-1 text-xs supports-[backdrop-filter]:bg-white/20 supports-[backdrop-filter]:dark:bg-white/10 supports-[backdrop-filter]:backdrop-blur-sm bg-white/40 dark:bg-gray-700/60 border border-white/30 dark:border-white/20 text-foreground rounded hover:supports-[backdrop-filter]:bg-white/30 hover:supports-[backdrop-filter]:dark:bg-white/15 hover:bg-white/60 hover:dark:bg-gray-600/80 transition-all duration-200 flex items-center space-x-1"
+                  className="ml-2 px-2 py-1 text-xs bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border text-foreground rounded hover:bg-accent transition-all duration-200 flex items-center space-x-1"
                 >
                   <RotateCcw className="w-3 h-3" />
                   <span>{t('common.repeat')}</span>
@@ -78,10 +78,10 @@ export function LearnMode({
             </div>
             <button
               onClick={onSpeechToggle}
-              className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 supports-[backdrop-filter]:backdrop-blur-sm border ${
+              className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur border ${
                 speechEnabled 
-                  ? 'supports-[backdrop-filter]:bg-green-100/60 supports-[backdrop-filter]:dark:bg-green-900/40 bg-green-100/80 dark:bg-green-900/60 text-green-800 dark:text-green-400 border-green-200/50 dark:border-green-700/50 hover:supports-[backdrop-filter]:bg-green-100/80 hover:supports-[backdrop-filter]:dark:bg-green-900/60 hover:bg-green-100 hover:dark:bg-green-900/80' 
-                  : 'supports-[backdrop-filter]:bg-white/20 supports-[backdrop-filter]:dark:bg-white/10 bg-white/40 dark:bg-gray-700/60 text-muted-foreground border-white/30 dark:border-white/20 hover:supports-[backdrop-filter]:bg-white/30 hover:supports-[backdrop-filter]:dark:bg-white/15 hover:bg-white/60 hover:dark:bg-gray-600/80'
+                  ? 'bg-green-100/60 dark:bg-green-900/40 text-green-800 dark:text-green-400 border-green-200/50 dark:border-green-700/50 hover:bg-green-100/80 dark:hover:bg-green-900/60' 
+                  : 'bg-background/95 supports-[backdrop-filter]:bg-background/60 text-muted-foreground border-border hover:bg-accent'
               }`}
             >
               {speechEnabled ? <Volume2 className="w-3 h-3" /> : <VolumeX className="w-3 h-3" />}
@@ -93,7 +93,7 @@ export function LearnMode({
 
       {/* 顶部口诀显示区域 */}
       <div
-        className="mb-8 p-6 relative rounded-xl text-center supports-[backdrop-filter]:bg-white/30 supports-[backdrop-filter]:dark:bg-white/10 supports-[backdrop-filter]:backdrop-blur-lg supports-[backdrop-filter]:backdrop-saturate-150 bg-white/90 dark:bg-gray-800/90 border border-white/50 dark:border-white/20 shadow-xl"
+        className="mb-8 p-6 relative rounded-xl text-center bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border shadow-xl"
       >
         <div 
           className="text-2xl sm:text-3xl font-bold text-card-foreground mb-2 transition-all duration-300 ease-in-out"

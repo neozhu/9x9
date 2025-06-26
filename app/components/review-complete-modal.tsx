@@ -25,8 +25,8 @@ export function ReviewCompleteModal({
   const description = isDaily ? t('quiz.dailyCompleteDesc') : t('quiz.reviewCompleteDesc');
 
   return (
-    <div className="fixed inset-0 supports-[backdrop-filter]:bg-black/50 supports-[backdrop-filter]:backdrop-blur-sm bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="supports-[backdrop-filter]:bg-white/90 supports-[backdrop-filter]:dark:bg-gray-800/90 supports-[backdrop-filter]:backdrop-blur-lg bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full mx-auto shadow-2xl border border-white/20">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border rounded-xl p-6 max-w-sm w-full mx-auto shadow-2xl">
         <div className="text-center space-y-4">
           {/* 成功图标 */}
           <div className="flex justify-center">
@@ -48,12 +48,12 @@ export function ReviewCompleteModal({
           </h2>
 
           {/* 描述 */}
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-muted-foreground">
             {description}
           </p>
 
           {/* 统计信息 */}
-          <div className="supports-[backdrop-filter]:bg-gray-50/80 supports-[backdrop-filter]:dark:bg-gray-700/50 supports-[backdrop-filter]:backdrop-blur-sm bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-2">
+          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span>{t('quiz.questionsCompleted')}:</span>
               <span className="font-semibold">{questionsCompleted}</span>
