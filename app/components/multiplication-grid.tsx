@@ -22,7 +22,7 @@ export function MultiplicationGrid({
   return (
     <Card className={cn(
       "mb-8 py-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-      "border border-border/50 shadow-2xl",
+      "border border-border/50 shadow-xl",
       "transition-all duration-300 ease-in-out",
       "animate-in fade-in-0 slide-in-from-bottom-6"
     )}>
@@ -64,26 +64,31 @@ export function MultiplicationGrid({
                     // Selected state
                     isSelected && [
                       "bg-primary text-primary-foreground border-primary",
-                      "shadow-xl shadow-primary/30 z-20 scale-110",
-                      "ring-4 ring-primary/20",
+                      "shadow-xl shadow-primary/40 z-20 scale-110",
+                      "ring-4 ring-primary/30",
                       "font-black text-base sm:text-lg"
                     ],
                     
-                    // Same result state
+                    // Same result state - Enhanced for dark mode
                     isSameResult && !isSelected && [
-                      "bg-blue-100/80 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200",
-                      "border-blue-300/70 dark:border-blue-600/70",
-                      "shadow-lg shadow-blue-500/20 z-10 scale-105",
-                      "ring-2 ring-blue-400/30",
-                      "font-bold"
+                      "bg-blue-100 dark:bg-blue-800/80 text-blue-900 dark:text-blue-100",
+                      "border-blue-400 dark:border-blue-400/90",
+                      "shadow-lg shadow-blue-500/30 dark:shadow-blue-400/40 z-10 scale-105",
+                      "ring-2 ring-blue-400/40 dark:ring-blue-400/60",
+                      "font-bold",
+                      // Additional glow effect for dark mode
+                      "dark:shadow-[0_0_12px_rgba(96,165,250,0.4)]"
                     ],
                     
-                    // Highlighted area state
+                    // Highlighted area state - Enhanced for dark mode
                     isAreaHighlighted && !isSameResult && [
-                      "bg-accent/80 text-accent-foreground border-accent-foreground/50",
-                      "shadow-md shadow-accent/20 z-5 scale-[1.02]",
-                      "ring-2 ring-accent/20",
-                      "font-semibold"
+                      "bg-green-50 dark:bg-green-800/70 text-green-800 dark:text-green-100",
+                      "border-green-400 dark:border-green-400/90",
+                      "shadow-md shadow-green-500/25 dark:shadow-green-400/40 z-5 scale-[1.02]",
+                      "ring-2 ring-green-400/30 dark:ring-green-400/60",
+                      "font-semibold",
+                      // Additional glow effect for dark mode
+                      "dark:shadow-[0_0_8px_rgba(74,222,128,0.3)]"
                     ],
                     
                     // Default state
@@ -103,7 +108,7 @@ export function MultiplicationGrid({
                   <span className={cn(
                     "relative z-10 transition-all duration-200",
                     isSelected && "drop-shadow-sm",
-                    (isSameResult || isAreaHighlighted) && "font-bold"
+                    (isSameResult || isAreaHighlighted) && "font-bold drop-shadow-sm"
                   )}>
                     {value}
                   </span>
@@ -111,6 +116,15 @@ export function MultiplicationGrid({
                   {/* Subtle shine effect for selected cells */}
                   {isSelected && (
                     <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50 rounded-lg" />
+                  )}
+                  
+                  {/* Enhanced glow effects for dark mode highlighting */}
+                  {isSameResult && !isSelected && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 dark:from-blue-400/20 to-transparent rounded-lg" />
+                  )}
+                  
+                  {isAreaHighlighted && !isSameResult && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-400/10 dark:from-green-400/20 to-transparent rounded-lg" />
                   )}
                 </Button>
               );

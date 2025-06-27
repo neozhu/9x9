@@ -1,6 +1,6 @@
 import type { Question, Mode } from '@/lib/types';
 import { useLocale } from '../hooks/use-locale';
-import { BookOpenCheck, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { BookOpenCheck, Clock, CheckCircle, XCircle, Pause, Play } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,8 +17,11 @@ interface QuizInterfaceProps {
   answerOptions: number[];
   questionsAnswered: number;
   quizScore: number;
+  isPaused: boolean;
   onAnswerSelect: (answer: number) => void;
   onStopQuiz: () => void;
+  onPauseQuiz: () => void;
+  onResumeQuiz: () => void;
 }
 
 export function QuizInterface({
@@ -31,8 +34,11 @@ export function QuizInterface({
   answerOptions,
   questionsAnswered,
   quizScore,
+  isPaused,
   onAnswerSelect,
-  onStopQuiz
+  onStopQuiz,
+  onPauseQuiz,
+  onResumeQuiz
 }: QuizInterfaceProps) {
   const { t } = useLocale();
 
@@ -44,7 +50,7 @@ export function QuizInterface({
       {/* 答题区域 - Compact with glassmorphism */}
       <Card className={cn(
         "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        "border border-border/50 shadow-xl",
+        "border border-border/50 shadow-lg",
         "transition-transform duration-200",
         showResult && "scale-[1.01]"
       )}>
@@ -64,7 +70,29 @@ export function QuizInterface({
             {currentQuestion.multiplicand} × {currentQuestion.multiplier} = ?
           </div>
           
-          {!showResult && (
+          {/* Paused State */}
+          {isPaused && !showResult && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-center gap-2 text-lg sm:text-xl text-orange-600 dark:text-orange-400">
+                <Pause className="w-5 h-5" />
+                <span className="font-medium">{t('quiz.quizPaused')}</span>
+              </div>
+              <Button
+                onClick={onResumeQuiz}
+                className={cn(
+                  "h-12 sm:h-14 px-6 text-lg font-bold",
+                  "transition-all duration-150 backdrop-blur",
+                  "bg-primary hover:bg-primary/90 shadow-lg",
+                  "hover:scale-105 gap-2"
+                )}
+              >
+                <Play className="w-4 h-4" />
+                {t('quiz.resumeQuiz')}
+              </Button>
+            </div>
+          )}
+          
+          {!showResult && !isPaused && (
             <>
               {/* Timer Section with Progress */}
               <div className="space-y-2">
@@ -103,8 +131,16 @@ export function QuizInterface({
                       "transition-all duration-150 backdrop-blur",
                       "bg-background/95 supports-[backdrop-filter]:bg-background/60",
                       selectedAnswer === option
-                        ? "scale-105 shadow-md shadow-primary/20 bg-primary"
-                        : "hover:scale-102 hover:border-primary hover:bg-accent shadow-md"
+                        ? [
+                            "scale-105 shadow-lg shadow-primary/30 bg-primary",
+                            "dark:shadow-primary/40 ring-2 ring-primary/30",
+                            "dark:ring-primary/50"
+                          ]
+                        : [
+                            "hover:scale-102 hover:border-primary hover:bg-accent shadow-lg",
+                            "dark:bg-background/90 dark:hover:bg-accent/80",
+                            "dark:border-border/70 dark:hover:border-primary/70"
+                          ]
                     )}
                   >
                     {option}
@@ -124,7 +160,15 @@ export function QuizInterface({
               )}>
                 <div className={cn(
                   "p-2 rounded-full",
-                  isCorrect ? "bg-green-100 dark:bg-green-900/30" : "bg-red-100 dark:bg-red-900/30"
+                  isCorrect 
+                    ? [
+                        "bg-green-100 dark:bg-green-900/40",
+                        "border border-green-200 dark:border-green-700/60"
+                      ]
+                    : [
+                        "bg-red-100 dark:bg-red-900/40",
+                        "border border-red-200 dark:border-red-700/60"
+                      ]
                 )}>
                   {isCorrect ? (
                     <CheckCircle className="w-6 h-6" />
@@ -162,27 +206,66 @@ export function QuizInterface({
       
       {/* 答题统计 - Compact stats */}
       <Card className={cn(
-        "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        "border border-border/50 shadow-md"
+        "py-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "border border-border/50 shadow-lg"
       )}>
         <CardFooter className="p-3 flex items-center justify-between text-sm">
           <div className="flex items-center gap-3">
-            <Badge variant="outline" className="bg-background/50 backdrop-blur text-xs px-2 py-0.5">
+            <Badge variant="outline" className={cn(
+              "bg-background/50 backdrop-blur text-xs px-2 py-0.5",
+              "dark:bg-background/70 dark:border-border/60"
+            )}>
               {t('quiz.questionsAnswered')}: {questionsAnswered}
             </Badge>
-            <Badge variant="outline" className="bg-background/50 backdrop-blur text-xs px-2 py-0.5">
+            <Badge variant="outline" className={cn(
+              "bg-background/50 backdrop-blur text-xs px-2 py-0.5",
+              "dark:bg-background/70 dark:border-border/60"
+            )}>
               {t('quiz.currentScore')}: {quizScore}
             </Badge>
           </div>
           
-          <Button 
-            onClick={onStopQuiz}
-            variant="destructive"
-            size="sm"
-            className="h-7 px-2.5 text-xs backdrop-blur hover:scale-105 transition-transform duration-150"
-          >
-            {t('quiz.stopQuiz')}
-          </Button>
+          <div className="flex items-center gap-2">
+            {/* Pause/Resume Button */}
+            {!showResult && (
+              <Button 
+                onClick={isPaused ? onResumeQuiz : onPauseQuiz}
+                variant="outline"
+                size="sm"
+                className={cn(
+                  "h-7 px-2.5 text-xs backdrop-blur hover:scale-105",
+                  "transition-transform duration-150 gap-1",
+                  "dark:border-border/70 dark:hover:bg-accent/80"
+                )}
+              >
+                {isPaused ? (
+                  <>
+                    <Play className="w-3 h-3" />
+                    {t('quiz.resumeQuiz')}
+                  </>
+                ) : (
+                  <>
+                    <Pause className="w-3 h-3" />
+                    {t('quiz.pauseQuiz')}
+                  </>
+                )}
+              </Button>
+            )}
+            
+            {/* Stop Button */}
+            <Button 
+              onClick={onStopQuiz}
+              variant="destructive"
+              size="sm"
+              className={cn(
+                "h-7 px-2.5 text-xs backdrop-blur hover:scale-105",
+                "transition-transform duration-150",
+                "dark:bg-red-600 dark:hover:bg-red-500 dark:text-white"
+              )}
+            >
+              {t('quiz.stopQuiz')}
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </div>

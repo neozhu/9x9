@@ -73,23 +73,17 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
     {
       label: t('stats.totalCorrectAnswers'),
       value: userProgress.correctAnswers,
-      icon: TrendingUp,
-      color: 'text-blue-600 dark:text-blue-400',
-      bgColor: 'bg-blue-50 dark:bg-blue-950/50'
+      icon: TrendingUp
     },
     {
       label: t('stats.accuracy'),
       value: `${accuracy}%`,
-      icon: Award,
-      color: 'text-green-600 dark:text-green-400',
-      bgColor: 'bg-green-50 dark:bg-green-950/50'
+      icon: Award
     },
     {
       label: t('stats.wrongQuestions'),
       value: userProgress.wrongQuestions.length,
-      icon: Brain,
-      color: 'text-purple-600 dark:text-purple-400',
-      bgColor: 'bg-purple-50 dark:bg-purple-950/50'
+      icon: Brain
     }
   ];
 
@@ -99,22 +93,19 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
       <Card className={cn(
         "gap-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         "border border-border/50 shadow-lg transition-all duration-300",
-        taskProgress.isCompleted && "border-green-300/50 bg-green-50/50 dark:bg-green-950/20"
+        
       )}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <taskProgress.icon className={cn(
-                "w-5 h-5",
-                taskProgress.isCompleted ? "text-green-600 dark:text-green-400" : "text-blue-600 dark:text-blue-400"
-              )} />
+              <taskProgress.icon className="w-5 h-5" />
               <span className="text-base">{taskProgress.taskName}</span>
             </div>
             
             {taskProgress.isCompleted && (
               <Badge 
                 variant="outline" 
-                className="bg-green-100/80 dark:bg-green-900/50 text-green-700 dark:text-green-300 border-green-300/50 dark:border-green-700/50 gap-1"
+                className="gap-1"
               >
                 <CheckCircle className="w-3 h-3" />
                 <span>{t('common.completed')}</span>
@@ -133,11 +124,7 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
           
           <Progress 
             value={Math.min(taskProgress.percentage, 100)}
-            className={cn(
-              "h-3 transition-all duration-500",
-              "[&>div]:transition-all [&>div]:duration-500",
-              taskProgress.isCompleted && "[&>div]:bg-green-500"
-            )}
+            className="h-3 transition-all duration-500"
           />
         </CardContent>
       </Card>
@@ -159,7 +146,7 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
             }}
           >
             <CardContent className="p-3 space-y-1">
-              <div className={cn("text-xl font-bold", stat.color)}>
+              <div className="text-xl font-bold">
                 {stat.value}
               </div>
               

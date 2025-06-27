@@ -11,6 +11,7 @@ import { ReviewCompleteModal } from "./components/review-complete-modal";
 import { DailyTaskComplete } from "./components/daily-task-complete";
 import { useUserProgress } from "./hooks/use-user-progress";
 import { useLocale } from "./hooks/use-locale";
+import { useQuizState } from "./hooks/use-quiz-state";
 import { 
   generateRandomQuestion, 
   generateReviewQuestion, 
@@ -36,8 +37,6 @@ export default function Home() {
   const [isQuizActive, setIsQuizActive] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
-  const [quizScore, setQuizScore] = useState(0);
-  const [questionsAnswered, setQuestionsAnswered] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [answerOptions, setAnswerOptions] = useState<number[]>([]);
   const [showReviewComplete, setShowReviewComplete] = useState(false);
@@ -45,6 +44,9 @@ export default function Home() {
   const [completionStats, setCompletionStats] = useState({ questionsCompleted: 0, score: 0 });
   const [reviewTaskCompleted, setReviewTaskCompleted] = useState(false);
   const [initialWrongQuestionsCount, setInitialWrongQuestionsCount] = useState(0);
+  
+  // 使用持久化的答题状态
+  const { quizState, updatePauseState, updateQuizState, clearQuizState } = useQuizState();
   
   // 用户进度管理
   const {
@@ -68,6 +70,14 @@ export default function Home() {
     return () => speechSynthesis.cancel();
   }, [loadProgress, setUserProgress]);
 
+  // 页面初始化时检查是否有暂停的答题状态需要恢复
+  useEffect(() => {
+    if (quizState.isPaused && quizState.mode) {
+      // 如果有暂停状态，设置正确的模式
+      setMode(quizState.mode);
+    }
+  }, [quizState.isPaused, quizState.mode]);
+
   // 监听用户进度变化，更新复习任务完成状态
   useEffect(() => {
     if (mode === 'review' && userProgress.wrongQuestions.length === 0 && !reviewTaskCompleted) {
@@ -80,9 +90,36 @@ export default function Home() {
     setIsQuizActive(false);
     setShowResult(false);
     setCurrentQuestion(null);
-    setQuizScore(0);
-    setQuestionsAnswered(0);
-  }, []);
+    clearQuizState();
+  }, [clearQuizState]);
+
+  // 暂停答题
+  const pauseQuiz = useCallback(() => {
+    // 保存完整的答题状态
+    updateQuizState({
+      isPaused: true,
+      timeLeft: timeLeft,
+      currentQuestion: currentQuestion,
+      answerOptions: answerOptions,
+      selectedAnswer: selectedAnswer
+    });
+    setIsQuizActive(false);
+  }, [updateQuizState, timeLeft, currentQuestion, answerOptions, selectedAnswer]);
+
+  // 恢复答题
+  const resumeQuiz = useCallback(() => {
+    updatePauseState(false);
+    setIsQuizActive(true);
+    
+    // 确保本地状态与暂停状态同步
+    if (quizState.currentQuestion && quizState.answerOptions.length > 0) {
+      setCurrentQuestion(quizState.currentQuestion);
+      setAnswerOptions(quizState.answerOptions);
+      setSelectedAnswer(quizState.selectedAnswer);
+      setTimeLeft(quizState.timeLeft);
+      setShowResult(false);
+    }
+  }, [updatePauseState, quizState.currentQuestion, quizState.answerOptions, quizState.selectedAnswer, quizState.timeLeft]);
 
   // 开始答题
   const startQuiz = useCallback((isReview = false) => {
@@ -98,9 +135,42 @@ export default function Home() {
     setIsQuizActive(true);
     setShowResult(false);
     
+    // 更新答题状态，记录当前模式
+    updateQuizState({ 
+      mode: isReview ? 'review' : 'quiz',
+      timeLeft: 10
+    });
+    
     // 朗读题目
     speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported, locale);
-  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, locale]);
+  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, locale, updateQuizState]);
+
+  // 恢复暂停的答题状态
+  const resumePausedQuiz = useCallback(() => {
+    if (quizState.currentQuestion && quizState.answerOptions.length > 0) {
+      setCurrentQuestion(quizState.currentQuestion);
+      setAnswerOptions(quizState.answerOptions);
+      setSelectedAnswer(quizState.selectedAnswer);
+      setTimeLeft(quizState.timeLeft);
+      setShowResult(false);
+      // 注意：不设置 isQuizActive 为 true，保持暂停状态
+    }
+  }, [quizState.currentQuestion, quizState.answerOptions, quizState.selectedAnswer, quizState.timeLeft]);
+
+  // 页面初始加载时恢复答题状态
+  useEffect(() => {
+    // 只在页面初始加载时执行，不在模式切换时执行
+    if (quizState.isPaused && quizState.mode && mode === quizState.mode && currentQuestion === null) {
+      // 如果有暂停的答题且当前模式匹配，且还没有恢复状态
+      if (quizState.mode === 'quiz' && !userProgress.dailyTaskCompleted) {
+        // 恢复答题模式界面
+        setTimeout(() => resumePausedQuiz(), 100);
+      } else if (quizState.mode === 'review' && userProgress.wrongQuestions.length > 0) {
+        // 恢复复习模式界面
+        setTimeout(() => resumePausedQuiz(), 100);
+      }
+    }
+  }, [quizState.isPaused, quizState.mode, mode, userProgress.dailyTaskCompleted, userProgress.wrongQuestions.length, resumePausedQuiz, currentQuestion]);
 
   // 提交答案
   const handleAnswerSubmit = useCallback((directAnswer?: number) => {
@@ -119,7 +189,7 @@ export default function Home() {
       if (correct) {
         // 复习模式答对了，只移除错题，不调用updateProgress避免覆盖
         newProgress = removeFromWrongQuestions(currentQuestion.multiplicand, currentQuestion.multiplier);
-        setQuizScore(quizScore + 1);
+        updateQuizState({ quizScore: quizState.quizScore + 1 });
       } else {
         // 复习模式答错了，正常更新进度
         const wrongQuestion = {
@@ -143,11 +213,11 @@ export default function Home() {
       
       newProgress = updateProgress(correct, wrongQuestion);
       if (correct) {
-        setQuizScore(quizScore + 1);
+        updateQuizState({ quizScore: quizState.quizScore + 1 });
       }
     }
     
-    setQuestionsAnswered(questionsAnswered + 1);
+    updateQuizState({ questionsAnswered: quizState.questionsAnswered + 1 });
 
     // 3秒后自动下一题或结束任务
     setTimeout(() => {
@@ -156,7 +226,7 @@ export default function Home() {
       // 检查是否完成每日任务
       if (mode === 'quiz' && newProgress.dailyTaskCompleted) {
         // 保存当前数据，因为stopQuiz会重置这些值
-        const currentScore = correct ? quizScore + 1 : quizScore;
+        const currentScore = correct ? quizState.quizScore + 1 : quizState.quizScore;
         // 对于每日任务，使用每日答题总数
         setCompletionStats({ questionsCompleted: newProgress.dailyQuestionsAnswered, score: currentScore });
         setMode('learn');
@@ -181,22 +251,22 @@ export default function Home() {
         startQuiz(false);
       }
     }, 3000);
-  }, [currentQuestion, selectedAnswer, quizScore, mode, removeFromWrongQuestions, updateProgress, questionsAnswered, stopQuiz, startQuiz, userProgress]);
+  }, [currentQuestion, selectedAnswer, quizState.quizScore, mode, removeFromWrongQuestions, updateProgress, quizState.questionsAnswered, stopQuiz, startQuiz, updateQuizState]);
 
   // 答题模式倒计时
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    if (isQuizActive && timeLeft > 0 && !showResult) {
+    if (isQuizActive && timeLeft > 0 && !showResult && !quizState.isPaused) {
       timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
-    } else if (timeLeft === 0 && !showResult) {
+    } else if (timeLeft === 0 && !showResult && !quizState.isPaused) {
       handleAnswerSubmit();
     }
     return () => clearTimeout(timer);
-  }, [isQuizActive, timeLeft, showResult, handleAnswerSubmit]);
+  }, [isQuizActive, timeLeft, showResult, quizState.isPaused, handleAnswerSubmit]);
 
   // 选择答案
   const handleAnswerSelect = (answer: number) => {
-    if (showResult) return;
+    if (showResult || quizState.isPaused) return;
     setSelectedAnswer(answer);
     setTimeout(() => {
       handleAnswerSubmit(answer);
@@ -206,10 +276,33 @@ export default function Home() {
   // 处理模式切换
   const handleModeChange = (newMode: Mode) => {
     setMode(newMode);
-    stopQuiz();
+    
+    // 如果当前是暂停状态，在切换到学习模式时保留暂停状态
+    if (newMode === 'learn' && quizState.isPaused) {
+      // 只停止当前答题界面，但保留暂停状态
+      setIsQuizActive(false);
+      setShowResult(false);
+      setCurrentQuestion(null);
+      // 不调用 clearQuizState()，保留暂停状态
+    } else {
+      // 其他情况正常停止答题
+      stopQuiz();
+    }
     
     // 如果切换到答题模式，检查当天任务是否已完成
     if (newMode === 'quiz') {
+      // 检查是否有暂停的quiz状态需要恢复
+      if (quizState.isPaused && quizState.mode === 'quiz') {
+        // 立即恢复暂停的答题状态
+        if (quizState.currentQuestion && quizState.answerOptions.length > 0) {
+          setCurrentQuestion(quizState.currentQuestion);
+          setAnswerOptions(quizState.answerOptions);
+          setSelectedAnswer(quizState.selectedAnswer);
+          setTimeLeft(quizState.timeLeft);
+          setShowResult(false);
+        }
+        return;
+      }
       // 检查当天任务是否已完成
       if (userProgress.dailyTaskCompleted) {
         // 任务已完成，不启动答题
@@ -217,6 +310,18 @@ export default function Home() {
       }
       setTimeout(() => startQuiz(false), 100);
     } else if (newMode === 'review') {
+      // 检查是否有暂停的review状态需要恢复
+      if (quizState.isPaused && quizState.mode === 'review') {
+        // 立即恢复暂停的复习状态
+        if (quizState.currentQuestion && quizState.answerOptions.length > 0) {
+          setCurrentQuestion(quizState.currentQuestion);
+          setAnswerOptions(quizState.answerOptions);
+          setSelectedAnswer(quizState.selectedAnswer);
+          setTimeLeft(quizState.timeLeft);
+          setShowResult(false);
+        }
+        return;
+      }
       // 检查是否有错题需要复习
       if (userProgress.wrongQuestions.length === 0) {
         // 没有错题，标记复习任务完成
@@ -289,7 +394,28 @@ export default function Home() {
           <DailyTaskComplete onBackToLearn={handleBackToLearn} type="review" />
         )}
         
-        {((mode === 'quiz' && !userProgress.dailyTaskCompleted) || (mode === 'review' && !reviewTaskCompleted)) && currentQuestion && (
+        {/* 暂停状态恢复时的答题界面 */}
+        {quizState.isPaused && quizState.mode && mode === quizState.mode && quizState.currentQuestion && (
+          <QuizInterface
+            mode={mode}
+            currentQuestion={quizState.currentQuestion}
+            timeLeft={quizState.timeLeft}
+            showResult={false}
+            isCorrect={false}
+            selectedAnswer={quizState.selectedAnswer}
+            answerOptions={quizState.answerOptions}
+            questionsAnswered={quizState.questionsAnswered}
+            quizScore={quizState.quizScore}
+            isPaused={true}
+            onAnswerSelect={handleAnswerSelect}
+            onStopQuiz={stopQuiz}
+            onPauseQuiz={pauseQuiz}
+            onResumeQuiz={resumeQuiz}
+          />
+        )}
+        
+        {/* 正常答题界面 */}
+        {!quizState.isPaused && ((mode === 'quiz' && !userProgress.dailyTaskCompleted) || (mode === 'review' && !reviewTaskCompleted)) && currentQuestion && (
           <QuizInterface
             mode={mode}
             currentQuestion={currentQuestion}
@@ -298,10 +424,13 @@ export default function Home() {
             isCorrect={isCorrect}
             selectedAnswer={selectedAnswer}
             answerOptions={answerOptions}
-            questionsAnswered={questionsAnswered}
-            quizScore={quizScore}
+            questionsAnswered={quizState.questionsAnswered}
+            quizScore={quizState.quizScore}
+            isPaused={quizState.isPaused}
             onAnswerSelect={handleAnswerSelect}
             onStopQuiz={stopQuiz}
+            onPauseQuiz={pauseQuiz}
+            onResumeQuiz={resumeQuiz}
           />
         )}
 

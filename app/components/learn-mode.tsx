@@ -67,7 +67,8 @@ export function LearnMode({
       {speechSupported && (
         <Card className={cn(
           "mb-3 py-1 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-          "border border-border/50 shadow-lg"
+          "border border-border/10 shadow-sm",
+          "dark:bg-background/90 dark:border-border/60 dark:shadow-sm dark:shadow-background/20"
         )}>
           <CardContent className="p-2.5">
             <div className="flex items-center justify-between gap-2">
@@ -85,8 +86,8 @@ export function LearnMode({
                     className={cn(
                       "h-7 px-2 bg-background/95 backdrop-blur",
                       "supports-[backdrop-filter]:bg-background/60",
-                      "hover:bg-accent hover:scale-105",
-                      "transition-all duration-200"
+                      "hover:bg-accent",
+                      "dark:bg-background/90 dark:hover:bg-accent/80 dark:border-border/70"
                     )}
                   >
                     <RotateCcw className="w-3 h-3 mr-1" />
@@ -100,10 +101,16 @@ export function LearnMode({
                 variant={speechEnabled ? "default" : "outline"}
                 size="sm"
                 className={cn(
-                  "h-7 px-2 transition-all duration-200 backdrop-blur flex-shrink-0",
+                  "h-7 px-2 backdrop-blur flex-shrink-0",
                   speechEnabled 
-                    ? "bg-green-600/90 hover:bg-green-600 text-white border-green-600/20 shadow-green-600/25" 
-                    : "hover:scale-105"
+                    ? [
+                        "bg-green-600/90 hover:bg-green-600 text-white border-green-600/20",
+                        "shadow-green-600/25 dark:bg-green-600 dark:hover:bg-green-500",
+                        "dark:shadow-green-600/40"
+                      ]
+                    : [
+                        "dark:border-border/70 dark:hover:bg-accent/80"
+                      ]
                 )}
               >
                 {speechEnabled ? <Volume2 className="w-3 h-3 mr-1" /> : <VolumeX className="w-3 h-3 mr-1" />}
@@ -118,16 +125,21 @@ export function LearnMode({
       <Card className={cn(
         "mb-8 py-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         "border border-border/50 shadow-xl",
-        "transition-all duration-300 ease-in-out",
-        selectedCell && "shadow-2xl scale-[1.02]"
+        selectedCell && [
+          "border-primary/30 dark:border-primary/50",
+          "shadow-primary/10 dark:shadow-primary/20"
+        ]
       )}>
         <CardContent className="p-6 sm:p-8 text-center space-y-4">
           {/* Main Formula Display */}
           <div 
             className={cn(
-              "font-bold text-card-foreground transition-all duration-300 ease-in-out",
-              "animate-in fade-in-0 slide-in-from-top-4",
-              selectedCell ? "text-2xl sm:text-3xl md:text-4xl" : "text-xl sm:text-2xl opacity-70"
+              "font-bold text-card-foreground",
+              selectedCell ? [
+                "text-2xl sm:text-3xl md:text-4xl",
+                "text-primary dark:text-primary-foreground",
+                "drop-shadow-sm dark:drop-shadow-md"
+              ] : "text-xl sm:text-2xl opacity-70"
             )}
           >
             {formula}
@@ -136,9 +148,11 @@ export function LearnMode({
           {/* Equation Display */}
           <div 
             className={cn(
-              "text-muted-foreground transition-all duration-300 ease-in-out",
-              "animate-in fade-in-0 slide-in-from-top-4 delay-100",
-              selectedCell ? "text-lg sm:text-xl md:text-2xl" : "text-base sm:text-lg opacity-70"
+              "text-muted-foreground",
+              selectedCell ? [
+                "text-lg sm:text-xl md:text-2xl",
+                "text-foreground/80 dark:text-foreground/90"
+              ] : "text-base sm:text-lg opacity-70"
             )}
           >
             {equation}
@@ -146,13 +160,14 @@ export function LearnMode({
           
           {/* Combination Info with Badge */}
           {selectedCell && combinationInfo && (
-            <div className="flex justify-center animate-in fade-in-0 slide-in-from-bottom-4 delay-200">
+            <div className="flex justify-center">
               <Badge 
                 variant="outline" 
                 className={cn(
-                  "bg-blue-50/80 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300",
-                  "border-blue-200/50 dark:border-blue-800/50 backdrop-blur",
-                  "px-3 py-1.5 text-xs gap-1.5"
+                  "bg-blue-50/80 dark:bg-blue-900/60 text-blue-700 dark:text-blue-200",
+                  "border-blue-200/50 dark:border-blue-700/70 backdrop-blur",
+                  "px-3 py-1.5 text-xs gap-1.5",
+                  "shadow-sm dark:shadow-blue-900/30"
                 )}
               >
                 <Lightbulb className="w-3 h-3" />
@@ -164,7 +179,7 @@ export function LearnMode({
       </Card>
 
       {/* 9x9网格区域 */}
-      <div className="animate-in fade-in-0 slide-in-from-bottom-6 delay-300">
+      <div>
         <MultiplicationGrid
           grid={grid}
           selectedCell={selectedCell}
@@ -178,7 +193,7 @@ export function LearnMode({
       <Card className={cn(
         "mt-6 bg-background/50 backdrop-blur supports-[backdrop-filter]:bg-background/30",
         "border border-border/30 shadow-sm",
-        "animate-in fade-in-0 slide-in-from-bottom-4 delay-500"
+        "dark:bg-background/60 dark:border-border/40"
       )}>
         <CardContent className="p-4 text-center space-y-3">
           <p className="text-sm text-muted-foreground">{t('learn.clickAnyNumber')}</p>
@@ -186,7 +201,10 @@ export function LearnMode({
           
           <div className="flex flex-wrap justify-center gap-2 pt-2">
             {speechSupported && (
-              <Badge variant="outline" className="bg-background/50 backdrop-blur text-xs gap-1">
+              <Badge variant="outline" className={cn(
+                "bg-background/50 backdrop-blur text-xs gap-1",
+                "dark:bg-background/70 dark:border-border/60"
+              )}>
                 <Lightbulb className="w-3 h-3" />
                 <span>{t('learn.clickToHear')}</span>
               </Badge>
@@ -195,8 +213,9 @@ export function LearnMode({
             <Badge 
               variant="outline" 
               className={cn(
-                "bg-blue-50/50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400",
-                "border-blue-200/50 dark:border-blue-800/50 text-xs gap-1"
+                "bg-blue-50/50 dark:bg-blue-900/50 text-blue-600 dark:text-blue-300",
+                "border-blue-200/50 dark:border-blue-700/60 text-xs gap-1",
+                "shadow-sm dark:shadow-blue-900/20"
               )}
             >
               <Sparkles className="w-3 h-3" />
