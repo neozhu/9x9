@@ -66,15 +66,15 @@ export function LearnMode({
       {/* 功能控制区域 - Enhanced with shadcn/ui */}
       {speechSupported && (
         <Card className={cn(
-          "mb-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+          "mb-3 py-1 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
           "border border-border/50 shadow-lg"
         )}>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Volume2 className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-sm font-medium text-foreground">{t('speech.enabled')}</span>
+          <CardContent className="p-2.5">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <Volume2 className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-xs font-medium text-foreground truncate">{t('speech.enabled')}</span>
                 </div>
                 
                 {selectedCell && (
@@ -83,7 +83,7 @@ export function LearnMode({
                     variant="outline"
                     size="sm"
                     className={cn(
-                      "h-8 px-3 bg-background/95 backdrop-blur",
+                      "h-7 px-2 bg-background/95 backdrop-blur",
                       "supports-[backdrop-filter]:bg-background/60",
                       "hover:bg-accent hover:scale-105",
                       "transition-all duration-200"
@@ -100,7 +100,7 @@ export function LearnMode({
                 variant={speechEnabled ? "default" : "outline"}
                 size="sm"
                 className={cn(
-                  "transition-all duration-200 backdrop-blur",
+                  "h-7 px-2 transition-all duration-200 backdrop-blur flex-shrink-0",
                   speechEnabled 
                     ? "bg-green-600/90 hover:bg-green-600 text-white border-green-600/20 shadow-green-600/25" 
                     : "hover:scale-105"
@@ -116,7 +116,7 @@ export function LearnMode({
 
       {/* 顶部口诀显示区域 - Enhanced with shadcn/ui */}
       <Card className={cn(
-        "mb-8 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "mb-8 py-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         "border border-border/50 shadow-xl",
         "transition-all duration-300 ease-in-out",
         selectedCell && "shadow-2xl scale-[1.02]"

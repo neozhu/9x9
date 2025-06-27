@@ -40,19 +40,19 @@ export function QuizInterface({
   const isTimeRunningOut = timeLeft <= 3;
 
   return (
-    <div className="mb-6 space-y-4">
-      {/* 答题区域 - Enhanced with shadcn/ui */}
+    <div className="mb-4 space-y-3">
+      {/* 答题区域 - Compact with glassmorphism */}
       <Card className={cn(
         "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        "border border-border/50 shadow-2xl",
-        "transition-all duration-300",
-        showResult && "scale-[1.02]"
+        "border border-border/50 shadow-xl",
+        "transition-transform duration-200",
+        showResult && "scale-[1.01]"
       )}>
-        <CardContent className="p-6 sm:p-8 text-center space-y-6">
+        <CardContent className="p-4 sm:p-6 text-center space-y-4">
           {/* Review Mode Badge */}
           {mode === 'review' && (
-            <div className="flex justify-center animate-in fade-in-0 slide-in-from-top-4">
-              <Badge variant="destructive" className="gap-1.5 text-xs px-3 py-1">
+            <div className="flex justify-center">
+              <Badge variant="destructive" className="gap-1 text-xs px-2.5 py-0.5">
                 <BookOpenCheck className="w-3 h-3" />
                 <span>{t('quiz.reviewMode')}</span>
               </Badge>
@@ -60,34 +60,30 @@ export function QuizInterface({
           )}
           
           {/* Question Display */}
-          <div className={cn(
-            "text-3xl sm:text-4xl md:text-5xl font-bold text-foreground",
-            "animate-in fade-in-0 zoom-in-95 duration-500",
-            mode === 'review' ? "delay-100" : ""
-          )}>
+          <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
             {currentQuestion.multiplicand} × {currentQuestion.multiplier} = ?
           </div>
           
           {!showResult && (
             <>
               {/* Timer Section with Progress */}
-              <div className="space-y-3 animate-in fade-in-0 slide-in-from-top-4 delay-200">
+              <div className="space-y-2">
                 <div className={cn(
-                  "text-lg sm:text-xl font-mono flex items-center justify-center gap-2",
+                  "text-base sm:text-lg font-mono flex items-center justify-center gap-2",
                   "transition-colors duration-300",
                   isTimeRunningOut 
                     ? "text-red-500 dark:text-red-400" 
                     : "text-blue-600 dark:text-blue-400"
                 )}>
-                  <Clock className="w-5 h-5" />
+                  <Clock className="w-4 h-4" />
                   <span>{t('quiz.timeLeft', { time: timeLeft })}</span>
                 </div>
                 
-                <div className="max-w-md mx-auto">
+                <div className="max-w-xs mx-auto">
                   <Progress 
                     value={timePercentage}
                     className={cn(
-                      "h-3 transition-all duration-1000",
+                      "h-2 transition-all duration-1000",
                       "[&>div]:transition-all [&>div]:duration-1000",
                       isTimeRunningOut && "[&>div]:bg-red-500"
                     )}
@@ -96,19 +92,19 @@ export function QuizInterface({
               </div>
               
               {/* Answer Options Grid */}
-              <div className="grid grid-cols-3 gap-3 sm:gap-4 animate-in fade-in-0 slide-in-from-bottom-4 delay-300">
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 {answerOptions.map((option, index) => (
                   <Button
                     key={index}
                     onClick={() => onAnswerSelect(option)}
                     variant={selectedAnswer === option ? "default" : "outline"}
                     className={cn(
-                      "h-16 sm:h-20 text-xl sm:text-2xl font-bold",
-                      "transition-all duration-200 backdrop-blur",
+                      "h-12 sm:h-14 text-lg sm:text-xl font-bold",
+                      "transition-all duration-150 backdrop-blur",
                       "bg-background/95 supports-[backdrop-filter]:bg-background/60",
                       selectedAnswer === option
-                        ? "scale-105 shadow-lg shadow-primary/25 bg-primary"
-                        : "hover:scale-105 hover:border-primary hover:bg-accent shadow-lg hover:shadow-xl"
+                        ? "scale-105 shadow-md shadow-primary/20 bg-primary"
+                        : "hover:scale-102 hover:border-primary hover:bg-accent shadow-md"
                     )}
                   >
                     {option}
@@ -120,44 +116,41 @@ export function QuizInterface({
           
           {/* Result Display */}
           {showResult && (
-            <div className={cn(
-              "space-y-4 animate-in fade-in-0 zoom-in-95 duration-500",
-              "text-center"
-            )}>
+            <div className="space-y-3 text-center">
               {/* Result Icon and Status */}
               <div className={cn(
-                "flex items-center justify-center gap-3 text-2xl sm:text-3xl font-bold",
+                "flex items-center justify-center gap-2 text-xl sm:text-2xl font-bold",
                 isCorrect ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"
               )}>
                 <div className={cn(
-                  "p-3 rounded-full",
+                  "p-2 rounded-full",
                   isCorrect ? "bg-green-100 dark:bg-green-900/30" : "bg-red-100 dark:bg-red-900/30"
                 )}>
                   {isCorrect ? (
-                    <CheckCircle className="w-8 h-8" />
+                    <CheckCircle className="w-6 h-6" />
                   ) : (
-                    <XCircle className="w-8 h-8" />
+                    <XCircle className="w-6 h-6" />
                   )}
                 </div>
                 <span>{isCorrect ? t('common.correct') : t('common.incorrect')}</span>
               </div>
               
               {/* Correct Answer */}
-              <div className="space-y-2">
-                <div className="text-lg sm:text-xl text-foreground font-medium">
+              <div className="space-y-1.5">
+                <div className="text-base sm:text-lg text-foreground font-medium">
                   {t('quiz.correctAnswer', { answer: currentQuestion.correctAnswer })}
                 </div>
                 
                 {/* User's Answer (if incorrect) */}
                 {!isCorrect && selectedAnswer !== null && (
-                  <Badge variant="outline" className="text-sm px-3 py-1">
+                  <Badge variant="outline" className="text-xs px-2 py-0.5">
                     {t('quiz.yourAnswer', { answer: selectedAnswer })}
                   </Badge>
                 )}
                 
                 {/* No Answer Given */}
                 {selectedAnswer === null && (
-                  <Badge variant="outline" className="text-sm px-3 py-1 text-muted-foreground">
+                  <Badge variant="outline" className="text-xs px-2 py-0.5 text-muted-foreground">
                     {t('quiz.noAnswer')}
                   </Badge>
                 )}
@@ -167,17 +160,17 @@ export function QuizInterface({
         </CardContent>
       </Card>
       
-      {/* 答题统计 - Enhanced with shadcn/ui */}
+      {/* 答题统计 - Compact stats */}
       <Card className={cn(
         "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        "border border-border/50 shadow-lg"
+        "border border-border/50 shadow-md"
       )}>
-        <CardFooter className="p-4 flex items-center justify-between text-sm">
-          <div className="flex items-center gap-4">
-            <Badge variant="outline" className="bg-background/50 backdrop-blur">
+        <CardFooter className="p-3 flex items-center justify-between text-sm">
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className="bg-background/50 backdrop-blur text-xs px-2 py-0.5">
               {t('quiz.questionsAnswered')}: {questionsAnswered}
             </Badge>
-            <Badge variant="outline" className="bg-background/50 backdrop-blur">
+            <Badge variant="outline" className="bg-background/50 backdrop-blur text-xs px-2 py-0.5">
               {t('quiz.currentScore')}: {quizScore}
             </Badge>
           </div>
@@ -186,7 +179,7 @@ export function QuizInterface({
             onClick={onStopQuiz}
             variant="destructive"
             size="sm"
-            className="h-8 px-3 text-xs backdrop-blur hover:scale-105 transition-all duration-200"
+            className="h-7 px-2.5 text-xs backdrop-blur hover:scale-105 transition-transform duration-150"
           >
             {t('quiz.stopQuiz')}
           </Button>

@@ -1,4 +1,7 @@
 import { useLocale } from "../hooks/use-locale";
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface MultiplicationGridProps {
   grid: number[][];
@@ -17,59 +20,104 @@ export function MultiplicationGrid({
   const { t } = useLocale();
 
   return (
-    <div className="mb-8 p-6 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border border-border rounded-2xl shadow-2xl text-center relative overflow-hidden">
+    <Card className={cn(
+      "mb-8 py-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+      "border border-border/50 shadow-2xl",
+      "transition-all duration-300 ease-in-out",
+      "animate-in fade-in-0 slide-in-from-bottom-6"
+    )}>
       {/* Glassmorphism overlay effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background/10 to-transparent rounded-2xl pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-background/10 to-transparent rounded-xl pointer-events-none" />
       
-      <div className="grid grid-cols-9 multiplication-grid gap-1 sm:gap-2 relative z-10">
-        {grid.map((row, rowIndex) =>
-          row.map((value, colIndex) => {
-            const currentRow = rowIndex + 1;
-            const currentCol = colIndex + 1;
-            const isSelected = selectedCell?.row === currentRow && selectedCell?.col === currentCol;
-            
-            const isInHighlightedArea = selectedCell && 
-              currentRow <= selectedCell.row && 
-              currentCol <= selectedCell.col;
-            const isAreaHighlighted = isInHighlightedArea && !isSelected;
-            
-            const isSameResult = sameResultCombinations.some(combo => 
-                combo.row === currentRow && combo.col === currentCol
-              ) && !isSelected;
-            
-            return (
-              <button
-                key={`${rowIndex}-${colIndex}`}
-                onClick={() => onCellClick(rowIndex, colIndex)}
-                aria-label={t('grid.formula', { num1: currentRow, num2: currentCol, result: value })}
-                tabIndex={rowIndex * 9 + colIndex + 1}
-                className={`
-                  multiplication-cell aspect-square flex items-center justify-center text-xs sm:text-sm font-semibold
-                  rounded transition-all duration-300 border-2 touch-button touch-manipulation no-zoom
-                  ${isSelected
-                    ? 'selected bg-primary text-primary-foreground border-primary shadow-xl z-10 relative ring-4 ring-primary/30'
-                    : isSameResult
-                    ? 'same-result bg-blue-100 text-blue-800 border-blue-300 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-600 shadow-lg ring-2 ring-blue-400/50'
-                    : isAreaHighlighted
-                    ? 'highlighted bg-accent text-accent-foreground border-accent-foreground shadow-md ring-2 ring-accent/50'
-                    : 'bg-secondary hover:bg-accent text-secondary-foreground border-border hover:border-accent-foreground hover:shadow-md hover:scale-102'
-                  }
-                `}
-                style={{
-                  minHeight: '2.5rem',
-                  minWidth: '2.5rem',
-                  transform: isSelected ? 'scale(1.15)' : (isSameResult || isAreaHighlighted) ? 'scale(1.05)' : 'scale(1)',
-                  zIndex: isSelected ? 10 : (isSameResult || isAreaHighlighted) ? 5 : 1
-                }}
-              >
-                <span className={`${isSelected ? 'font-black text-lg' : (isSameResult || isAreaHighlighted) ? 'font-bold' : 'font-semibold'}`}>
-                  {value}
-                </span>
-              </button>
-            );
-          })
-        )}
-      </div>
-    </div>
+      <CardContent className="p-4 sm:p-6 relative z-10">
+        <div className="grid grid-cols-9 gap-1 sm:gap-2 max-w-lg mx-auto">
+          {grid.map((row, rowIndex) =>
+            row.map((value, colIndex) => {
+              const currentRow = rowIndex + 1;
+              const currentCol = colIndex + 1;
+              const isSelected = selectedCell?.row === currentRow && selectedCell?.col === currentCol;
+              
+              const isInHighlightedArea = selectedCell && 
+                currentRow <= selectedCell.row && 
+                currentCol <= selectedCell.col;
+              const isAreaHighlighted = isInHighlightedArea && !isSelected;
+              
+              const isSameResult = sameResultCombinations.some(combo => 
+                  combo.row === currentRow && combo.col === currentCol
+                ) && !isSelected;
+              
+              return (
+                <Button
+                  key={`${rowIndex}-${colIndex}`}
+                  onClick={() => onCellClick(rowIndex, colIndex)}
+                  variant="outline"
+                  size="sm"
+                  aria-label={t('grid.formula', { num1: currentRow, num2: currentCol, result: value })}
+                  className={cn(
+                    // Base styles
+                    "aspect-square p-0 text-xs sm:text-sm font-semibold",
+                    "min-h-[2.5rem] min-w-[2.5rem] rounded-lg",
+                    "transition-all duration-300 ease-out",
+                    "border-2 backdrop-blur touch-manipulation",
+                    "relative overflow-hidden",
+                    
+                    // Selected state
+                    isSelected && [
+                      "bg-primary text-primary-foreground border-primary",
+                      "shadow-xl shadow-primary/30 z-20 scale-110",
+                      "ring-4 ring-primary/20",
+                      "font-black text-base sm:text-lg"
+                    ],
+                    
+                    // Same result state
+                    isSameResult && !isSelected && [
+                      "bg-blue-100/80 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200",
+                      "border-blue-300/70 dark:border-blue-600/70",
+                      "shadow-lg shadow-blue-500/20 z-10 scale-105",
+                      "ring-2 ring-blue-400/30",
+                      "font-bold"
+                    ],
+                    
+                    // Highlighted area state
+                    isAreaHighlighted && !isSameResult && [
+                      "bg-accent/80 text-accent-foreground border-accent-foreground/50",
+                      "shadow-md shadow-accent/20 z-5 scale-[1.02]",
+                      "ring-2 ring-accent/20",
+                      "font-semibold"
+                    ],
+                    
+                    // Default state
+                    !isSelected && !isSameResult && !isAreaHighlighted && [
+                      "bg-background/95 supports-[backdrop-filter]:bg-background/60",
+                      "hover:bg-accent hover:text-accent-foreground",
+                      "border-border hover:border-accent-foreground/50",
+                      "hover:shadow-md hover:scale-[1.05]",
+                      "hover:z-5"
+                    ]
+                  )}
+                  style={{
+                    zIndex: isSelected ? 20 : (isSameResult || isAreaHighlighted) ? 10 : 1
+                  }}
+                >
+                  {/* Cell content with enhanced typography */}
+                  <span className={cn(
+                    "relative z-10 transition-all duration-200",
+                    isSelected && "drop-shadow-sm",
+                    (isSameResult || isAreaHighlighted) && "font-bold"
+                  )}>
+                    {value}
+                  </span>
+                  
+                  {/* Subtle shine effect for selected cells */}
+                  {isSelected && (
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50 rounded-lg" />
+                  )}
+                </Button>
+              );
+            })
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 } 
