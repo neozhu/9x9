@@ -151,45 +151,5 @@ export function speakFormula(
     speechSynthesis.speak(utterance);
   } catch (err) {
     console.error('[speakFormula] exception', err);
-<<<<<<< HEAD
-    
-         // iOS备用方案：如果语音合成失败，尝试创建一个简单的音频提示
-     if (isIOS || isSafari) {
-       try {
-         // 创建一个短暂的音频上下文来"唤醒"语音合成
-         const AudioContextConstructor = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-         const audioContext = new AudioContextConstructor();
-         const oscillator = audioContext.createOscillator();
-         const gainNode = audioContext.createGain();
-         
-         oscillator.connect(gainNode);
-         gainNode.connect(audioContext.destination);
-         
-         oscillator.frequency.value = 0; // 静音
-         gainNode.gain.value = 0;
-         
-         oscillator.start();
-         oscillator.stop(audioContext.currentTime + 0.01);
-         
-         // 延迟后再次尝试语音合成
-         setTimeout(() => {
-           const retryUtterance = new SpeechSynthesisUtterance(getFormulaByLocale(multiplicand, multiplier, multiplicand * multiplier, locale));
-           const retryDefaultSettings = {
-             'zh': { lang: 'zh-CN' },
-             'en': { lang: 'en-US' },
-             'de': { lang: 'de-DE' },
-             'ja': { lang: 'ja-JP' }
-           };
-           const retrySettings = retryDefaultSettings[locale as keyof typeof retryDefaultSettings] || retryDefaultSettings.zh;
-           retryUtterance.lang = retrySettings.lang;
-           retryUtterance.rate = 0.8;
-           speechSynthesis.speak(retryUtterance);
-         }, 200);
-       } catch (audioErr) {
-         console.error('[speakFormula] iOS audio fallback failed', audioErr);
-       }
-     }
-=======
->>>>>>> parent of c6140aa (test)
   }
 } 
