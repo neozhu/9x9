@@ -62,6 +62,34 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
       setSpeechSupported(true);
+      
+      // iOS语音初始化 - 需要在用户交互后激活
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        console.log('[iOS Speech] Detected iOS device, speech will be activated on first user interaction');
+        
+        // 监听第一次用户交互来激活语音合成
+        const activateSpeech = () => {
+          try {
+            // 说一个无声的短语来激活语音合成
+            const testUtterance = new SpeechSynthesisUtterance(' ');
+            testUtterance.volume = 0.01;
+            testUtterance.rate = 10; // 快速完成
+            speechSynthesis.speak(testUtterance);
+            console.log('[iOS Speech] Speech synthesis activated');
+          } catch (e) {
+            console.log('[iOS Speech] Activation failed:', e);
+          }
+          
+          // 移除事件监听器
+          document.removeEventListener('touchstart', activateSpeech);
+          document.removeEventListener('click', activateSpeech);
+        };
+        
+        // 添加事件监听器
+        document.addEventListener('touchstart', activateSpeech, { once: true, passive: true });
+        document.addEventListener('click', activateSpeech, { once: true });
+      }
     }
     
     const progress = loadProgress();

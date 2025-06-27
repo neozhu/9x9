@@ -174,9 +174,78 @@
     }
   }
   
+  /* iOS特定优化 */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS设备专用样式 */
+    .multiplication-grid {
+      /* 改善iOS触摸响应 */
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .multiplication-cell {
+      /* iOS按钮优化 */
+      -webkit-tap-highlight-color: rgba(251, 146, 60, 0.2);
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      /* 确保iOS语音辅助功能正常工作 */
+      cursor: pointer;
+      /* 增强iOS可访问性 */
+      position: relative;
+    }
+    
+    /* iOS语音合成激活状态 */
+    .multiplication-cell[data-ios-click="true"] {
+      /* 视觉反馈表明语音功能已激活 */
+      outline: 2px solid rgba(34, 197, 94, 0.3);
+      outline-offset: 2px;
+    }
+    
+         /* iOS VoiceOver焦点增强 */
+     .multiplication-cell:focus-visible {
+       outline: 3px solid rgb(59, 130, 246);
+       outline-offset: 3px;
+       z-index: 1000;
+     }
+     
+     /* iOS增强样式 */
+     .ios-enhanced {
+       /* 改善iOS语音合成触发 */
+       -webkit-appearance: none;
+       -webkit-transform: translateZ(0);
+       /* 确保iOS正确识别为交互元素 */
+       min-height: 44px;
+       min-width: 44px;
+     }
+   }
+  
+  /* iOS Safari特定修复 */
+  @media screen and (-webkit-min-device-pixel-ratio: 1) {
+    /* 修复iOS Safari语音合成延迟问题 */
+    .multiplication-cell {
+      /* 确保触摸事件正确绑定 */
+      pointer-events: auto;
+      /* 防止iOS双击缩放影响语音触发 */
+      touch-action: manipulation;
+    }
+  }
+  
   /* 高亮效果优化 */
   .multiplication-cell {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* 悬停效果增强 */
+  .multiplication-cell:not(.selected):not(.highlighted):not(.same-result):hover {
+    background: linear-gradient(135deg, rgba(148, 163, 184, 0.15) 0%, rgba(203, 213, 225, 0.1) 100%);
+    border-color: rgb(148, 163, 184);
+    transform: scale(1.08) translateZ(0);
+    box-shadow: 0 4px 15px rgba(148, 163, 184, 0.25);
+  }
+  
+  .dark .multiplication-cell:not(.selected):not(.highlighted):not(.same-result):hover {
+    background: linear-gradient(135deg, rgba(71, 85, 105, 0.3) 0%, rgba(100, 116, 139, 0.2) 100%);
+    border-color: rgb(100, 116, 139);
+    box-shadow: 0 4px 20px rgba(71, 85, 105, 0.4);
   }
   
   /* 选中状态的特殊效果 */
@@ -200,10 +269,16 @@
   
   /* 选中状态在dark mode下的增强 */
   .multiplication-cell.selected {
+    background-color: rgb(249, 115, 22) !important;
+    color: white !important;
+    border-color: rgb(234, 88, 12) !important;
     box-shadow: 0 0 25px rgba(249, 115, 22, 0.6), 0 0 40px rgba(249, 115, 22, 0.3);
   }
   
   .dark .multiplication-cell.selected {
+    background-color: rgb(251, 146, 60) !important;
+    color: rgb(154, 52, 18) !important;
+    border-color: rgb(253, 186, 116) !important;
     box-shadow: 0 0 30px rgba(251, 146, 60, 0.8), 0 0 50px rgba(251, 146, 60, 0.4);
   }
   

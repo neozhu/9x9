@@ -129,13 +129,22 @@ export function speakFormula(
   voiceSettings?: { lang?: string; rate?: number; pitch?: number; volume?: number }
 ) {
   if (!speechEnabled || !speechSupported) return;
+  
+  // 检测iOS设备
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  
   try {
-    console.log('[speakFormula] try speak:', { multiplicand, multiplier, locale });
+    console.log('[speakFormula] try speak:', { multiplicand, multiplier, locale, isIOS, isSafari });
+    
+    // 取消之前的语音
     speechSynthesis.cancel();
+    
     const result = multiplicand * multiplier;
     const formula = getFormulaByLocale(multiplicand, multiplier, result, locale);
     const utterance = new SpeechSynthesisUtterance(formula);
-    // 只设置 lang，避免 iOS 兼容性问题
+    
+    // 语言设置
     const defaultSettings = {
       'zh': { lang: 'zh-CN' },
       'en': { lang: 'en-US' },
@@ -144,12 +153,85 @@ export function speakFormula(
     };
     const settings = defaultSettings[locale as keyof typeof defaultSettings] || defaultSettings.zh;
     utterance.lang = voiceSettings?.lang || settings.lang;
-    // 不设置 rate/pitch/volume
-    utterance.onstart = () => console.log('[speakFormula] speech start');
-    utterance.onerror = (e) => console.error('[speakFormula] speech error', e);
-    utterance.onend = () => console.log('[speakFormula] speech end');
-    speechSynthesis.speak(utterance);
+    
+    // iOS特殊处理
+    if (isIOS || isSafari) {
+      // iOS需要设置一些额外的属性来确保语音正常工作
+      utterance.rate = 0.8; // 稍微慢一点，确保清晰度
+      utterance.volume = 1.0; // 确保音量正常
+      utterance.pitch = 1.0; // 确保音调正常
+      
+      // iOS有时需要小延迟来确保语音引擎就绪
+      setTimeout(() => {
+        // 确保在用户交互上下文中执行
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        }
+        
+        // 再次设置事件监听器
+        utterance.onstart = () => {
+          console.log('[speakFormula] iOS speech start');
+        };
+        utterance.onerror = (e) => {
+          console.error('[speakFormula] iOS speech error', e);
+          // iOS错误处理，尝试重新播放
+          if (e.error === 'interrupted' || e.error === 'canceled') {
+            setTimeout(() => {
+              speechSynthesis.speak(utterance);
+            }, 100);
+          }
+        };
+        utterance.onend = () => {
+          console.log('[speakFormula] iOS speech end');
+        };
+        
+        speechSynthesis.speak(utterance);
+      }, 50);
+    } else {
+      // 非iOS设备的标准处理
+      utterance.onstart = () => console.log('[speakFormula] speech start');
+      utterance.onerror = (e) => console.error('[speakFormula] speech error', e);
+      utterance.onend = () => console.log('[speakFormula] speech end');
+      speechSynthesis.speak(utterance);
+    }
+    
   } catch (err) {
     console.error('[speakFormula] exception', err);
+    
+         // iOS备用方案：如果语音合成失败，尝试创建一个简单的音频提示
+     if (isIOS || isSafari) {
+       try {
+         // 创建一个短暂的音频上下文来"唤醒"语音合成
+         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+         const oscillator = audioContext.createOscillator();
+         const gainNode = audioContext.createGain();
+         
+         oscillator.connect(gainNode);
+         gainNode.connect(audioContext.destination);
+         
+         oscillator.frequency.value = 0; // 静音
+         gainNode.gain.value = 0;
+         
+         oscillator.start();
+         oscillator.stop(audioContext.currentTime + 0.01);
+         
+         // 延迟后再次尝试语音合成
+         setTimeout(() => {
+           const retryUtterance = new SpeechSynthesisUtterance(getFormulaByLocale(multiplicand, multiplier, multiplicand * multiplier, locale));
+           const retryDefaultSettings = {
+             'zh': { lang: 'zh-CN' },
+             'en': { lang: 'en-US' },
+             'de': { lang: 'de-DE' },
+             'ja': { lang: 'ja-JP' }
+           };
+           const retrySettings = retryDefaultSettings[locale as keyof typeof retryDefaultSettings] || retryDefaultSettings.zh;
+           retryUtterance.lang = retrySettings.lang;
+           retryUtterance.rate = 0.8;
+           speechSynthesis.speak(retryUtterance);
+         }, 200);
+       } catch (audioErr) {
+         console.error('[speakFormula] iOS audio fallback failed', audioErr);
+       }
+     }
   }
 } 
