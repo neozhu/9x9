@@ -241,12 +241,12 @@ export function QuizInterface({
                 {isPaused ? (
                   <>
                     <Play className="w-3 h-3" />
-                    {t('quiz.resumeQuiz')}
+                   
                   </>
                 ) : (
                   <>
                     <Pause className="w-3 h-3" />
-                    {t('quiz.pauseQuiz')}
+                   
                   </>
                 )}
               </Button>

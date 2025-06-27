@@ -37,7 +37,7 @@ const GridCell = React.memo(function GridCell({
 
   // 移动端下精简样式
   const baseClass =
-    "aspect-square p-0 text-xs sm:text-sm font-semibold min-h-[2.5rem] min-w-[2.5rem] rounded-lg relative overflow-hidden border-2 touch-manipulation";
+    "aspect-square p-0 text-xs sm:text-sm font-semibold min-h-[2.5rem] min-w-[2.5rem] rounded-md relative overflow-hidden border-2 touch-manipulation";
   const selectedClass = isSelected && [
     "!bg-primary !text-primary-foreground !border-primary font-black text-base sm:text-lg z-20 scale-110 ring-4 ring-primary/30 dark:ring-primary/50"
   ];
@@ -45,7 +45,7 @@ const GridCell = React.memo(function GridCell({
     "bg-blue-100 dark:bg-blue-800/80 text-blue-900 dark:text-blue-100 border-blue-400 dark:border-blue-400/90 font-bold z-10 scale-105 ring-2 ring-blue-400/40 dark:ring-blue-400/60"
   ];
   const areaHighlightedClass = isAreaHighlighted && !isSameResult && [
-    "bg-green-50 dark:bg-green-800/70 text-green-800 dark:text-green-100 border-green-400 dark:border-green-400/90 font-semibold z-5 scale-[1.02] ring-2 ring-green-400/30 dark:ring-green-400/60"
+    "bg-green-50 dark:bg-green-800/70 text-green-800 dark:text-green-100 border-green-400 dark:border-green-400/90 font-semibold z-5 scale-[1.02] ring-1 ring-green-400/25 dark:ring-green-400/50"
   ];
   const defaultClass = !isSelected && !isSameResult && !isAreaHighlighted && [
     "bg-background/95 sm:supports-[backdrop-filter]:bg-background/60 hover:bg-accent hover:text-accent-foreground border-border hover:border-accent-foreground/50 hover:scale-[1.05] hover:z-5"
@@ -97,13 +97,13 @@ const GridCell = React.memo(function GridCell({
       </span>
       {/* 仅在桌面端保留高开销效果 */}
       {isSelected && (
-        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-white/20 dark:from-white/10 to-transparent opacity-50 rounded-lg" />
+        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-white/20 dark:from-white/10 to-transparent opacity-50 rounded-sm" />
       )}
       {isSameResult && !isSelected && (
-        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-blue-400/10 dark:from-blue-400/20 to-transparent rounded-lg" />
+        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-blue-400/10 dark:from-blue-400/20 to-transparent rounded-sm" />
       )}
       {isAreaHighlighted && !isSameResult && (
-        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-green-400/10 dark:from-green-400/20 to-transparent rounded-lg" />
+        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-green-400/10 dark:from-green-400/20 to-transparent rounded-sm" />
       )}
     </Button>
   );
