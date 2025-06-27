@@ -129,28 +129,27 @@ export function speakFormula(
   voiceSettings?: { lang?: string; rate?: number; pitch?: number; volume?: number }
 ) {
   if (!speechEnabled || !speechSupported) return;
-  
-  speechSynthesis.cancel();
-  
-  const result = multiplicand * multiplier;
-  const formula = getFormulaByLocale(multiplicand, multiplier, result, locale);
-  
-  const utterance = new SpeechSynthesisUtterance(formula);
-  
-  // 根据语言设置语音参数
-  const defaultSettings = {
-    'zh': { lang: 'zh-CN', rate: 0.8, pitch: 1.1 },
-    'en': { lang: 'en-US', rate: 0.9, pitch: 1.0 },
-    'de': { lang: 'de-DE', rate: 0.8, pitch: 1.0 },
-    'ja': { lang: 'ja-JP', rate: 0.8, pitch: 1.2 }
-  };
-  
-  const settings = defaultSettings[locale as keyof typeof defaultSettings] || defaultSettings.zh;
-  
-  utterance.lang = voiceSettings?.lang || settings.lang;
-  utterance.rate = voiceSettings?.rate || settings.rate;
-  utterance.pitch = voiceSettings?.pitch || settings.pitch;
-  utterance.volume = voiceSettings?.volume || 0.8;
-  
-  speechSynthesis.speak(utterance);
+  try {
+    console.log('[speakFormula] try speak:', { multiplicand, multiplier, locale });
+    speechSynthesis.cancel();
+    const result = multiplicand * multiplier;
+    const formula = getFormulaByLocale(multiplicand, multiplier, result, locale);
+    const utterance = new SpeechSynthesisUtterance(formula);
+    // 只设置 lang，避免 iOS 兼容性问题
+    const defaultSettings = {
+      'zh': { lang: 'zh-CN' },
+      'en': { lang: 'en-US' },
+      'de': { lang: 'de-DE' },
+      'ja': { lang: 'ja-JP' }
+    };
+    const settings = defaultSettings[locale as keyof typeof defaultSettings] || defaultSettings.zh;
+    utterance.lang = voiceSettings?.lang || settings.lang;
+    // 不设置 rate/pitch/volume
+    utterance.onstart = () => console.log('[speakFormula] speech start');
+    utterance.onerror = (e) => console.error('[speakFormula] speech error', e);
+    utterance.onend = () => console.log('[speakFormula] speech end');
+    speechSynthesis.speak(utterance);
+  } catch (err) {
+    console.error('[speakFormula] exception', err);
+  }
 } 
