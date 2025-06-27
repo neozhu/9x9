@@ -13,6 +13,7 @@ interface LearnModeProps {
   selectedResult: number | null;
   speechEnabled: boolean;
   speechSupported: boolean;
+  speechInitialized?: boolean;
   onCellClick: (row: number, col: number) => void;
   onSpeechToggle: () => void;
   onRepeatSpeech: () => void;
@@ -23,11 +24,14 @@ export function LearnMode({
   selectedResult,
   speechEnabled,
   speechSupported,
+  speechInitialized = true,
   onCellClick,
   onSpeechToggle,
   onRepeatSpeech
 }: LearnModeProps) {
   const { locale, t } = useLocale();
+
+  const isIOS = typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
   const getDisplayFormula = () => {
     if (!selectedCell) {
@@ -76,10 +80,12 @@ export function LearnMode({
               <div className="flex items-center gap-2 min-w-0 flex-1">
                 <div className="flex items-center gap-1.5">
                   <Volume2 className="w-3.5 h-3.5 text-muted-foreground" />
-                  <span className="text-xs font-medium text-foreground truncate">{t('speech.enabled')}</span>
+                  <span className="text-xs font-medium text-foreground truncate">
+                    {speechInitialized ? t('speech.enabled') : (isIOS ? 'Audio is being prepared—tap anywhere to activate.' : t('speech.enabled'))}
+                  </span>
                 </div>
                 
-                {selectedCell && (
+                {selectedCell && speechInitialized && (
                   <Button
                     onClick={onRepeatSpeech}
                     variant="outline"
@@ -207,7 +213,7 @@ export function LearnMode({
                 "dark:bg-background/70 dark:border-border/60"
               )}>
                 <Lightbulb className="w-3 h-3" />
-                <span>{t('learn.clickToHear')}</span>
+                <span>{speechInitialized ? t('learn.clickToHear') : '点击激活语音功能'}</span>
               </Badge>
             )}
             
@@ -225,6 +231,21 @@ export function LearnMode({
           </div>
         </CardContent>
       </Card>
+
+      {/* iOS Safari 特别提示 */}
+      {isIOS && speechSupported && !speechInitialized && speechEnabled && (
+        <Card className="mb-6 bg-amber-50/80 dark:bg-amber-900/30 border-amber-200/50 dark:border-amber-700/50">
+          <CardContent className="p-3">
+            <div className="flex items-start gap-2">
+              <Lightbulb className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+              <div className="text-xs text-amber-700 dark:text-amber-300">
+                <p className="font-medium mb-1">iOS Safari 语音提示</p>
+                <p>请点击屏幕任意位置来激活语音功能。这是 iOS Safari 的安全要求。</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </>
   );
 } 

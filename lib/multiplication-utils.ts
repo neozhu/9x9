@@ -129,27 +129,76 @@ export function speakFormula(
   voiceSettings?: { lang?: string; rate?: number; pitch?: number; volume?: number }
 ) {
   if (!speechEnabled || !speechSupported) return;
+  
   try {
     console.log('[speakFormula] try speak:', { multiplicand, multiplier, locale });
-    speechSynthesis.cancel();
-    const result = multiplicand * multiplier;
-    const formula = getFormulaByLocale(multiplicand, multiplier, result, locale);
-    const utterance = new SpeechSynthesisUtterance(formula);
-    // 只设置 lang，避免 iOS 兼容性问题
-    const defaultSettings = {
-      'zh': { lang: 'zh-CN' },
-      'en': { lang: 'en-US' },
-      'de': { lang: 'de-DE' },
-      'ja': { lang: 'ja-JP' }
-    };
-    const settings = defaultSettings[locale as keyof typeof defaultSettings] || defaultSettings.zh;
-    utterance.lang = voiceSettings?.lang || settings.lang;
-    // 不设置 rate/pitch/volume
-    utterance.onstart = () => console.log('[speakFormula] speech start');
-    utterance.onerror = (e) => console.error('[speakFormula] speech error', e);
-    utterance.onend = () => console.log('[speakFormula] speech end');
-    speechSynthesis.speak(utterance);
+    
+    // 检查iOS Safari是否需要用户交互激活
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      // 对于iOS Safari，需要在用户交互中激活语音合成
+      if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+      }
+      
+      // 取消之前的语音
+      speechSynthesis.cancel();
+      
+      const result = multiplicand * multiplier;
+      const formula = getFormulaByLocale(multiplicand, multiplier, result, locale);
+      const utterance = new SpeechSynthesisUtterance(formula);
+      
+      // 只设置 lang，避免 iOS 兼容性问题
+      const defaultSettings = {
+        'zh': { lang: 'zh-CN' },
+        'en': { lang: 'en-US' },
+        'de': { lang: 'de-DE' },
+        'ja': { lang: 'ja-JP' }
+      };
+      
+      const settings = defaultSettings[locale as keyof typeof defaultSettings] || defaultSettings.zh;
+      utterance.lang = voiceSettings?.lang || settings.lang;
+      
+      // 添加事件监听器
+      utterance.onstart = () => console.log('[speakFormula] speech start');
+      utterance.onerror = (e) => {
+        console.error('[speakFormula] speech error', e);
+        // iOS Safari 常见错误：未在用户交互中启动
+        if (e.error === 'not-allowed' || e.error === 'interrupted') {
+          console.warn('[speakFormula] iOS Safari may need user interaction to enable speech');
+        }
+      };
+      utterance.onend = () => console.log('[speakFormula] speech end');
+      
+      // 立即执行，确保在用户交互事件中
+      speechSynthesis.speak(utterance);
+    }
   } catch (err) {
     console.error('[speakFormula] exception', err);
   }
+}
+
+// 新增：iOS Safari 语音合成初始化函数
+export function initializeSpeechSynthesis(): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined' || !('speechSynthesis' in window)) {
+      resolve(false);
+      return;
+    }
+
+    try {
+      // 对于iOS Safari，需要在用户交互中创建一个静音的语音来激活
+      const testUtterance = new SpeechSynthesisUtterance('');
+      testUtterance.volume = 0;
+      testUtterance.onend = () => resolve(true);
+      testUtterance.onerror = () => resolve(false);
+      
+      speechSynthesis.speak(testUtterance);
+      
+      // 备用超时
+      setTimeout(() => resolve(true), 100);
+    } catch (err) {
+      console.error('[initializeSpeechSynthesis] error:', err);
+      resolve(false);
+    }
+  });
 } 
