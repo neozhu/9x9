@@ -16,7 +16,8 @@ import {
   generateRandomQuestion, 
   generateReviewQuestion, 
   generateAnswerOptions,
-  speakFormula 
+  speakFormula,
+  initializeSpeechSynthesis
 } from "@/lib/multiplication-utils";
 import type { Question, Mode } from "@/lib/types";
 
@@ -29,6 +30,7 @@ export default function Home() {
   const [selectedCell, setSelectedCell] = useState<{row: number, col: number} | null>(null);
   const [speechEnabled, setSpeechEnabled] = useState(true);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [speechInitialized, setSpeechInitialized] = useState(false);
   const [selectedResult, setSelectedResult] = useState<number | null>(null);
   
   // 答题模式状态
@@ -58,6 +60,21 @@ export default function Home() {
     removeFromWrongQuestions
   } = useUserProgress();
 
+  // 初始化语音功能的函数
+  const initializeSpeech = useCallback(async () => {
+    if (speechSupported && !speechInitialized) {
+      try {
+        console.log('[initializeSpeech] Attempting to initialize speech synthesis...');
+        const initialized = await initializeSpeechSynthesis();
+        setSpeechInitialized(initialized);
+        console.log('[initializeSpeech] Speech synthesis initialized:', initialized);
+      } catch (error) {
+        console.error('[initializeSpeech] Failed to initialize speech synthesis:', error);
+        setSpeechInitialized(false);
+      }
+    }
+  }, [speechSupported, speechInitialized]);
+
   // 初始化
   useEffect(() => {
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
@@ -69,6 +86,33 @@ export default function Home() {
     
     return () => speechSynthesis.cancel();
   }, [loadProgress, setUserProgress]);
+
+  // 监听用户首次交互以初始化语音
+  useEffect(() => {
+    if (speechSupported && !speechInitialized) {
+      const handleFirstInteraction = () => {
+        initializeSpeech();
+        // 移除事件监听器，只需要初始化一次
+        document.removeEventListener('touchstart', handleFirstInteraction);
+        document.removeEventListener('touchend', handleFirstInteraction);
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('keydown', handleFirstInteraction);
+      };
+
+      // 监听各种用户交互事件
+      document.addEventListener('touchstart', handleFirstInteraction, { once: true });
+      document.addEventListener('touchend', handleFirstInteraction, { once: true });
+      document.addEventListener('click', handleFirstInteraction, { once: true });
+      document.addEventListener('keydown', handleFirstInteraction, { once: true });
+
+      return () => {
+        document.removeEventListener('touchstart', handleFirstInteraction);
+        document.removeEventListener('touchend', handleFirstInteraction);
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('keydown', handleFirstInteraction);
+      };
+    }
+  }, [speechSupported, speechInitialized, initializeSpeech]);
 
   // 页面初始化时检查是否有暂停的答题状态需要恢复
   useEffect(() => {
@@ -141,9 +185,16 @@ export default function Home() {
       timeLeft: 10
     });
     
-    // 朗读题目
-    speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported, locale);
-  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, locale, updateQuizState]);
+    // 朗读题目（确保语音已初始化）
+    if (speechInitialized) {
+      speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported, locale);
+    } else if (speechSupported && speechEnabled) {
+      // 如果语音未初始化，先初始化再朗读
+      initializeSpeech().then(() => {
+        speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported, locale);
+      });
+    }
+  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, speechInitialized, locale, updateQuizState, initializeSpeech]);
 
   // 恢复暂停的答题状态
   const resumePausedQuiz = useCallback(() => {
@@ -341,7 +392,7 @@ export default function Home() {
   };
 
   // 学习模式相关函数
-  const handleCellClick = (row: number, col: number) => {
+  const handleCellClick = useCallback((row: number, col: number) => {
     const newRow = row + 1;
     const newCol = col + 1;
     const result = newRow * newCol;
@@ -349,14 +400,30 @@ export default function Home() {
     setSelectedCell({ row: newRow, col: newCol });
     setSelectedResult(result);
     
-    speakFormula(newRow, newCol, speechEnabled, speechSupported, locale);
-  };
-
-  const repeatSpeech = () => {
-    if (selectedCell) {
-      speakFormula(selectedCell.row, selectedCell.col, speechEnabled, speechSupported, locale);
+    // 确保语音已初始化后再朗读
+    if (speechInitialized) {
+      speakFormula(newRow, newCol, speechEnabled, speechSupported, locale);
+    } else if (speechSupported) {
+      // 如果语音未初始化，先初始化再朗读
+      initializeSpeech().then(() => {
+        speakFormula(newRow, newCol, speechEnabled, speechSupported, locale);
+      });
     }
-  };
+  }, [speechEnabled, speechSupported, speechInitialized, locale, initializeSpeech]);
+
+  const repeatSpeech = useCallback(() => {
+    if (selectedCell) {
+      // 确保语音已初始化后再朗读
+      if (speechInitialized) {
+        speakFormula(selectedCell.row, selectedCell.col, speechEnabled, speechSupported, locale);
+      } else if (speechSupported) {
+        // 如果语音未初始化，先初始化再朗读
+        initializeSpeech().then(() => {
+          speakFormula(selectedCell.row, selectedCell.col, speechEnabled, speechSupported, locale);
+        });
+      }
+    }
+  }, [selectedCell, speechEnabled, speechSupported, speechInitialized, locale, initializeSpeech]);
 
   // 返回学习模式
   const handleBackToLearn = () => {
@@ -441,6 +508,7 @@ export default function Home() {
             selectedResult={selectedResult}
             speechEnabled={speechEnabled}
             speechSupported={speechSupported}
+            speechInitialized={speechInitialized}
             onCellClick={handleCellClick}
             onSpeechToggle={() => setSpeechEnabled(!speechEnabled)}
             onRepeatSpeech={repeatSpeech}
