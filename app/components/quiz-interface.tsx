@@ -1,6 +1,11 @@
 import type { Question, Mode } from '@/lib/types';
 import { useLocale } from '../hooks/use-locale';
-import { BookOpenCheck, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { BookOpenCheck, Clock, CheckCircle, XCircle, Pause, Play } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 
 interface QuizInterfaceProps {
   mode: Mode;
@@ -12,8 +17,11 @@ interface QuizInterfaceProps {
   answerOptions: number[];
   questionsAnswered: number;
   quizScore: number;
+  isPaused: boolean;
   onAnswerSelect: (answer: number) => void;
   onStopQuiz: () => void;
+  onPauseQuiz: () => void;
+  onResumeQuiz: () => void;
 }
 
 export function QuizInterface({
@@ -26,108 +34,240 @@ export function QuizInterface({
   answerOptions,
   questionsAnswered,
   quizScore,
+  isPaused,
   onAnswerSelect,
-  onStopQuiz
+  onStopQuiz,
+  onPauseQuiz,
+  onResumeQuiz
 }: QuizInterfaceProps) {
   const { t } = useLocale();
 
+  const timePercentage = (timeLeft / 10) * 100;
+  const isTimeRunningOut = timeLeft <= 3;
+
   return (
-    <div className="mb-6 space-y-4">
-      {/* 答题区域 - Glassmorphism Effect */}
-      <div className="relative backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border border-white/20 dark:border-gray-700/30 rounded-xl p-6 text-center shadow-2xl shadow-black/10 dark:shadow-black/30">
-        {/* Glassmorphism overlay for extra depth */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent dark:from-white/5 dark:to-transparent pointer-events-none"></div>
-        
-        {/* Content with relative positioning */}
-        <div className="relative z-10">
-          <div className="text-lg mb-4">
-            {mode === 'review' && (
-              <span className="text-red-500 dark:text-red-400 text-sm flex items-center justify-center space-x-1">
-                <BookOpenCheck className="w-4 h-4" />
+    <div className="mb-4 space-y-3">
+      {/* 答题区域 - Compact with glassmorphism */}
+      <Card className={cn(
+        "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "border border-border/50 shadow-lg",
+        "transition-transform duration-200",
+        showResult && "scale-[1.01]"
+      )}>
+        <CardContent className="p-4 sm:p-6 text-center space-y-4">
+          {/* Review Mode Badge */}
+          {mode === 'review' && (
+            <div className="flex justify-center">
+              <Badge variant="destructive" className="gap-1 text-xs px-2.5 py-0.5">
+                <BookOpenCheck className="w-3 h-3" />
                 <span>{t('quiz.reviewMode')}</span>
-              </span>
-            )}
-          </div>
+              </Badge>
+            </div>
+          )}
           
-          <div className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+          {/* Question Display */}
+          <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
             {currentQuestion.multiplicand} × {currentQuestion.multiplier} = ?
           </div>
           
-          {!showResult && (
+          {/* Paused State */}
+          {isPaused && !showResult && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-center gap-2 text-lg sm:text-xl text-orange-600 dark:text-orange-400">
+                <Pause className="w-5 h-5" />
+                <span className="font-medium">{t('quiz.quizPaused')}</span>
+              </div>
+              <Button
+                onClick={onResumeQuiz}
+                className={cn(
+                  "h-12 sm:h-14 px-6 text-lg font-bold",
+                  "transition-all duration-150 backdrop-blur",
+                  "bg-primary hover:bg-primary/90 shadow-lg",
+                  "hover:scale-105 gap-2"
+                )}
+              >
+                <Play className="w-4 h-4" />
+                {t('quiz.resumeQuiz')}
+              </Button>
+            </div>
+          )}
+          
+          {!showResult && !isPaused && (
             <>
-              <div className="mb-6">
-                <div className={`text-xl font-mono flex items-center justify-center space-x-2 ${timeLeft <= 3 ? 'text-red-500 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
-                  <Clock className="w-5 h-5" />
+              {/* Timer Section with Progress */}
+              <div className="space-y-2">
+                <div className={cn(
+                  "text-base sm:text-lg font-mono flex items-center justify-center gap-2",
+                  "transition-colors duration-300",
+                  isTimeRunningOut 
+                    ? "text-red-500 dark:text-red-400" 
+                    : "text-blue-600 dark:text-blue-400"
+                )}>
+                  <Clock className="w-4 h-4" />
                   <span>{t('quiz.timeLeft', { time: timeLeft })}</span>
                 </div>
-                <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-2 mt-2 backdrop-blur-sm">
-                  <div 
-                    className={`h-2 rounded-full transition-all duration-1000 ${
-                      timeLeft <= 3 ? 'bg-red-500 dark:bg-red-400' : 'bg-blue-500 dark:bg-blue-400'
-                    }`}
-                    style={{ width: `${(timeLeft / 10) * 100}%` }}
-                  ></div>
+                
+                <div className="max-w-xs mx-auto">
+                  <Progress 
+                    value={timePercentage}
+                    className={cn(
+                      "h-2 transition-all duration-1000",
+                      "[&>div]:transition-all [&>div]:duration-1000",
+                      isTimeRunningOut && "[&>div]:bg-red-500"
+                    )}
+                  />
                 </div>
               </div>
               
-              {/* 答案选项按钮 - Glassmorphism Effect */}
-              <div className="grid grid-cols-3 gap-3">
+              {/* Answer Options Grid */}
+              <div className="grid grid-cols-3 gap-2 sm:gap-3">
                 {answerOptions.map((option, index) => (
-                  <button
+                  <Button
                     key={index}
                     onClick={() => onAnswerSelect(option)}
-                    className={`h-16 text-2xl font-bold rounded-lg border-2 transition-all duration-200 backdrop-blur-md ${
+                    variant={selectedAnswer === option ? "default" : "outline"}
+                    className={cn(
+                      "h-12 sm:h-14 text-lg sm:text-xl font-bold",
+                      "transition-all duration-150 backdrop-blur",
+                      "bg-background/95 supports-[backdrop-filter]:bg-background/60",
                       selectedAnswer === option
-                        ? 'bg-blue-500/80 dark:bg-blue-600/80 text-white border-blue-400/50 dark:border-blue-500/50 shadow-lg shadow-blue-500/25 scale-105'
-                        : 'bg-white/60 dark:bg-gray-800/60 border-white/30 dark:border-gray-600/30 hover:border-blue-400/50 dark:hover:border-blue-500/50 hover:bg-white/80 dark:hover:bg-gray-700/80 text-gray-900 dark:text-white shadow-lg shadow-black/5 dark:shadow-black/20'
-                    }`}
+                        ? [
+                            "scale-105 shadow-lg shadow-primary/30 bg-primary",
+                            "dark:shadow-primary/40 ring-2 ring-primary/30",
+                            "dark:ring-primary/50"
+                          ]
+                        : [
+                            "hover:scale-102 hover:border-primary hover:bg-accent shadow-lg",
+                            "dark:bg-background/90 dark:hover:bg-accent/80",
+                            "dark:border-border/70 dark:hover:border-primary/70"
+                          ]
+                    )}
                   >
                     {option}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </>
           )}
           
+          {/* Result Display */}
           {showResult && (
-            <div className={`text-2xl font-bold ${isCorrect ? 'text-green-600 dark:text-green-400' : 'text-red-500 dark:text-red-400'}`}>
-              <div className="flex items-center justify-center space-x-2">
-                {isCorrect ? (
-                  <CheckCircle className="w-8 h-8" />
-                ) : (
-                  <XCircle className="w-8 h-8" />
-                )}
+            <div className="space-y-3 text-center">
+              {/* Result Icon and Status */}
+              <div className={cn(
+                "flex items-center justify-center gap-2 text-xl sm:text-2xl font-bold",
+                isCorrect ? "text-green-600 dark:text-green-400" : "text-red-500 dark:text-red-400"
+              )}>
+                <div className={cn(
+                  "p-2 rounded-full",
+                  isCorrect 
+                    ? [
+                        "bg-green-100 dark:bg-green-900/40",
+                        "border border-green-200 dark:border-green-700/60"
+                      ]
+                    : [
+                        "bg-red-100 dark:bg-red-900/40",
+                        "border border-red-200 dark:border-red-700/60"
+                      ]
+                )}>
+                  {isCorrect ? (
+                    <CheckCircle className="w-6 h-6" />
+                  ) : (
+                    <XCircle className="w-6 h-6" />
+                  )}
+                </div>
                 <span>{isCorrect ? t('common.correct') : t('common.incorrect')}</span>
               </div>
-              <div className="text-lg mt-2 text-gray-700 dark:text-gray-300">
-                {t('quiz.correctAnswer', { answer: currentQuestion.correctAnswer })}
+              
+              {/* Correct Answer */}
+              <div className="space-y-1.5">
+                <div className="text-base sm:text-lg text-foreground font-medium">
+                  {t('quiz.correctAnswer', { answer: currentQuestion.correctAnswer })}
+                </div>
+                
+                {/* User's Answer (if incorrect) */}
+                {!isCorrect && selectedAnswer !== null && (
+                  <Badge variant="outline" className="text-xs px-2 py-0.5">
+                    {t('quiz.yourAnswer', { answer: selectedAnswer })}
+                  </Badge>
+                )}
+                
+                {/* No Answer Given */}
+                {selectedAnswer === null && (
+                  <Badge variant="outline" className="text-xs px-2 py-0.5 text-muted-foreground">
+                    {t('quiz.noAnswer')}
+                  </Badge>
+                )}
               </div>
-              {!isCorrect && selectedAnswer !== null && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  {t('quiz.yourAnswer', { answer: selectedAnswer })}
-                </div>
-              )}
-              {selectedAnswer === null && (
-                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  {t('quiz.noAnswer')}
-                </div>
-              )}
             </div>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
       
-      {/* 答题统计 - Glassmorphism Effect */}
-      <div className="flex justify-between text-sm backdrop-blur-md bg-white/50 dark:bg-gray-900/50 border border-white/20 dark:border-gray-700/30 rounded-lg px-4 py-3 shadow-lg shadow-black/5 dark:shadow-black/20">
-        <span className="text-gray-700 dark:text-gray-300">{t('quiz.questionsAnswered')}: {questionsAnswered}</span>
-        <span className="text-gray-700 dark:text-gray-300">{t('quiz.currentScore')}: {quizScore}</span>
-        <button 
-          onClick={onStopQuiz}
-          className="text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors duration-200"
-        >
-          {t('quiz.stopQuiz')}
-        </button>
-      </div>
+      {/* 答题统计 - Compact stats */}
+      <Card className={cn(
+        "py-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "border border-border/50 shadow-lg"
+      )}>
+        <CardFooter className="p-3 flex items-center justify-between text-sm">
+          <div className="flex items-center gap-3">
+            <Badge variant="outline" className={cn(
+              "bg-background/50 backdrop-blur text-xs px-2 py-0.5",
+              "dark:bg-background/70 dark:border-border/60"
+            )}>
+              {t('quiz.questionsAnswered')}: {questionsAnswered}
+            </Badge>
+            <Badge variant="outline" className={cn(
+              "bg-background/50 backdrop-blur text-xs px-2 py-0.5",
+              "dark:bg-background/70 dark:border-border/60"
+            )}>
+              {t('quiz.currentScore')}: {quizScore}
+            </Badge>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            {/* Pause/Resume Button */}
+            {!showResult && (
+              <Button 
+                onClick={isPaused ? onResumeQuiz : onPauseQuiz}
+                variant="outline"
+                size="sm"
+                className={cn(
+                  "h-7 px-2.5 text-xs backdrop-blur hover:scale-105",
+                  "transition-transform duration-150 gap-1",
+                  "dark:border-border/70 dark:hover:bg-accent/80"
+                )}
+              >
+                {isPaused ? (
+                  <>
+                    <Play className="w-3 h-3" />
+                    {t('quiz.resumeQuiz')}
+                  </>
+                ) : (
+                  <>
+                    <Pause className="w-3 h-3" />
+                    {t('quiz.pauseQuiz')}
+                  </>
+                )}
+              </Button>
+            )}
+            
+            {/* Stop Button */}
+            <Button 
+              onClick={onStopQuiz}
+              variant="destructive"
+              size="sm"
+              className={cn(
+                "h-7 px-2.5 text-xs backdrop-blur hover:scale-105",
+                "transition-transform duration-150",
+                "dark:bg-red-600 dark:hover:bg-red-500 dark:text-white"
+              )}
+            >
+              {t('quiz.stopQuiz')}
+            </Button>
+          </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 } 

@@ -17,8 +17,75 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "9×9乘法口诀 - 数学学习应用",
-  description: "专为手机和iPad优化的9×9乘法口诀学习应用，帮助孩子轻松掌握乘法表",
+  title: "9x9 Multiplication Table - Interactive Learning App",
+  description:
+    "A modern, interactive web application for learning the 9x9 multiplication table. Features visual grid, Chinese mnemonics, audio pronunciation, and mobile-first responsive design. Perfect for students, teachers, and parents.",
+  keywords: [
+    "multiplication table",
+    "9x9",
+    "math learning",
+    "Chinese mnemonics",
+    "interactive",
+    "education",
+    "elementary",
+    "visual learning",
+    "audio learning",
+    "math app",
+    "responsive",
+    "kids",
+    "teachers",
+    "parents"
+  ],
+  authors: [{ name: "9x9 App Team" }],
+  creator: "9x9 App Team",
+  publisher: "9x9 App Team",
+  applicationName: "9x9 Multiplication Table",
+  generator: "Next.js",
+  referrer: "origin-when-cross-origin",
+  category: "education",
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    title: "9x9 Multiplication Table - Interactive Learning App",
+    description:
+      "A modern, interactive web application for learning the 9x9 multiplication table. Features visual grid, Chinese mnemonics, audio pronunciation, and mobile-first responsive design.",
+    url: "https://9x9.vercel.app/",
+    siteName: "9x9 Multiplication Table",
+    images: [
+      {
+        url: "/screenshot.jpg",
+        width: 1200,
+        height: 630,
+        alt: "9x9 Multiplication Table App Screenshot",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "9x9 Multiplication Table - Interactive Learning App",
+    description:
+      "A modern, interactive web application for learning the 9x9 multiplication table. Features visual grid, Chinese mnemonics, audio pronunciation, and mobile-first responsive design.",
+    creator: "@your_twitter_handle",
+    images: ["/screenshot.jpg"],
+  },
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
 };
 

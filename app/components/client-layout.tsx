@@ -2,24 +2,32 @@
 
 import { useEffect } from 'react';
 import { useLocale } from '../hooks/use-locale';
+import type { Locale } from '@/i18n';
 
 interface ClientLayoutProps {
   children: React.ReactNode;
 }
 
+// Language code mapping for HTML lang attribute
+const langMap: Record<Locale, string> = {
+  'zh': 'zh-CN',
+  'en': 'en-US', 
+  'de': 'de-DE',
+  'ja': 'ja-JP'
+} as const;
+
 export function ClientLayout({ children }: ClientLayoutProps) {
   const { locale } = useLocale();
 
   useEffect(() => {
-    // 更新document的lang属性
+    // Update document lang attribute for accessibility and SEO
     if (typeof document !== 'undefined') {
-      const langMap = {
-        'zh': 'zh-CN',
-        'en': 'en-US', 
-        'de': 'de-DE',
-        'ja': 'ja-JP'
-      };
-      document.documentElement.lang = langMap[locale] || 'zh-CN';
+      const htmlLang = langMap[locale] || 'zh-CN';
+      document.documentElement.lang = htmlLang;
+      
+      // Optional: Update document dir attribute for RTL languages
+      // Currently all supported languages are LTR
+      document.documentElement.dir = 'ltr';
     }
   }, [locale]);
 

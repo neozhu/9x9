@@ -1,12 +1,22 @@
 import { CheckCircle, Trophy, Sparkles } from 'lucide-react';
 import { useLocale } from '../hooks/use-locale';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface ReviewCompleteModalProps {
   isOpen: boolean;
   onClose: () => void;
   questionsCompleted: number;
   score: number;
-  type?: 'review' | 'daily'; // 新增类型属性
+  type?: 'review' | 'daily';
 }
 
 export function ReviewCompleteModal({
@@ -18,61 +28,112 @@ export function ReviewCompleteModal({
 }: ReviewCompleteModalProps) {
   const { t } = useLocale();
 
-  if (!isOpen) return null;
-
   const isDaily = type === 'daily';
   const title = isDaily ? t('quiz.dailyComplete') : t('quiz.reviewComplete');
   const description = isDaily ? t('quiz.dailyCompleteDesc') : t('quiz.reviewCompleteDesc');
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm w-full mx-auto shadow-2xl border border-white/20">
-        <div className="text-center space-y-4">
-          {/* 成功图标 */}
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className={cn(
+        "sm:max-w-md bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80",
+        "border border-border/50 shadow-2xl",
+        "animate-in fade-in-0 zoom-in-95 duration-300"
+      )}>
+        <DialogHeader className="text-center space-y-4">
+          {/* Success Icon with Trophy */}
           <div className="flex justify-center">
-            <div className="relative">
-              <div className={`w-16 h-16 ${isDaily ? 'bg-blue-100 dark:bg-blue-900/30' : 'bg-green-100 dark:bg-green-900/30'} rounded-full flex items-center justify-center`}>
-                <CheckCircle className={`w-8 h-8 ${isDaily ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`} />
-              </div>
-              <div className="absolute -top-1 -right-1">
-                <Trophy className="w-6 h-6 text-yellow-500" />
+            <div className={cn(
+              "relative w-20 h-20 rounded-full flex items-center justify-center",
+              "bg-gradient-to-br shadow-xl transition-all duration-500",
+              isDaily 
+                ? "from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50" 
+                : "from-green-100 to-green-200 dark:from-green-900/50 dark:to-green-800/50",
+              "animate-in zoom-in-50 duration-700 delay-200"
+            )}>
+              <CheckCircle className={cn(
+                "w-10 h-10",
+                isDaily ? "text-blue-600 dark:text-blue-400" : "text-green-600 dark:text-green-400"
+              )} />
+              
+              {/* Floating Trophy */}
+              <div className={cn(
+                "absolute -top-2 -right-2 w-8 h-8 rounded-full",
+                "bg-yellow-100 dark:bg-yellow-900/50 border-2 border-yellow-300 dark:border-yellow-700",
+                "flex items-center justify-center shadow-lg",
+                "animate-in slide-in-from-top-2 duration-500 delay-500"
+              )}>
+                <Trophy className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
               </div>
             </div>
           </div>
 
-          {/* 标题 */}
-          <h2 className={`text-2xl font-bold ${isDaily ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'} flex items-center justify-center space-x-2`}>
+          {/* Title with Sparkles */}
+          <DialogTitle className={cn(
+            "text-2xl font-bold flex items-center justify-center gap-2",
+            "animate-in slide-in-from-bottom-4 duration-500 delay-300",
+            isDaily ? "text-blue-600 dark:text-blue-400" : "text-green-600 dark:text-green-400"
+          )}>
             <Sparkles className="w-6 h-6" />
             <span>{title}</span>
             <Sparkles className="w-6 h-6" />
-          </h2>
+          </DialogTitle>
 
-          {/* 描述 */}
-          <p className="text-gray-600 dark:text-gray-300">
+          {/* Description */}
+          <p className={cn(
+            "text-muted-foreground text-center leading-relaxed",
+            "animate-in slide-in-from-bottom-4 duration-500 delay-400"
+          )}>
             {description}
           </p>
+        </DialogHeader>
 
-          {/* 统计信息 */}
-          <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 space-y-2">
-            <div className="flex justify-between text-sm">
-              <span>{t('quiz.questionsCompleted')}:</span>
-              <span className="font-semibold">{questionsCompleted}</span>
+        {/* Statistics Card */}
+        <Card className={cn(
+          "bg-background/50 backdrop-blur border border-border/30",
+          "animate-in slide-in-from-bottom-4 duration-500 delay-500"
+        )}>
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{t('quiz.questionsCompleted')}:</span>
+              <Badge variant="outline" className="font-semibold">
+                {questionsCompleted}
+              </Badge>
             </div>
-            <div className="flex justify-between text-sm">
-              <span>{t('quiz.finalScore')}:</span>
-              <span className={`font-semibold ${isDaily ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`}>{score}</span>
+            
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-muted-foreground">{t('quiz.finalScore')}:</span>
+              <Badge 
+                variant="outline"
+                className={cn(
+                  "font-bold text-base px-3 py-1",
+                  isDaily 
+                    ? "bg-blue-50 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700" 
+                    : "bg-green-50 dark:bg-green-950/50 text-green-700 dark:text-green-300 border-green-300 dark:border-green-700"
+                )}
+              >
+                {score}
+              </Badge>
             </div>
-          </div>
+          </CardContent>
+        </Card>
 
-          {/* 关闭按钮 */}
-          <button
+        {/* Continue Button */}
+        <div className="pt-2 animate-in slide-in-from-bottom-4 duration-500 delay-600">
+          <Button
             onClick={onClose}
-            className={`w-full ${isDaily ? 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600' : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600'} text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 shadow-lg`}
+            className={cn(
+              "w-full h-12 text-base font-medium",
+              "bg-gradient-to-r shadow-lg backdrop-blur",
+              "transition-all duration-200 hover:scale-[1.02]",
+              isDaily 
+                ? "from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 shadow-blue-500/25" 
+                : "from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 shadow-green-500/25"
+            )}
           >
             {t('common.continue')}
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 } 

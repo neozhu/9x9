@@ -1,6 +1,10 @@
 import type { UserProgress, Mode } from '@/lib/types';
 import { useLocale } from '../hooks/use-locale';
-import { Target, CheckCircle, BookOpen } from 'lucide-react';
+import { Target, CheckCircle, BookOpen, TrendingUp, Award, Brain } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 
 interface UserProgressStatsProps {
   userProgress: UserProgress;
@@ -30,7 +34,8 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
           percentage: 100,
           isCompleted: true,
           taskName: t('stats.reviewTask'),
-          icon: BookOpen
+          icon: BookOpen,
+          description: t('stats.noWrongQuestions')
         };
       } else {
         // 复习进行中，计算已完成的百分比
@@ -42,7 +47,8 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
           percentage,
           isCompleted: false,
           taskName: t('stats.reviewTask'),
-          icon: BookOpen
+          icon: BookOpen,
+          description: `${initialCount - currentWrongQuestions}/${initialCount} ${t('stats.questions')}`
         };
       }
     } else {
@@ -55,66 +61,101 @@ export function UserProgressStats({ userProgress, mode, initialWrongQuestionsCou
         percentage,
         isCompleted: userProgress.dailyTaskCompleted,
         taskName: t('stats.dailyTask'),
-        icon: Target
+        icon: Target,
+        description: `${current}/${userProgress.dailyTarget} ${t('stats.questions')}`
       };
     }
   };
 
   const taskProgress = getTaskProgress();
 
+  const statsData = [
+    {
+      label: t('stats.totalCorrectAnswers'),
+      value: userProgress.correctAnswers,
+      icon: TrendingUp
+    },
+    {
+      label: t('stats.accuracy'),
+      value: `${accuracy}%`,
+      icon: Award
+    },
+    {
+      label: t('stats.wrongQuestions'),
+      value: userProgress.wrongQuestions.length,
+      icon: Brain
+    }
+  ];
+
   return (
     <div className="mb-6 space-y-4">
       {/* 任务进度（根据模式显示不同内容） */}
-      <div className="bg-card border border-border rounded-lg p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center space-x-2">
-            <taskProgress.icon className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium">{taskProgress.taskName}</span>
-          </div>
-          {taskProgress.isCompleted && (
-            <div className="flex items-center space-x-1 text-green-600">
-              <CheckCircle className="w-4 h-4" />
-              <span className="text-xs font-medium">{t('common.completed')}</span>
+      <Card className={cn(
+        "gap-2 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "border border-border/50 shadow-lg transition-all duration-300",
+        
+      )}>
+        <CardHeader className="pb-3">
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <taskProgress.icon className="w-5 h-5" />
+              <span className="text-base">{taskProgress.taskName}</span>
             </div>
-          )}
-        </div>
-        <div className="flex items-center justify-between text-sm mb-1">
-          {mode === 'review' ? (
-            <span>
-              {taskProgress.isCompleted 
-                ? t('stats.noWrongQuestions') 
-                : `${taskProgress.total - taskProgress.current}/${taskProgress.total} ${t('stats.questions')}`
-              }
-            </span>
-          ) : (
-            <span>{taskProgress.current}/{taskProgress.total} {t('stats.questions')}</span>
-          )}
-          <span className="font-medium">{Math.round(taskProgress.percentage)}%</span>
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
-            className={`h-2 rounded-full transition-all duration-500 ${
-              taskProgress.isCompleted ? 'bg-green-500' : 'bg-blue-500'
-            }`}
-            style={{ width: `${Math.min(taskProgress.percentage, 100)}%` }}
-          ></div>
-        </div>
-      </div>
+            
+            {taskProgress.isCompleted && (
+              <Badge 
+                variant="outline" 
+                className="gap-1"
+              >
+                <CheckCircle className="w-3 h-3" />
+                <span>{t('common.completed')}</span>
+              </Badge>
+            )}
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="space-y-3">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground">{taskProgress.description}</span>
+            <Badge variant="secondary" className="font-semibold">
+              {Math.round(taskProgress.percentage)}%
+            </Badge>
+          </div>
+          
+          <Progress 
+            value={Math.min(taskProgress.percentage, 100)}
+            className="h-3 transition-all duration-500"
+          />
+        </CardContent>
+      </Card>
 
       {/* 其他统计 */}
-      <div className="grid grid-cols-3 gap-4">
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <div className="text-2xl font-bold text-blue-600">{userProgress.correctAnswers}</div>
-          <div className="text-xs text-muted-foreground">{t('stats.totalCorrectAnswers')}</div>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <div className="text-2xl font-bold text-green-600">{accuracy}%</div>
-          <div className="text-xs text-muted-foreground">{t('stats.accuracy')}</div>
-        </div>
-        <div className="bg-card border border-border rounded-lg p-3 text-center">
-          <div className="text-2xl font-bold text-purple-600">{userProgress.wrongQuestions.length}</div>
-          <div className="text-xs text-muted-foreground">{t('stats.wrongQuestions')}</div>
-        </div>
+      <div className="grid grid-cols-3 gap-2">
+        {statsData.map((stat, index) => (
+          <Card 
+            key={stat.label}
+            className={cn(
+              "py-0 text-center transition-all duration-200 hover:scale-105",
+              "bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+              "border border-border/50 shadow-sm hover:shadow-md",
+              "animate-in fade-in-0 slide-in-from-bottom-4"
+            )}
+            style={{ 
+              animationDelay: `${index * 100}ms`,
+              animationFillMode: 'backwards'
+            }}
+          >
+            <CardContent className="p-3 space-y-1">
+              <div className="text-xl font-bold">
+                {stat.value}
+              </div>
+              
+              <div className="text-xs text-muted-foreground leading-tight">
+                {stat.label}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );

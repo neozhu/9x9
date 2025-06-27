@@ -31,12 +31,21 @@ export function useUserProgress() {
       if (saved) {
         const progress = JSON.parse(saved);
         // 确保旧数据兼容性
-        return {
+        const loadedProgress = {
           ...progress,
           dailyQuestionsAnswered: progress.dailyQuestionsAnswered || 0,
           dailyTarget: progress.dailyTarget || 10,
           dailyTaskCompleted: progress.dailyTaskCompleted || false
         };
+        
+        // 检查是否是新的一天，如果是则重置每日任务状态
+        const today = new Date().toDateString();
+        if (loadedProgress.lastPlayDate !== today) {
+          loadedProgress.dailyQuestionsAnswered = 0;
+          loadedProgress.dailyTaskCompleted = false;
+        }
+        
+        return loadedProgress;
       }
     }
     return {

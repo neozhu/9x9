@@ -1,8 +1,15 @@
 "use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { Globe, ChevronDown } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { locales, languageConfig, type Locale } from '@/i18n';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface LanguageSwitcherProps {
   currentLocale: Locale;
@@ -10,54 +17,53 @@ interface LanguageSwitcherProps {
 }
 
 export function LanguageSwitcher({ currentLocale, onLocaleChange }: LanguageSwitcherProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const handleLanguageChange = (locale: Locale) => {
-    onLocaleChange(locale);
-    setIsOpen(false);
-  };
-
   return (
-    <div className="relative" ref={dropdownRef}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:bg-accent text-muted-foreground hover:text-foreground"
-        aria-label="切换语言"
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            "h-9 px-3 gap-2 text-muted-foreground hover:text-foreground",
+            "transition-all duration-200 hover:bg-accent/50",
+            "backdrop-blur supports-[backdrop-filter]:bg-background/50"
+          )}
+          aria-label="切换语言"
+        >
+          <Globe className="w-4 h-4" />
+          <span className="hidden sm:inline font-medium">
+            {languageConfig[currentLocale].name}
+          </span>
+        </Button>
+      </DropdownMenuTrigger>
+      
+      <DropdownMenuContent 
+        align="end" 
+        className={cn(
+          "min-w-[140px] bg-background/95 backdrop-blur",
+          "supports-[backdrop-filter]:bg-background/80",
+          "border border-border/50 shadow-xl"
+        )}
       >
-        <Globe className="w-4 h-4" />
-        <span className="hidden sm:inline">{languageConfig[currentLocale].name}</span>
-        <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-background border border-border rounded-lg shadow-lg py-1 z-50 min-w-[120px]">
-          {locales.map((locale) => (
-            <button
-              key={locale}
-              onClick={() => handleLanguageChange(locale)}
-              className={`w-full text-left px-3 py-2 text-sm hover:bg-accent transition-colors ${
-                locale === currentLocale ? 'bg-accent text-accent-foreground' : 'text-foreground'
-              }`}
-            >
-              {languageConfig[locale].name}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+        {locales.map((locale) => (
+          <DropdownMenuItem
+            key={locale}
+            onClick={() => onLocaleChange(locale)}
+            className={cn(
+              "cursor-pointer transition-all duration-200",
+              "focus:bg-accent/50 hover:bg-accent/50",
+              locale === currentLocale && "bg-accent text-accent-foreground font-medium"
+            )}
+          >
+            <div className="flex items-center justify-between w-full">
+              <span>{languageConfig[locale].name}</span>
+              {locale === currentLocale && (
+                <div className="w-2 h-2 bg-primary rounded-full" />
+              )}
+            </div>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 } 
