@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import React, { useMemo } from 'react';
 
 interface LearnModeProps {
   selectedCell: {row: number, col: number} | null;
@@ -57,9 +58,9 @@ export function LearnMode({
     };
   };
 
-  const grid = generateGrid();
-  const { formula, equation, combinationInfo } = getDisplayFormula();
-  const sameResultCombinations = selectedResult ? findSameResultCombinations(selectedResult) : [];
+  const grid = useMemo(() => generateGrid(), []);
+  const { formula, equation, combinationInfo } = useMemo(getDisplayFormula, [selectedCell, locale, t]);
+  const sameResultCombinations = useMemo(() => selectedResult ? findSameResultCombinations(selectedResult) : [], [selectedResult]);
 
   return (
     <>
