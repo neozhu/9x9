@@ -39,6 +39,14 @@ export function Footer() {
             <p className="text-xs text-muted-foreground">
               {t('footer.copyright')}
             </p>
+            <a
+              href="https://github.com/neozhu/9x9"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block mt-1 text-xs text-primary hover:underline transition-colors"
+            >
+              GitHub: @neozhu/9x9
+            </a>
           </div>
         </div>
       </div>
