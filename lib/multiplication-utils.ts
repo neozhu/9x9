@@ -202,7 +202,8 @@ export function speakFormula(
      if (isIOS || isSafari) {
        try {
          // 创建一个短暂的音频上下文来"唤醒"语音合成
-         const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+         const AudioContextConstructor = window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+         const audioContext = new AudioContextConstructor();
          const oscillator = audioContext.createOscillator();
          const gainNode = audioContext.createGain();
          
