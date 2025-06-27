@@ -39,7 +39,7 @@ const GridCell = React.memo(function GridCell({
   const baseClass =
     "aspect-square p-0 text-xs sm:text-sm font-semibold min-h-[2.5rem] min-w-[2.5rem] rounded-lg relative overflow-hidden border-2 touch-manipulation";
   const selectedClass = isSelected && [
-    "bg-primary text-primary-foreground border-primary font-black text-base sm:text-lg z-20 scale-110 ring-4 ring-primary/30"
+    "!bg-primary !text-primary-foreground !border-primary font-black text-base sm:text-lg z-20 scale-110 ring-4 ring-primary/30 dark:ring-primary/50"
   ];
   const sameResultClass = isSameResult && !isSelected && [
     "bg-blue-100 dark:bg-blue-800/80 text-blue-900 dark:text-blue-100 border-blue-400 dark:border-blue-400/90 font-bold z-10 scale-105 ring-2 ring-blue-400/40 dark:ring-blue-400/60"
@@ -54,7 +54,7 @@ const GridCell = React.memo(function GridCell({
   // 移动端下移除高开销样式
   const transitionClass = "sm:transition-all sm:duration-300 sm:ease-out";
   const shadowClass = isSelected
-    ? "sm:shadow-xl sm:shadow-primary/40"
+    ? "sm:shadow-xl sm:shadow-primary/40 dark:sm:shadow-primary/60"
     : isSameResult
       ? "sm:shadow-lg sm:shadow-blue-500/30 dark:sm:shadow-blue-400/40"
       : isAreaHighlighted
@@ -67,7 +67,7 @@ const GridCell = React.memo(function GridCell({
     <Button
       key={`${row}-${col}`}
       onClick={handleClick}
-      variant="outline"
+      variant={isSelected ? "default" : "outline"}
       size="sm"
       aria-label={t('grid.formula', { num1: row, num2: col, result: value })}
       className={cn(
@@ -80,7 +80,12 @@ const GridCell = React.memo(function GridCell({
         shadowClass
       )}
       style={{
-        zIndex: isSelected ? 20 : (isSameResult || isAreaHighlighted) ? 10 : 1
+        zIndex: isSelected ? 20 : (isSameResult || isAreaHighlighted) ? 10 : 1,
+        ...(isSelected && {
+          backgroundColor: 'hsl(var(--primary))',
+          color: 'hsl(var(--primary-foreground))',
+          borderColor: 'hsl(var(--primary))'
+        })
       }}
     >
       <span className={cn(
@@ -92,7 +97,7 @@ const GridCell = React.memo(function GridCell({
       </span>
       {/* 仅在桌面端保留高开销效果 */}
       {isSelected && (
-        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-50 rounded-lg" />
+        <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-white/20 dark:from-white/10 to-transparent opacity-50 rounded-lg" />
       )}
       {isSameResult && !isSelected && (
         <div className="hidden sm:block absolute inset-0 bg-gradient-to-br from-blue-400/10 dark:from-blue-400/20 to-transparent rounded-lg" />
@@ -130,7 +135,7 @@ export function MultiplicationGrid({
   return (
     <Card className={cn(
       "mb-8 py-0 bg-background/95 sm:backdrop-blur sm:supports-[backdrop-filter]:bg-background/60",
-      "border border-border/50 sm:shadow-xl",
+      "border border-border/50 sm:shadow-xl dark:sm:shadow-2xl",
       "sm:transition-all sm:duration-300 sm:ease-in-out",
       "sm:animate-in sm:fade-in-0 sm:slide-in-from-bottom-6"
     )}>
