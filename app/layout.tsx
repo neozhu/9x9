@@ -165,11 +165,45 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
+        <meta name="application-name" content="9x9" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="9x9" />
+        <meta name="description" content="A modern, interactive web application for learning the 9x9 multiplication table." />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="msapplication-config" content="/icons/browserconfig.xml" />
+        <meta name="msapplication-TileColor" content="#2B5797" />
+        <meta name="msapplication-tap-highlight" content="no" />
+        <meta name="theme-color" content="#000000" />
+
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="167x167" href="/icons/icon-192x192.png" />
+
+        <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-96x96.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-96x96.png" />
+        <link rel="manifest" href="/manifest.json" />
+        <link rel="mask-icon" href="/icons/icon-192x192.png" color="#5bbad5" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:url" content="https://9x9.vercel.app/" />
+        <meta name="twitter:title" content="9x9 Multiplication Table" />
+        <meta name="twitter:description" content="A modern, interactive web application for learning the 9x9 multiplication table." />
+        <meta name="twitter:image" content="https://9x9.vercel.app/icons/icon-192x192.png" />
+        <meta name="twitter:creator" content="@your_twitter_handle" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="9x9 Multiplication Table" />
+        <meta property="og:description" content="A modern, interactive web application for learning the 9x9 multiplication table." />
+        <meta property="og:site_name" content="9x9" />
+        <meta property="og:url" content="https://9x9.vercel.app/" />
+        <meta property="og:image" content="https://9x9.vercel.app/icons/icon-192x192.png" />
+        
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#000000" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="乘法口诀" />
       </head>
       <body
