@@ -57,8 +57,9 @@
     "dailyTaskCompletedTitle": "今日のタスク完了",
     "dailyTaskCompletedMessage": "おめでとうございます！今日のクイズタスクが完了しました。明日また挑戦してください！",
     "reviewTaskCompletedTitle": "復習タスク完了",
-    "reviewTaskCompletedMessage": "おめでとうございます！すべての間違い問題を克服しました、復習タスク完了！",
-    "backToLearn": "学習モードに戻る"
+    "reviewTaskCompletedMessage": "おめでとうございます！すべての間違った問題をマスターし、復習タスクが完了しました！",
+    "backToLearn": "学習モードに戻る",
+    "continueQuiz": "もう10問やる"
   },
   "achievements": {
     "title": "実績",

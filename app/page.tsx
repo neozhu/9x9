@@ -430,6 +430,16 @@ export default function Home() {
     setMode('learn');
   };
 
+  const handleContinueQuiz = useCallback(() => {
+    setUserProgress({
+      ...userProgress,
+      dailyTaskCompleted: false,
+      dailyQuestionsAnswered: 0,
+    });
+    setMode('quiz');
+    setTimeout(() => startQuiz(false), 100);
+  }, [userProgress, setUserProgress, startQuiz]);
+
   return (
     <div className="text-foreground min-h-screen relative">
       <Header 
@@ -453,7 +463,11 @@ export default function Home() {
 
         {/* 答题模式界面 */}
         {mode === 'quiz' && userProgress.dailyTaskCompleted && (
-          <DailyTaskComplete onBackToLearn={handleBackToLearn} type="daily" />
+          <DailyTaskComplete 
+            onBackToLearn={handleBackToLearn} 
+            type="daily" 
+            onContinueQuiz={handleContinueQuiz}
+          />
         )}
         
         {/* 复习模式界面 */}

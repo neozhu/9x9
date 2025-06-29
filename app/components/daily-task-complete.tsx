@@ -6,10 +6,11 @@ import { cn } from '@/lib/utils';
 
 interface DailyTaskCompleteProps {
   onBackToLearn: () => void;
+  onContinueQuiz?: () => void;
   type?: 'daily' | 'review';
 }
 
-export function DailyTaskComplete({ onBackToLearn, type = 'daily' }: DailyTaskCompleteProps) {
+export function DailyTaskComplete({ onBackToLearn, onContinueQuiz, type = 'daily' }: DailyTaskCompleteProps) {
   const { t } = useLocale();
 
   return (
@@ -61,25 +62,35 @@ export function DailyTaskComplete({ onBackToLearn, type = 'daily' }: DailyTaskCo
             </p>
           </div>
           
-          {/* Simplified Back to Learn Button */}
-          <div className="pt-4">
+          {/* Action Buttons */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button
               onClick={onBackToLearn}
               size="lg"
+              variant="outline"
               className={cn(
-                // Enhanced glassmorphism effect for button
-                "bg-primary/90 backdrop-blur supports-[backdrop-filter]:bg-primary/80",
-                "border border-primary/20 shadow-lg shadow-primary/25",
-                "hover:bg-primary transition-colors duration-200",
-                // Responsive sizing
-                "h-12 sm:h-14 px-6 sm:px-8",
-                "text-sm sm:text-base font-medium",
-                "gap-2 sm:gap-3"
+                "h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium",
+                "backdrop-blur-sm border-border/50",
+                "hover:bg-accent/80 transition-colors duration-200 gap-2 sm:gap-3"
               )}
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>{t('quiz.backToLearn')}</span>
             </Button>
+            {type === 'daily' && onContinueQuiz && (
+              <Button
+                onClick={onContinueQuiz}
+                size="lg"
+                className={cn(
+                  "bg-primary/90 backdrop-blur supports-[backdrop-filter]:bg-primary/80",
+                  "border border-primary/20 shadow-lg shadow-primary/25",
+                  "hover:bg-primary transition-colors duration-200",
+                  "h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-medium"
+                )}
+              >
+                <span>{t('quiz.continueQuiz')}</span>
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>

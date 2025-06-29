@@ -59,8 +59,9 @@
     "dailyTaskCompletedTitle": "今日任务已完成",
     "dailyTaskCompletedMessage": "恭喜！您今天的答题任务已经完成了。明天再来挑战吧！",
     "reviewTaskCompletedTitle": "复习任务已完成",
-    "reviewTaskCompletedMessage": "恭喜！您已经掌握了所有错题，复习任务完成！",
-    "backToLearn": "返回学习模式"
+    "reviewTaskCompletedMessage": "恭喜你！已掌握所有错题，复习任务完成！",
+    "backToLearn": "返回学习模式",
+    "continueQuiz": "再来一组 (10题)"
   },
   "achievements": {
     "title": "成就",

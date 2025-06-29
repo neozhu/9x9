@@ -59,8 +59,9 @@
     "dailyTaskCompletedTitle": "Daily Task Completed",
     "dailyTaskCompletedMessage": "Congratulations! You have completed today's quiz task. Come back tomorrow for more challenges!",
     "reviewTaskCompletedTitle": "Review Task Completed",
-    "reviewTaskCompletedMessage": "Congratulations! You have mastered all wrong questions, review task completed!",
-    "backToLearn": "Back to Learn Mode"
+    "reviewTaskCompletedMessage": "You've reviewed all the tricky questions. Great job!",
+    "backToLearn": "Back to Learn Mode",
+    "continueQuiz": "Do Another 10"
   },
   "achievements": {
     "title": "Achievements",

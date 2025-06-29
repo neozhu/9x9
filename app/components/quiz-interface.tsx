@@ -228,26 +228,21 @@ export function QuizInterface({
           <div className="flex items-center gap-2">
             {/* Pause/Resume Button */}
             {!showResult && (
-              <Button 
+              <Button
                 onClick={isPaused ? onResumeQuiz : onPauseQuiz}
+                aria-label={isPaused ? t('quiz.resumeQuiz') : t('quiz.pauseQuiz')}
                 variant="outline"
-                size="sm"
+                size="icon"
                 className={cn(
-                  "h-7 px-2.5 text-xs backdrop-blur hover:scale-105",
-                  "transition-transform duration-150 gap-1",
+                  "backdrop-blur hover:scale-105",
+                  "transition-transform duration-150",
                   "dark:border-border/70 dark:hover:bg-accent/80"
                 )}
               >
                 {isPaused ? (
-                  <>
-                    <Play className="w-3 h-3" />
-                   
-                  </>
+                  <Play className="w-3 h-3" />
                 ) : (
-                  <>
-                    <Pause className="w-3 h-3" />
-                   
-                  </>
+                  <Pause className="w-3 h-3" />
                 )}
               </Button>
             )}
