@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { Question } from '@/lib/types';
+import type { Question, Difficulty } from '@/lib/types';
 
 interface QuizState {
   isPaused: boolean;
@@ -7,6 +7,7 @@ interface QuizState {
   questionsAnswered: number;
   quizScore: number;
   mode: 'quiz' | 'review' | null;
+  difficulty: Difficulty;
   currentQuestion: Question | null;
   answerOptions: number[];
   selectedAnswer: number | null;
@@ -21,6 +22,7 @@ export function useQuizState() {
     questionsAnswered: 0,
     quizScore: 0,
     mode: null,
+    difficulty: 'beginner',
     currentQuestion: null,
     answerOptions: [],
     selectedAnswer: null
@@ -51,6 +53,7 @@ export function useQuizState() {
       questionsAnswered: 0,
       quizScore: 0,
       mode: null,
+      difficulty: 'beginner',
       currentQuestion: null,
       answerOptions: [],
       selectedAnswer: null
@@ -68,6 +71,7 @@ export function useQuizState() {
       questionsAnswered: 0,
       quizScore: 0,
       mode: null,
+      difficulty: 'beginner',
       currentQuestion: null,
       answerOptions: [],
       selectedAnswer: null

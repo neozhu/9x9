@@ -1,5 +1,5 @@
-import { chineseNumbers } from './constants';
-import type { Question, WrongQuestion } from './types';
+import { chineseNumbers, difficultyConfigs } from './constants';
+import type { Question, WrongQuestion, Difficulty } from './types';
 
 // 中文口诀转换函数
 export function getChineseFormula(multiplicand: number, multiplier: number, result: number): string {
@@ -49,10 +49,15 @@ export function findSameResultCombinations(targetResult: number): Array<{row: nu
   return combinations;
 }
 
-// 生成答案选项
-export function generateAnswerOptions(correctAnswer: number): number[] {
+// 生成答案选项 - 支持不同难度的答案范围
+export function generateAnswerOptions(correctAnswer: number, difficulty: Difficulty = 'beginner'): number[] {
   const options = [correctAnswer];
   const usedNumbers = new Set([correctAnswer]);
+  
+  // 根据难度调整答案范围
+  const difficultyConfig = difficultyConfigs.find(config => config.id === difficulty);
+  const maxRange = difficulty === 'beginner' ? 81 : 
+                   difficulty === 'advanced' ? 361 : 9801; // 19*19 或 99*99
   
   // 生成2个干扰项
   while (options.length < 3) {
@@ -61,16 +66,25 @@ export function generateAnswerOptions(correctAnswer: number): number[] {
     const random = Math.random();
     if (random < 0.3) {
       // 相邻的数字
-      wrongAnswer = correctAnswer + (Math.random() < 0.5 ? 1 : -1);
+      const offset = Math.floor(Math.random() * 10) + 1;
+      wrongAnswer = correctAnswer + (Math.random() < 0.5 ? offset : -offset);
     } else if (random < 0.6) {
-      // 其他乘法表中的数字
-      wrongAnswer = Math.floor(Math.random() * 81) + 1;
+      // 基于相似乘法的结果
+      if (difficultyConfig) {
+        const [minMult, maxMult] = difficultyConfig.multiplicandRange;
+        const [minMultiplier, maxMultiplier] = difficultyConfig.multiplierRange;
+        const randomMult = Math.floor(Math.random() * (maxMult - minMult + 1)) + minMult;
+        const randomMultiplier = Math.floor(Math.random() * (maxMultiplier - minMultiplier + 1)) + minMultiplier;
+        wrongAnswer = randomMult * randomMultiplier;
+      } else {
+        wrongAnswer = Math.floor(Math.random() * maxRange) + 1;
+      }
     } else {
       // 完全随机但合理的数字
-      wrongAnswer = Math.floor(Math.random() * 20) + 1;
+      wrongAnswer = Math.floor(Math.random() * Math.min(maxRange, correctAnswer + 50)) + Math.max(1, correctAnswer - 50);
     }
     
-    if (wrongAnswer > 0 && wrongAnswer <= 81 && !usedNumbers.has(wrongAnswer)) {
+    if (wrongAnswer > 0 && wrongAnswer <= maxRange && !usedNumbers.has(wrongAnswer)) {
       options.push(wrongAnswer);
       usedNumbers.add(wrongAnswer);
     }
@@ -80,10 +94,27 @@ export function generateAnswerOptions(correctAnswer: number): number[] {
   return options.sort(() => Math.random() - 0.5);
 }
 
-// 生成随机题目
-export function generateRandomQuestion(): Question {
-  const multiplicand = Math.floor(Math.random() * 9) + 1;
-  const multiplier = Math.floor(Math.random() * 9) + 1;
+// 生成随机题目 - 支持难度选择
+export function generateRandomQuestion(difficulty: Difficulty = 'beginner'): Question {
+  const difficultyConfig = difficultyConfigs.find(config => config.id === difficulty);
+  
+  if (!difficultyConfig) {
+    // 默认使用初级难度
+    const multiplicand = Math.floor(Math.random() * 9) + 1;
+    const multiplier = Math.floor(Math.random() * 9) + 1;
+    return {
+      multiplicand,
+      multiplier,
+      correctAnswer: multiplicand * multiplier
+    };
+  }
+  
+  const [minMult, maxMult] = difficultyConfig.multiplicandRange;
+  const [minMultiplier, maxMultiplier] = difficultyConfig.multiplierRange;
+  
+  const multiplicand = Math.floor(Math.random() * (maxMult - minMult + 1)) + minMult;
+  const multiplier = Math.floor(Math.random() * (maxMultiplier - minMultiplier + 1)) + minMultiplier;
+  
   return {
     multiplicand,
     multiplier,

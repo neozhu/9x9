@@ -1,7 +1,32 @@
-import type { Achievement } from './types';
+import type { Achievement, DifficultyConfig } from './types';
 
 // 中文数字转换
 export const chineseNumbers = ['', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+
+// 难度配置
+export const difficultyConfigs: DifficultyConfig[] = [
+  {
+    id: 'beginner',
+    name: '初级',
+    description: '1-9 乘法表',
+    multiplicandRange: [1, 9],
+    multiplierRange: [1, 9]
+  },
+  {
+    id: 'advanced', 
+    name: '高级',
+    description: '11-19 乘法',
+    multiplicandRange: [11, 19],
+    multiplierRange: [11, 19]
+  },
+  {
+    id: 'expert',
+    name: '专家级', 
+    description: '21-99 乘法',
+    multiplicandRange: [21, 99],
+    multiplierRange: [21, 99]
+  }
+];
 
 // 成就系统
 export const achievements: Achievement[] = [

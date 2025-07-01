@@ -19,7 +19,14 @@
     "enabled": "Enabled",
     "disabled": "Disabled",
     "continue": "Continue",
-    "completed": "Completed"
+    "completed": "Completed",
+    "loading": "Loading...",
+    "error": "Error occurred",
+    "retry": "Retry",
+    "back": "Back",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "selected": "Selected"
   },
   "modes": {
     "learn": "Learn",
@@ -63,7 +70,27 @@
     "reviewTaskCompletedTitle": "Review Task Completed",
     "reviewTaskCompletedMessage": "You've reviewed all the tricky questions. Great job!",
     "backToLearn": "Back to Learn Mode",
-    "continueQuiz": "Do Another 10"
+    "continueQuiz": "Do Another 10",
+    "selectDifficulty": "Select Difficulty",
+    "selectReviewDifficulty": "Select Review Difficulty",
+    "difficultyDescription": "Choose your difficulty level to start practicing",
+    "difficulty": {
+      "beginner": {
+        "name": "Beginner",
+        "description": "1-9 multiplication table, perfect for starters"
+      },
+      "advanced": {
+        "name": "Advanced",
+        "description": "11-19 multiplication, level up the challenge"
+      },
+      "expert": {
+        "name": "Expert",
+        "description": "21-99 multiplication, ultimate challenge"
+      }
+    },
+    "multiplicandRange": "Multiplicand Range",
+    "multiplierRange": "Multiplier Range",
+    "startReview": "Start Review"
   },
   "achievements": {
     "title": "Achievements",
@@ -86,7 +113,9 @@
     "questions_100": "Century Master",
     "questions_100Desc": "Answered 100 questions",
     "daily_task_complete": "Daily Champion",
-    "daily_task_completeDesc": "Completed today's 10 questions task"
+    "daily_task_completeDesc": "Completed today's 10 questions task",
+    "unlocked": "Unlocked",
+    "locked": "Locked"
   },
   "stats": {
     "totalQuestions": "Total Questions",
@@ -117,7 +146,14 @@
     "clickAnyNumber": "Click any number to learn multiplication",
     "practiceDaily": "Practice a few minutes daily to master the multiplication table",
     "clickToHear": "Click numbers to hear speech",
-    "sameResult": "Blue squares show same results"
+    "sameResult": "Blue squares show same results",
+    "title": "Learn Multiplication Table",
+    "formula": "Formula",
+    "sameResultCombinations": "Same result combinations",
+    "speechToggle": "Speech playback",
+    "enableSpeech": "Enable speech",
+    "disableSpeech": "Disable speech",
+    "speechNotSupported": "Speech not supported"
   },
   "footer": {
     "appName": "9×9 Multiplication Table Learning App",
@@ -126,5 +162,32 @@
     "interactiveExperience": "Interactive Experience",
     "eyeProtection": "Eye Protection",
     "copyright": "© 2024 Multiplication Table Learning App · Making math more enjoyable"
+  },
+  "progress": {
+    "totalQuestions": "Total questions",
+    "correctAnswers": "Correct answers",
+    "accuracy": "Accuracy",
+    "currentStreak": "Current streak",
+    "bestStreak": "Best streak",
+    "consecutiveDays": "Consecutive days",
+    "wrongQuestions": "Wrong questions",
+    "dailyProgress": "Daily progress",
+    "dailyTarget": "Daily target",
+    "clearWrongQuestions": "Clear wrong questions",
+    "confirmClear": "Are you sure you want to clear all wrong questions?",
+    "cleared": "Cleared"
+  },
+  "review": {
+    "title": "Review Wrong Questions",
+    "noWrongQuestions": "No wrong questions to review",
+    "startReview": "Start Review",
+    "reviewComplete": "Review Complete",
+    "reviewCompleteMessage": "Congratulations! You have completed reviewing all wrong questions.",
+    "backToLearn": "Back to Learn"
+  },
+  "daily": {
+    "taskComplete": "Daily Task Complete",
+    "taskCompleteMessage": "Congratulations! You have completed today's 10-question task.",
+    "keepGoing": "Keep going"
   }
 } 

@@ -19,7 +19,14 @@
     "enabled": "有効",
     "disabled": "無効",
     "continue": "続ける",
-    "completed": "完了"
+    "completed": "完了",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "retry": "再試行",
+    "back": "戻る",
+    "ok": "OK",
+    "cancel": "キャンセル",
+    "selected": "選択済み"
   },
   "modes": {
     "learn": "学習",
@@ -61,7 +68,27 @@
     "reviewTaskCompletedTitle": "復習タスク完了",
     "reviewTaskCompletedMessage": "おめでとうございます！すべての間違った問題をマスターし、復習タスクが完了しました！",
     "backToLearn": "学習モードに戻る",
-    "continueQuiz": "もう10問やる"
+    "continueQuiz": "もう10問やる",
+    "selectDifficulty": "難易度を選択",
+    "selectReviewDifficulty": "復習難易度を選択",
+    "difficultyDescription": "練習する難易度レベルを選択してください",
+    "difficulty": {
+      "beginner": {
+        "name": "初級",
+        "description": "1-9の九九、初心者に最適"
+      },
+      "advanced": {
+        "name": "上級",
+        "description": "11-19の掛け算、チャレンジレベルアップ"
+      },
+      "expert": {
+        "name": "エキスパート",
+        "description": "21-99の掛け算、究極のチャレンジ"
+      }
+    },
+    "multiplicandRange": "被乗数の範囲",
+    "multiplierRange": "乗数の範囲",
+    "startReview": "復習開始"
   },
   "achievements": {
     "title": "実績",
@@ -84,7 +111,9 @@
     "questions_100": "百問達人",
     "questions_100Desc": "合計100問回答",
     "daily_task_complete": "今日のチャンピオン",
-    "daily_task_completeDesc": "今日の10問タスクを完了"
+    "daily_task_completeDesc": "今日の10問タスクを完了",
+    "unlocked": "解除済み",
+    "locked": "ロック中"
   },
   "stats": {
     "totalQuestions": "総問題数",
@@ -115,7 +144,14 @@
     "clickAnyNumber": "任意の数字をクリックして掛け算を学習",
     "practiceDaily": "毎日数分練習して九九表をマスター",
     "clickToHear": "数字をクリックして音声を聞く",
-    "sameResult": "青い四角は同じ結果を表示"
+    "sameResult": "青い四角は同じ結果を表示",
+    "title": "九九を学ぶ",
+    "formula": "公式",
+    "sameResultCombinations": "同じ結果の組み合わせ",
+    "speechToggle": "音声再生",
+    "enableSpeech": "音声を有効にする",
+    "disableSpeech": "音声を無効にする",
+    "speechNotSupported": "音声がサポートされていません"
   },
   "footer": {
     "appName": "9×9九九表学習アプリ",
@@ -124,5 +160,32 @@
     "interactiveExperience": "インタラクティブ体験",
     "eyeProtection": "目の保護",
     "copyright": "© 2024 九九表学習アプリ · 数学をもっと楽しく"
+  },
+  "progress": {
+    "totalQuestions": "総質問数",
+    "correctAnswers": "正解数",
+    "accuracy": "正答率",
+    "currentStreak": "現在の連続正解",
+    "bestStreak": "最高連続正解",
+    "consecutiveDays": "連続日数",
+    "wrongQuestions": "間違えた問題",
+    "dailyProgress": "今日の進捗",
+    "dailyTarget": "今日の目標",
+    "clearWrongQuestions": "間違えた問題をクリア",
+    "confirmClear": "すべての間違えた問題をクリアしてもよろしいですか？",
+    "cleared": "クリアされました"
+  },
+  "review": {
+    "title": "間違えた問題の復習",
+    "noWrongQuestions": "復習する間違えた問題がありません",
+    "startReview": "復習開始",
+    "reviewComplete": "復習完了",
+    "reviewCompleteMessage": "おめでとうございます！すべての間違えた問題の復習が完了しました。",
+    "backToLearn": "学習に戻る"
+  },
+  "daily": {
+    "taskComplete": "今日のタスク完了",
+    "taskCompleteMessage": "おめでとうございます！今日の10問タスクが完了しました。",
+    "keepGoing": "その調子で続けましょう"
   }
 } 

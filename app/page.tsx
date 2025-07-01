@@ -5,6 +5,7 @@ import { Header } from "./header";
 import { AchievementNotification } from "./components/achievement-notification";
 import { UserProgressStats } from "./components/user-progress-stats";
 import { QuizInterface } from "./components/quiz-interface";
+import { DifficultySelector } from "./components/difficulty-selector";
 import { LearnMode } from "./components/learn-mode";
 import { AchievementDisplay } from "./components/achievement-display";
 import { ReviewCompleteModal } from "./components/review-complete-modal";
@@ -19,7 +20,7 @@ import {
   speakFormula,
   initializeSpeechSynthesis
 } from "@/lib/multiplication-utils";
-import type { Question, Mode } from "@/lib/types";
+import type { Question, Mode, Difficulty } from "@/lib/types";
 
 export default function Home() {
   // 国际化
@@ -32,6 +33,10 @@ export default function Home() {
   const [speechSupported, setSpeechSupported] = useState(false);
   const [speechInitialized, setSpeechInitialized] = useState(false);
   const [selectedResult, setSelectedResult] = useState<number | null>(null);
+  
+  // 难度选择状态
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>('beginner');
+  const [showDifficultySelector, setShowDifficultySelector] = useState(false);
   
   // 答题模式状态
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -134,6 +139,7 @@ export default function Home() {
     setIsQuizActive(false);
     setShowResult(false);
     setCurrentQuestion(null);
+    setShowDifficultySelector(false);
     clearQuizState();
   }, [clearQuizState]);
 
@@ -166,22 +172,24 @@ export default function Home() {
   }, [updatePauseState, quizState.currentQuestion, quizState.answerOptions, quizState.selectedAnswer, quizState.timeLeft]);
 
   // 开始答题
-  const startQuiz = useCallback((isReview = false) => {
+  const startQuiz = useCallback((isReview = false, difficulty: Difficulty = selectedDifficulty) => {
     const question = isReview 
       ? generateReviewQuestion(userProgress.wrongQuestions) 
-      : generateRandomQuestion();
+      : generateRandomQuestion(difficulty);
     if (!question) return;
     
     setCurrentQuestion(question);
-    setAnswerOptions(generateAnswerOptions(question.correctAnswer));
+    setAnswerOptions(generateAnswerOptions(question.correctAnswer, difficulty));
     setSelectedAnswer(null);
     setTimeLeft(10);
     setIsQuizActive(true);
     setShowResult(false);
+    setShowDifficultySelector(false);
     
-    // 更新答题状态，记录当前模式
+    // 更新答题状态，记录当前模式和难度
     updateQuizState({ 
       mode: isReview ? 'review' : 'quiz',
+      difficulty: difficulty,
       timeLeft: 10
     });
     
@@ -194,7 +202,7 @@ export default function Home() {
         speakFormula(question.multiplicand, question.multiplier, speechEnabled, speechSupported, locale);
       });
     }
-  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, speechInitialized, locale, updateQuizState, initializeSpeech]);
+  }, [userProgress.wrongQuestions, speechEnabled, speechSupported, speechInitialized, locale, updateQuizState, initializeSpeech, selectedDifficulty]);
 
   // 恢复暂停的答题状态
   const resumePausedQuiz = useCallback(() => {
@@ -296,13 +304,13 @@ export default function Home() {
           setReviewTaskCompleted(true);
           stopQuiz();
         } else {
-          startQuiz(true);
+          startQuiz(true, selectedDifficulty);
         }
-      } else {
-        startQuiz(false);
+                    } else {
+        startQuiz(false, selectedDifficulty);
       }
     }, 3000);
-  }, [currentQuestion, selectedAnswer, quizState.quizScore, mode, removeFromWrongQuestions, updateProgress, quizState.questionsAnswered, stopQuiz, startQuiz, updateQuizState]);
+  }, [currentQuestion, selectedAnswer, quizState.quizScore, mode, removeFromWrongQuestions, updateProgress, quizState.questionsAnswered, stopQuiz, startQuiz, updateQuizState, selectedDifficulty]);
 
   // 答题模式倒计时
   useEffect(() => {
@@ -334,6 +342,7 @@ export default function Home() {
       setIsQuizActive(false);
       setShowResult(false);
       setCurrentQuestion(null);
+      setShowDifficultySelector(false);
       // 不调用 clearQuizState()，保留暂停状态
     } else {
       // 其他情况正常停止答题
@@ -351,6 +360,7 @@ export default function Home() {
           setSelectedAnswer(quizState.selectedAnswer);
           setTimeLeft(quizState.timeLeft);
           setShowResult(false);
+          setSelectedDifficulty(quizState.difficulty);
         }
         return;
       }
@@ -359,7 +369,8 @@ export default function Home() {
         // 任务已完成，不启动答题
         return;
       }
-      setTimeout(() => startQuiz(false), 100);
+      // 显示难度选择器
+      setShowDifficultySelector(true);
     } else if (newMode === 'review') {
       // 检查是否有暂停的review状态需要恢复
       if (quizState.isPaused && quizState.mode === 'review') {
@@ -370,6 +381,7 @@ export default function Home() {
           setSelectedAnswer(quizState.selectedAnswer);
           setTimeLeft(quizState.timeLeft);
           setShowResult(false);
+          setSelectedDifficulty(quizState.difficulty);
         }
         return;
       }
@@ -383,11 +395,13 @@ export default function Home() {
       // 重置复习任务完成状态并记录初始错题数量
       setReviewTaskCompleted(false);
       setInitialWrongQuestionsCount(userProgress.wrongQuestions.length);
-      setTimeout(() => startQuiz(true), 100);
+      // 显示难度选择器
+      setShowDifficultySelector(true);
     } else {
       // 切换到学习模式时，重置复习任务完成状态和初始错题数量
       setReviewTaskCompleted(false);
       setInitialWrongQuestionsCount(0);
+      setShowDifficultySelector(false);
     }
   };
 
@@ -437,8 +451,8 @@ export default function Home() {
       dailyQuestionsAnswered: 0,
     });
     setMode('quiz');
-    setTimeout(() => startQuiz(false), 100);
-  }, [userProgress, setUserProgress, startQuiz]);
+    setShowDifficultySelector(true);
+  }, [userProgress, setUserProgress]);
 
   return (
     <div className="text-foreground min-h-screen relative">
@@ -475,6 +489,16 @@ export default function Home() {
           <DailyTaskComplete onBackToLearn={handleBackToLearn} type="review" />
         )}
         
+        {/* 难度选择器 */}
+        {showDifficultySelector && !quizState.isPaused && (
+          <DifficultySelector
+            selectedDifficulty={selectedDifficulty}
+            onDifficultySelect={setSelectedDifficulty}
+            onStartQuiz={() => startQuiz(mode === 'review', selectedDifficulty)}
+            isReview={mode === 'review'}
+          />
+        )}
+        
         {/* 暂停状态恢复时的答题界面 */}
         {quizState.isPaused && quizState.mode && mode === quizState.mode && quizState.currentQuestion && (
           <QuizInterface
@@ -496,7 +520,7 @@ export default function Home() {
         )}
         
         {/* 正常答题界面 */}
-        {!quizState.isPaused && ((mode === 'quiz' && !userProgress.dailyTaskCompleted) || (mode === 'review' && !reviewTaskCompleted)) && currentQuestion && (
+        {!quizState.isPaused && !showDifficultySelector && ((mode === 'quiz' && !userProgress.dailyTaskCompleted) || (mode === 'review' && !reviewTaskCompleted)) && currentQuestion && (
           <QuizInterface
             mode={mode}
             currentQuestion={currentQuestion}

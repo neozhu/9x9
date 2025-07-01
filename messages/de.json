@@ -19,7 +19,14 @@
     "enabled": "Aktiviert",
     "disabled": "Deaktiviert",
     "continue": "Weiter",
-    "completed": "Abgeschlossen"
+    "completed": "Abgeschlossen",
+    "loading": "Lädt...",
+    "error": "Fehler aufgetreten",
+    "retry": "Wiederholen",
+    "back": "Zurück",
+    "ok": "OK",
+    "cancel": "Abbrechen",
+    "selected": "Ausgewählt"
   },
   "modes": {
     "learn": "Lernen",
@@ -61,7 +68,27 @@
     "reviewTaskCompletedTitle": "Wiederholungsaufgabe abgeschlossen",
     "reviewTaskCompletedMessage": "Herzlichen Glückwunsch! Sie haben alle falschen Fragen gemeistert, Wiederholungsaufgabe abgeschlossen!",
     "backToLearn": "Zurück zum Lernmodus",
-    "continueQuiz": "Weitere 10 machen"
+    "continueQuiz": "Weitere 10 machen",
+    "selectDifficulty": "Schwierigkeit wählen",
+    "selectReviewDifficulty": "Wiederholungs-Schwierigkeit wählen",
+    "difficultyDescription": "Wählen Sie Ihre Schwierigkeitsstufe zum Üben",
+    "difficulty": {
+      "beginner": {
+        "name": "Anfänger",
+        "description": "1-9 Einmaleins, perfekt für Einsteiger"
+      },
+      "advanced": {
+        "name": "Fortgeschritten",
+        "description": "11-19 Multiplikation, erhöhte Herausforderung"
+      },
+      "expert": {
+        "name": "Experte",
+        "description": "21-99 Multiplikation, ultimative Herausforderung"
+      }
+    },
+    "multiplicandRange": "Multiplikand-Bereich",
+    "multiplierRange": "Multiplikator-Bereich",
+    "startReview": "Wiederholung starten"
   },
   "achievements": {
     "title": "Erfolge",
@@ -84,7 +111,9 @@
     "questions_100": "Jahrhundert-Meister",
     "questions_100Desc": "100 Fragen beantwortet",
     "daily_task_complete": "Tages-Champion",
-    "daily_task_completeDesc": "Heutige 10-Fragen-Aufgabe erledigt"
+    "daily_task_completeDesc": "Heutige 10-Fragen-Aufgabe erledigt",
+    "unlocked": "Freigeschaltet",
+    "locked": "Gesperrt"
   },
   "stats": {
     "totalQuestions": "Gesamtfragen",
@@ -115,7 +144,14 @@
     "clickAnyNumber": "Klicken Sie auf eine beliebige Zahl, um Multiplikation zu lernen",
     "practiceDaily": "Üben Sie täglich einige Minuten, um das Einmaleins zu beherrschen",
     "clickToHear": "Zahlen anklicken, um Sprache zu hören",
-    "sameResult": "Blaue Quadrate zeigen gleiche Ergebnisse"
+    "sameResult": "Blaue Quadrate zeigen gleiche Ergebnisse",
+    "title": "Einmaleins lernen",
+    "formula": "Formel",
+    "sameResultCombinations": "Kombinationen mit gleichem Ergebnis",
+    "speechToggle": "Sprachausgabe",
+    "enableSpeech": "Sprache aktivieren",
+    "disableSpeech": "Sprache deaktivieren",
+    "speechNotSupported": "Sprache nicht unterstützt"
   },
   "footer": {
     "appName": "9×9 Einmaleins-Lern-App",
@@ -124,5 +160,32 @@
     "interactiveExperience": "Interaktive Erfahrung",
     "eyeProtection": "Augenschutz",
     "copyright": "© 2024 Einmaleins-Lern-App · Mathematik unterhaltsamer machen"
+  },
+  "progress": {
+    "totalQuestions": "Fragen insgesamt",
+    "correctAnswers": "Richtige Antworten",
+    "accuracy": "Genauigkeit",
+    "currentStreak": "Aktuelle Serie",
+    "bestStreak": "Beste Serie",
+    "consecutiveDays": "Aufeinanderfolgende Tage",
+    "wrongQuestions": "Falsche Fragen",
+    "dailyProgress": "Täglicher Fortschritt",
+    "dailyTarget": "Tagesziel",
+    "clearWrongQuestions": "Falsche Fragen löschen",
+    "confirmClear": "Sind Sie sicher, dass Sie alle falschen Fragen löschen möchten?",
+    "cleared": "Gelöscht"
+  },
+  "review": {
+    "title": "Falsche Fragen wiederholen",
+    "noWrongQuestions": "Keine falschen Fragen zum Wiederholen",
+    "startReview": "Wiederholung starten",
+    "reviewComplete": "Wiederholung abgeschlossen",
+    "reviewCompleteMessage": "Herzlichen Glückwunsch! Sie haben alle falschen Fragen wiederholt.",
+    "backToLearn": "Zurück zum Lernen"
+  },
+  "daily": {
+    "taskComplete": "Tägliche Aufgabe abgeschlossen",
+    "taskCompleteMessage": "Herzlichen Glückwunsch! Sie haben die heutige 10-Fragen-Aufgabe abgeschlossen.",
+    "keepGoing": "Weiter so"
   }
 } 

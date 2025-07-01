@@ -19,7 +19,14 @@
     "enabled": "开启",
     "disabled": "关闭",
     "continue": "继续",
-    "completed": "已完成"
+    "completed": "已完成",
+    "loading": "加载中...",
+    "error": "出错了",
+    "retry": "重试",
+    "back": "返回",
+    "ok": "确定",
+    "cancel": "取消",
+    "selected": "已选择"
   },
   "modes": {
     "learn": "学习",
@@ -63,7 +70,27 @@
     "reviewTaskCompletedTitle": "复习任务已完成",
     "reviewTaskCompletedMessage": "恭喜你！已掌握所有错题，复习任务完成！",
     "backToLearn": "返回学习模式",
-    "continueQuiz": "再来一组 (10题)"
+    "continueQuiz": "再来一组 (10题)",
+    "selectDifficulty": "选择难度",
+    "selectReviewDifficulty": "选择复习难度",
+    "difficultyDescription": "请选择适合你的难度级别开始练习",
+    "difficulty": {
+      "beginner": {
+        "name": "初级",
+        "description": "1-9 乘法表，适合初学者"
+      },
+      "advanced": {
+        "name": "高级", 
+        "description": "11-19 乘法，提升挑战"
+      },
+      "expert": {
+        "name": "专家级",
+        "description": "21-99 乘法，极限挑战"
+      }
+    },
+    "multiplicandRange": "被乘数范围",
+    "multiplierRange": "乘数范围",
+    "startReview": "开始复习"
   },
   "achievements": {
     "title": "成就",
@@ -86,7 +113,9 @@
     "questions_100": "百题达人",
     "questions_100Desc": "累计答题100道",
     "daily_task_complete": "今日达人",
-    "daily_task_completeDesc": "完成今日10题任务"
+    "daily_task_completeDesc": "完成今日10题任务",
+    "unlocked": "解锁",
+    "locked": "未解锁"
   },
   "stats": {
     "totalQuestions": "总题数",
@@ -117,7 +146,14 @@
     "clickAnyNumber": "点击任意数字学习乘法口诀",
     "practiceDaily": "每天练习几分钟，轻松记住九九表",
     "clickToHear": "点击数字即可听到语音朗读",
-    "sameResult": "蓝色方块表示相同的结果"
+    "sameResult": "蓝色方块表示相同的结果",
+    "title": "学习九九乘法表",
+    "formula": "口诀",
+    "sameResultCombinations": "相同结果的组合",
+    "speechToggle": "语音播放",
+    "enableSpeech": "启用语音",
+    "disableSpeech": "关闭语音",
+    "speechNotSupported": "浏览器不支持语音功能"
   },
   "footer": {
     "appName": "9×9乘法口诀学习应用",
@@ -126,5 +162,32 @@
     "interactiveExperience": "互动体验",
     "eyeProtection": "护眼模式",
     "copyright": "© 2024 乘法口诀学习应用 · 让数学学习更有趣"
+  },
+  "progress": {
+    "totalQuestions": "总题数",
+    "correctAnswers": "正确数",
+    "accuracy": "正确率",
+    "currentStreak": "连击",
+    "bestStreak": "最佳连击",
+    "consecutiveDays": "连续天数",
+    "wrongQuestions": "错题数",
+    "dailyProgress": "今日进度",
+    "dailyTarget": "日目标",
+    "clearWrongQuestions": "清空错题",
+    "confirmClear": "确定要清空所有错题吗？",
+    "cleared": "已清空"
+  },
+  "review": {
+    "title": "错题复习",
+    "noWrongQuestions": "没有错题需要复习",
+    "startReview": "开始复习",
+    "reviewComplete": "复习完成",
+    "reviewCompleteMessage": "恭喜！你已经完成了所有错题的复习。",
+    "backToLearn": "返回学习"
+  },
+  "daily": {
+    "taskComplete": "每日任务完成",
+    "taskCompleteMessage": "恭喜！你已经完成了今天的10题任务。",
+    "keepGoing": "继续加油"
   }
 } 

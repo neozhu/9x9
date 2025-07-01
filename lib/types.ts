@@ -33,4 +33,14 @@ export interface Achievement {
   icon: string;
 }
 
-export type Mode = 'learn' | 'quiz' | 'review'; 
+export type Mode = 'learn' | 'quiz' | 'review';
+
+export type Difficulty = 'beginner' | 'advanced' | 'expert';
+
+export interface DifficultyConfig {
+  id: Difficulty;
+  name: string;
+  description: string;
+  multiplicandRange: [number, number];
+  multiplierRange: [number, number];
+} 
