@@ -30,7 +30,9 @@
     "multiplication": "乘法",
     "equals": "等于",
     "formula": "{num1} 乘以 {num2} 等于 {result}",
-    "clickCell": "点击格子学习乘法"
+    "clickCell": "点击格子学习乘法",
+    "welcomeTitle": "🎯 开始你的乘法之旅",
+    "welcomeSubtitle": "选择任意格子，探索乘法的奥秘"
   },
   "quiz": {
     "question": "{num1} × {num2} = ?",

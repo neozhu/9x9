@@ -29,15 +29,84 @@ export function LearnMode({
   onSpeechToggle,
   onRepeatSpeech
 }: LearnModeProps) {
-  const { locale, t } = useLocale();
+  const { locale, t, isLoading, messages } = useLocale();
 
   const isIOS = typeof window !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  // 安全的翻译函数，在翻译未加载时提供默认值
+  const safeT = (key: string, fallback?: string) => {
+    if (isLoading || !messages) {
+      if (fallback) return fallback;
+      // 提供一些常用的默认翻译
+      const defaultTexts: Record<string, Record<string, string>> = {
+        zh: {
+          'grid.clickCell': '点击格子学习乘法',
+          'grid.welcomeTitle': '🎯 开始你的乘法之旅',
+          'grid.welcomeSubtitle': '选择任意格子，探索乘法的奥秘',
+          'speech.enabled': '语音开启',
+          'common.repeat': '重复',
+          'common.enabled': '开启',
+          'common.disabled': '关闭',
+          'learn.clickAnyNumber': '点击任意数字学习乘法口诀',
+          'learn.practiceDaily': '每天练习几分钟，轻松记住九九表',
+          'learn.clickToHear': '点击数字即可听到语音朗读',
+          'learn.sameResult': '蓝色方块表示相同的结果',
+          'common.other': '其他组合'
+        },
+        en: {
+          'grid.clickCell': 'Click a cell to learn multiplication',
+          'grid.welcomeTitle': '🎯 Start Your Multiplication Journey',
+          'grid.welcomeSubtitle': 'Choose any cell to explore the magic of multiplication',
+          'speech.enabled': 'Speech Enabled',
+          'common.repeat': 'Repeat',
+          'common.enabled': 'Enabled',
+          'common.disabled': 'Disabled',
+          'learn.clickAnyNumber': 'Click any number to learn multiplication',
+          'learn.practiceDaily': 'Practice a few minutes daily to master the multiplication table',
+          'learn.clickToHear': 'Click numbers to hear speech',
+          'learn.sameResult': 'Blue squares show same results',
+          'common.other': 'Other combinations'
+        },
+        de: {
+          'grid.clickCell': 'Klicken Sie auf eine Zelle, um Multiplikation zu lernen',
+          'grid.welcomeTitle': '🎯 Beginnen Sie Ihre Einmaleins-Reise',
+          'grid.welcomeSubtitle': 'Wählen Sie eine beliebige Zelle, um die Wunder der Multiplikation zu entdecken',
+          'speech.enabled': 'Sprache aktiviert',
+          'common.repeat': 'Wiederholen',
+          'common.enabled': 'Aktiviert',
+          'common.disabled': 'Deaktiviert',
+          'learn.clickAnyNumber': 'Klicken Sie auf eine beliebige Zahl, um Multiplikation zu lernen',
+          'learn.practiceDaily': 'Üben Sie täglich einige Minuten, um das Einmaleins zu beherrschen',
+          'learn.clickToHear': 'Zahlen anklicken, um Sprache zu hören',
+          'learn.sameResult': 'Blaue Quadrate zeigen gleiche Ergebnisse',
+          'common.other': 'Andere Kombinationen'
+        },
+        ja: {
+          'grid.clickCell': 'セルをクリックして掛け算を学習しましょう',
+          'grid.welcomeTitle': '🎯 かけ算の旅を始めよう',
+          'grid.welcomeSubtitle': '好きなマスを選んで、かけ算の魔法を発見しよう',
+          'speech.enabled': '音声有効',
+          'common.repeat': '繰り返し',
+          'common.enabled': '有効',
+          'common.disabled': '無効',
+          'learn.clickAnyNumber': '任意の数字をクリックして掛け算を学習',
+          'learn.practiceDaily': '毎日数分練習して九九表をマスター',
+          'learn.clickToHear': '数字をクリックして音声を聞く',
+          'learn.sameResult': '青い四角は同じ結果を表示',
+          'common.other': '他の組み合わせ'
+        }
+      };
+      
+      return defaultTexts[locale]?.[key] || defaultTexts['en']?.[key] || key;
+    }
+    return t(key);
+  };
 
   const getDisplayFormula = () => {
     if (!selectedCell) {
       return {
-        formula: t('grid.clickCell'),
-        equation: t('grid.clickCell'),
+        formula: safeT('grid.welcomeTitle'),
+        equation: safeT('grid.welcomeSubtitle'),
         combinationInfo: ""
       };
     }
@@ -52,7 +121,7 @@ export function LearnMode({
     let combinationInfo = "";
     if (otherCombinations.length > 0) {
       const otherFormulas = otherCombinations.map(combo => `${combo.row}×${combo.col}`).join('、');
-      combinationInfo = `${t('common.other')}: ${otherFormulas}`;
+      combinationInfo = `${safeT('common.other')}: ${otherFormulas}`;
     }
     
     return {
@@ -63,7 +132,7 @@ export function LearnMode({
   };
 
   const grid = useMemo(() => generateGrid(), []);
-  const { formula, equation, combinationInfo } = useMemo(getDisplayFormula, [selectedCell, locale, t]);
+  const { formula, equation, combinationInfo } = useMemo(getDisplayFormula, [selectedCell, locale, safeT]);
   const sameResultCombinations = useMemo(() => selectedResult ? findSameResultCombinations(selectedResult) : [], [selectedResult]);
 
   return (
@@ -81,7 +150,7 @@ export function LearnMode({
                 <div className="flex items-center gap-1.5">
                   <Volume2 className="w-3.5 h-3.5 text-muted-foreground" />
                   <span className="text-xs font-medium text-foreground truncate">
-                    {speechInitialized ? t('speech.enabled') : (isIOS ? 'Audio is being prepared—tap anywhere to activate.' : t('speech.enabled'))}
+                    {speechInitialized ? safeT('speech.enabled') : (isIOS ? 'Audio is being prepared—tap anywhere to activate.' : safeT('speech.enabled'))}
                   </span>
                 </div>
                 
@@ -98,7 +167,7 @@ export function LearnMode({
                     )}
                   >
                     <RotateCcw className="w-3 h-3 mr-1" />
-                    <span className="text-xs">{t('common.repeat')}</span>
+                    <span className="text-xs">{safeT('common.repeat')}</span>
                   </Button>
                 )}
               </div>
@@ -121,7 +190,7 @@ export function LearnMode({
                 )}
               >
                 {speechEnabled ? <Volume2 className="w-3 h-3 mr-1" /> : <VolumeX className="w-3 h-3 mr-1" />}
-                <span className="text-xs">{speechEnabled ? t('common.enabled') : t('common.disabled')}</span>
+                <span className="text-xs">{speechEnabled ? safeT('common.enabled') : safeT('common.disabled')}</span>
               </Button>
             </div>
           </CardContent>
@@ -203,8 +272,8 @@ export function LearnMode({
         "dark:bg-background/60 dark:border-border/40"
       )}>
         <CardContent className="p-4 text-center space-y-3">
-          <p className="text-sm text-muted-foreground">{t('learn.clickAnyNumber')}</p>
-          <p className="text-sm text-muted-foreground">{t('learn.practiceDaily')}</p>
+          <p className="text-sm text-muted-foreground">{safeT('learn.clickAnyNumber')}</p>
+          <p className="text-sm text-muted-foreground">{safeT('learn.practiceDaily')}</p>
           
           <div className="flex flex-wrap justify-center gap-2 pt-2">
             {speechSupported && (
@@ -213,7 +282,7 @@ export function LearnMode({
                 "dark:bg-background/70 dark:border-border/60"
               )}>
                 <Lightbulb className="w-3 h-3" />
-                <span>{speechInitialized ? t('learn.clickToHear') : '点击激活语音功能'}</span>
+                <span>{speechInitialized ? safeT('learn.clickToHear') : '点击激活语音功能'}</span>
               </Badge>
             )}
             
@@ -224,10 +293,10 @@ export function LearnMode({
                 "border-blue-200/50 dark:border-blue-700/60 text-xs gap-1",
                 "shadow-sm dark:shadow-blue-900/20"
               )}
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>{t('learn.sameResult')}</span>
-            </Badge>
+                          >
+                <Sparkles className="w-3 h-3" />
+                <span>{safeT('learn.sameResult')}</span>
+              </Badge>
           </div>
         </CardContent>
       </Card>

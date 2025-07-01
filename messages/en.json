@@ -30,7 +30,9 @@
     "multiplication": "Multiplication",
     "equals": "equals",
     "formula": "{num1} times {num2} equals {result}",
-    "clickCell": "Click a cell to learn multiplication"
+    "clickCell": "Click a cell to learn multiplication",
+    "welcomeTitle": "🎯 Start Your Multiplication Journey",
+    "welcomeSubtitle": "Choose any cell to explore the magic of multiplication"
   },
   "quiz": {
     "question": "{num1} × {num2} = ?",

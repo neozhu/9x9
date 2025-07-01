@@ -30,7 +30,9 @@
     "multiplication": "Multiplikation",
     "equals": "gleich",
     "formula": "{num1} mal {num2} gleich {result}",
-    "clickCell": "Klicken Sie auf eine Zelle, um Multiplikation zu lernen"
+    "clickCell": "Klicken Sie auf eine Zelle, um Multiplikation zu lernen",
+    "welcomeTitle": "🎯 Beginnen Sie Ihre Einmaleins-Reise",
+    "welcomeSubtitle": "Wählen Sie eine beliebige Zelle, um die Wunder der Multiplikation zu entdecken"
   },
   "quiz": {
     "question": "{num1} × {num2} = ?",
