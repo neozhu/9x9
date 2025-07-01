@@ -395,8 +395,10 @@ export default function Home() {
       // 重置复习任务完成状态并记录初始错题数量
       setReviewTaskCompleted(false);
       setInitialWrongQuestionsCount(userProgress.wrongQuestions.length);
-      // 显示难度选择器
-      setShowDifficultySelector(true);
+      // 直接开始复习错题，不显示难度选择器
+      setShowDifficultySelector(false);
+      // 默认使用之前选择的难度或 beginner，但复习模式下实际不会用到
+      startQuiz(true, selectedDifficulty || 'beginner');
     } else {
       // 切换到学习模式时，重置复习任务完成状态和初始错题数量
       setReviewTaskCompleted(false);

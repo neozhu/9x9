@@ -48,8 +48,9 @@ export function QuizInterface({
   const timePercentage = (timeLeft / 10) * 100;
   const isTimeRunningOut = timeLeft <= 3;
   
-  // 生成心算技巧（仅适用于高级和专家级）
-  const calculationTip = (difficulty === 'advanced' || difficulty === 'expert') 
+  // 生成心算技巧（高级/专家级 或 复习模式 都显示）
+  const shouldShowTip = mode === 'review' || difficulty === 'advanced' || difficulty === 'expert';
+  const calculationTip = shouldShowTip
     ? generateCalculationTip(currentQuestion.multiplicand, currentQuestion.multiplier, locale)
     : null;
 
