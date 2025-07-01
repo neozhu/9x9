@@ -95,13 +95,8 @@ export function DifficultySelector({
                 
                 {/* 难度范围显示 */}
                 <div className="mt-3 pt-3 border-t border-border/50">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{t('quiz.multiplicandRange')}:</span>
-                    <span>{config.multiplicandRange[0]} - {config.multiplicandRange[1]}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground mt-1">
-                    <span>{t('quiz.multiplierRange')}:</span>
-                    <span>{config.multiplierRange[0]} - {config.multiplierRange[1]}</span>
+                  <div className="flex items-center justify-center text-xs text-muted-foreground">
+                    <span>{t('quiz.multiplicationRange')}: {config.multiplicandRange[0]}-{config.multiplicandRange[1]} × {config.multiplierRange[0]}-{config.multiplierRange[1]}</span>
                   </div>
                 </div>
               </CardContent>
