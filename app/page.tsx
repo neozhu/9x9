@@ -503,6 +503,7 @@ export default function Home() {
         {quizState.isPaused && quizState.mode && mode === quizState.mode && quizState.currentQuestion && (
           <QuizInterface
             mode={mode}
+            difficulty={quizState.difficulty}
             currentQuestion={quizState.currentQuestion}
             timeLeft={quizState.timeLeft}
             showResult={false}
@@ -523,6 +524,7 @@ export default function Home() {
         {!quizState.isPaused && !showDifficultySelector && ((mode === 'quiz' && !userProgress.dailyTaskCompleted) || (mode === 'review' && !reviewTaskCompleted)) && currentQuestion && (
           <QuizInterface
             mode={mode}
+            difficulty={selectedDifficulty}
             currentQuestion={currentQuestion}
             timeLeft={timeLeft}
             showResult={showResult}

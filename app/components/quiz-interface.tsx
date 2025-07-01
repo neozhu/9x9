@@ -1,4 +1,4 @@
-import type { Question, Mode } from '@/lib/types';
+import type { Question, Mode, Difficulty } from '@/lib/types';
 import { useLocale } from '../hooks/use-locale';
 import { BookOpenCheck, Clock, CheckCircle, XCircle, Pause, Play } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
@@ -6,9 +6,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { generateCalculationTip } from '@/lib/multiplication-utils';
 
 interface QuizInterfaceProps {
   mode: Mode;
+  difficulty?: Difficulty;
   currentQuestion: Question;
   timeLeft: number;
   showResult: boolean;
@@ -26,6 +28,7 @@ interface QuizInterfaceProps {
 
 export function QuizInterface({
   mode,
+  difficulty = 'beginner',
   currentQuestion,
   timeLeft,
   showResult,
@@ -40,10 +43,15 @@ export function QuizInterface({
   onPauseQuiz,
   onResumeQuiz
 }: QuizInterfaceProps) {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   const timePercentage = (timeLeft / 10) * 100;
   const isTimeRunningOut = timeLeft <= 3;
+  
+  // 生成心算技巧（仅适用于高级和专家级）
+  const calculationTip = (difficulty === 'advanced' || difficulty === 'expert') 
+    ? generateCalculationTip(currentQuestion.multiplicand, currentQuestion.multiplier, locale)
+    : null;
 
   return (
     <div className="mb-4 space-y-3">
@@ -69,6 +77,20 @@ export function QuizInterface({
           <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
             {currentQuestion.multiplicand} × {currentQuestion.multiplier} = ?
           </div>
+          
+          {/* 心算技巧提示 - 仅在高级和专家级显示，暂停时也显示以助记忆 */}
+          {calculationTip && !showResult && (
+            <div className={cn(
+              "mx-auto max-w-sm p-3 rounded-lg border text-center",
+              "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700/60",
+              "text-xs sm:text-sm text-blue-800 dark:text-blue-200"
+            )}>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="font-medium">{t('quiz.calculationTip')}</div>
+              </div>
+              <div className="text-xs leading-relaxed">{calculationTip}</div>
+            </div>
+          )}
           
           {/* Paused State */}
           {isPaused && !showResult && (

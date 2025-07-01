@@ -232,4 +232,146 @@ export function initializeSpeechSynthesis(): Promise<boolean> {
       resolve(false);
     }
   });
+}
+
+// 心算技巧生成函数
+export function generateCalculationTip(multiplicand: number, multiplier: number, locale: string = 'zh'): string | null {
+  // 只为高级(11-19)和专家级(21-99)提供技巧
+  if ((multiplicand < 11 || multiplier < 11)) {
+    return null;
+  }
+
+  const a = multiplicand;
+  const b = multiplier;
+  
+  // 1. 11的乘法特殊规律
+  if (a === 11 || b === 11) {
+    const other = a === 11 ? b : a;
+    if (other >= 10 && other <= 99) {
+      const tens = Math.floor(other / 10);
+      const units = other % 10;
+      const sum = other + tens;
+      const middleStep = sum * 10;
+      const unitsProduct = 1 * units;
+      
+      switch (locale) {
+        case 'zh':
+          return `11乘法技巧：${other}+${tens}=${sum} → ${sum}×10=${middleStep} → 1×${units}=${unitsProduct} → ${middleStep}+${unitsProduct}=${11 * other}`;
+        case 'en':
+          return `11 trick: ${other}+${tens}=${sum} → ${sum}×10=${middleStep} → 1×${units}=${unitsProduct} → ${11 * other}`;
+        case 'de':
+          return `11-Trick: ${other}+${tens}=${sum} → ${sum}×10=${middleStep} → 1×${units}=${unitsProduct} → ${11 * other}`;
+        case 'ja':
+          return `11の技巧：${other}+${tens}=${sum} → ${sum}×10=${middleStep} → 1×${units}=${unitsProduct} → ${11 * other}`;
+        default:
+          return `11乘法技巧：${other}+${tens}=${sum} → ${sum}×10=${middleStep} → 1×${units}=${unitsProduct} → ${middleStep}+${unitsProduct}=${11 * other}`;
+      }
+    }
+  }
+  
+  // 2. 首位互补=10，末位相同的速算
+  if (a >= 10 && b >= 10 && a <= 99 && b <= 99) {
+    const a_tens = Math.floor(a / 10);
+    const a_units = a % 10;
+    const b_tens = Math.floor(b / 10);
+    const b_units = b % 10;
+    
+    if (a_tens + b_tens === 10 && a_units === b_units) {
+      const left = a_tens * b_tens + a_units;
+      const right = a_units * a_units;
+      
+      switch (locale) {
+        case 'zh':
+          return `首位互补法：${a_tens}×${b_tens}+${a_units}=${left}，${a_units}²=${right.toString().padStart(2, '0')} → ${left}${right.toString().padStart(2, '0')}`;
+        case 'en':
+          return `Complement method: ${a_tens}×${b_tens}+${a_units}=${left}, ${a_units}²=${right.toString().padStart(2, '0')} → ${left}${right.toString().padStart(2, '0')}`;
+        case 'de':
+          return `Ergänzung: ${a_tens}×${b_tens}+${a_units}=${left}, ${a_units}²=${right.toString().padStart(2, '0')} → ${left}${right.toString().padStart(2, '0')}`;
+        case 'ja':
+          return `補数法：${a_tens}×${b_tens}+${a_units}=${left}、${a_units}²=${right.toString().padStart(2, '0')} → ${left}${right.toString().padStart(2, '0')}`;
+        default:
+          return `首位互补法：${a_tens}×${b_tens}+${a_units}=${left}，${a_units}²=${right.toString().padStart(2, '0')} → ${left}${right.toString().padStart(2, '0')}`;
+      }
+    }
+  }
+  
+  // 3. 平方数快速计算
+  if (a === b) {
+    if (a >= 10 && a <= 99) {
+      const tens = Math.floor(a / 10);
+      const units = a % 10;
+      
+      switch (locale) {
+        case 'zh':
+          return `平方技巧：(${tens}0+${units})² = ${tens}0²+2×${tens}0×${units}+${units}² = ${tens*tens*100}+${2*tens*10*units}+${units*units} = ${a*a}`;
+        case 'en':
+          return `Square trick: (${tens}0+${units})² = ${tens}0²+2×${tens}0×${units}+${units}² = ${a*a}`;
+        case 'de':
+          return `Quadrat-Trick: (${tens}0+${units})² = ${tens}0²+2×${tens}0×${units}+${units}² = ${a*a}`;
+        case 'ja':
+          return `平方の技巧：(${tens}0+${units})² = ${tens}0²+2×${tens}0×${units}+${units}² = ${a*a}`;
+        default:
+          return `平方技巧：(${tens}0+${units})² = ${tens}0²+2×${tens}0×${units}+${units}² = ${a*a}`;
+      }
+    }
+  }
+  
+  // 4. 接近整十数的计算
+  if ((a % 10 === 0 || b % 10 === 0) && (a > 10 || b > 10)) {
+    switch (locale) {
+      case 'zh':
+        return `整十数技巧：先算整十部分，再调整个位数的影响`;
+      case 'en':
+        return `Round number trick: Calculate tens first, then adjust for units`;
+      case 'de':
+        return `Runde Zahl: Zuerst Zehner rechnen, dann Einer anpassen`;
+      case 'ja':
+        return `整十の技巧：まず十の位を計算し、一の位を調整`;
+      default:
+        return `整十数技巧：先算整十部分，再调整个位数的影响`;
+    }
+  }
+  
+  // 5. 对半翻倍法（适用于偶数）
+  if (a % 2 === 0 || b % 2 === 0) {
+    const even = a % 2 === 0 ? a : b;
+    const other = a % 2 === 0 ? b : a;
+    
+    switch (locale) {
+      case 'zh':
+        return `对半翻倍法：${even}÷2×${other}×2 = ${even/2}×${other*2}`;
+      case 'en':
+        return `Half-double method: ${even}÷2×${other}×2 = ${even/2}×${other*2}`;
+      case 'de':
+        return `Halbieren-Verdoppeln: ${even}÷2×${other}×2 = ${even/2}×${other*2}`;
+      case 'ja':
+        return `半分倍増法：${even}÷2×${other}×2 = ${even/2}×${other*2}`;
+      default:
+        return `对半翻倍法：${even}÷2×${other}×2 = ${even/2}×${other*2}`;
+    }
+  }
+  
+  // 6. 通用拆分法（降低阈值以覆盖更多情况）
+  const smaller = Math.min(a, b);
+  const larger = Math.max(a, b);
+  
+  if (smaller >= 12) { // 降低阈值从20到12
+    const tens = Math.floor(smaller / 10) * 10;
+    const units = smaller % 10;
+    
+    switch (locale) {
+      case 'zh':
+        return `拆分法：${smaller}×${larger} = (${tens}+${units})×${larger} = ${tens}×${larger}+${units}×${larger}`;
+      case 'en':
+        return `Split method: ${smaller}×${larger} = (${tens}+${units})×${larger} = ${tens}×${larger}+${units}×${larger}`;
+      case 'de':
+        return `Aufteilen: ${smaller}×${larger} = (${tens}+${units})×${larger} = ${tens}×${larger}+${units}×${larger}`;
+      case 'ja':
+        return `分解法：${smaller}×${larger} = (${tens}+${units})×${larger} = ${tens}×${larger}+${units}×${larger}`;
+      default:
+        return `拆分法：${smaller}×${larger} = (${tens}+${units})×${larger} = ${tens}×${larger}+${units}×${larger}`;
+    }
+  }
+  
+  return null;
 } 
